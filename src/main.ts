@@ -1,38 +1,26 @@
-
-interface KeepAlive {
-  action: string;
-}
-
-
-interface Subscription {
-  action: string;
-  topic: string;
-  options?: {
-    [key: string]: any;
-  }
-}
+import { NodeManager } from "./node_manager.ts";
+import { TopicMessage, NanoMessage } from "./models.ts";
+import { DbStore } from "./handlers/db_store.ts";
+import { logger } from "./logger.ts";
 
 const wsUrl = `ws://192.168.1.70:7078`;
-const socket = new WebSocket(wsUrl);
+const nodeManager = new NodeManager(wsUrl);
+const dbStore = new DbStore();
 
-socket.addEventListener('open', () => {
-    console.log('Connected to WebSocket server');
-    socket.send(JSON.stringify({
-        action: "subscribe",
-        topic: "confirmation"
-    } as Subscription));
+const unsubscribe = nodeManager.subscribe("confirmation", async (message: TopicMessage<NanoMessage>) => {
+  await dbStore.storeConfirmation(message);
+  await logger.log(`Received confirmation: ${message.message.hash}`);
 });
 
-socket.addEventListener('error', (error) => {
-    console.error('WebSocket error:', error);
-});
+// Update cleanup handler for Deno
+async function cleanup() {
+  console.log('Cleaning up...');
+  unsubscribe();
+  await nodeManager.close();
+  Deno.exit(0);
+}
 
-socket.addEventListener('message', (event) => {
-    console.log('Received message:', event.data);
-});
-
-// setTimeout(() => {
-//   console.log("Closing socket");
-//   socket.close();
-// }, 30e3);
+// Handle different termination signals using Deno.addSignalListener
+Deno.addSignalListener("SIGINT", cleanup);  // Handles Ctrl+C
+Deno.addSignalListener("SIGTERM", cleanup); // Handles kill command
 

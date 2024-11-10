@@ -37,3 +37,4 @@ junit.xml
 .ipynb_checkpoints/
 Untitled*.ipynb
 timescale_data
+logs
