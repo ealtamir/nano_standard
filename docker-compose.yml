@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  timescaledb:
+    image: timescale/timescaledb-ha:pg16
+    container_name: timescaledb
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-your_user}         # Default to 'your_user' if POSTGRES_USER is not set
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-your_password} # Default to 'your_password' if POSTGRES_PASSWORD is not set
+      POSTGRES_DB: ${POSTGRES_DB:-your_database}             # Default to 'your_database' if POSTGRES_DB is not set
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./timescale_data:/var/lib/postgresql/data
+        #      - ./custom_postgresql.conf:/etc/postgresql/postgresql.conf  # Mount custom config file
+    networks:
+      - timescale_net
+        #    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"] # Point to custom config
+
+networks:
+  timescale_net:
+    driver: bridge
