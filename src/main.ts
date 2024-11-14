@@ -4,6 +4,7 @@ import { DbStore } from "./handlers/db_store.ts";
 import { logger } from "./logger.ts";
 import { NanoPriceCaller } from "./callers/nano_price_caller.ts";
 import { GoldPriceCaller } from "./callers/gold_price_caller.ts";
+import { MINUTE, HOUR } from "@std/datetime";
 
 const wsUrl = `ws://192.168.1.70:7078`;
 const nodeManager = new NodeManager(wsUrl);
@@ -20,8 +21,8 @@ if (!goldApiKey) {
 }
 
 const callers = [
-    new NanoPriceCaller(coinGeckoApiKey, 1000 * 60 * 5),
-    new GoldPriceCaller(goldApiKey, 1000 * 60 * 60 * 8),
+    new NanoPriceCaller(coinGeckoApiKey, MINUTE * 5),
+    new GoldPriceCaller(goldApiKey, HOUR * 8),
 ];
 
 const unsubscribe = nodeManager.subscribe("confirmation", async (message: TopicMessage<NanoMessage>) => {
