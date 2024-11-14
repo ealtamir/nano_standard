@@ -38,3 +38,4 @@ junit.xml
 Untitled*.ipynb
 timescale_data
 logs
+.env

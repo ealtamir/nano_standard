@@ -3,7 +3,7 @@ import { TopicMessage } from './models.ts';
 type MessageHandler<T> = (data: T) => void;
 
 export class NodeManager {
-    private ws: WebSocket; 
+    private ws: WebSocket;
     private subscribers: Map<string, Set<MessageHandler<any>>>;
     private reconnectAttempts: number = 0;
     private readonly maxReconnectAttempts: number = 5;
