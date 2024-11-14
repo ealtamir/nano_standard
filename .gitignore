@@ -40,3 +40,4 @@ timescale_data
 logs
 prod.flyway.conf
 flyway-*
+.env

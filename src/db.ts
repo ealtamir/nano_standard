@@ -15,7 +15,7 @@ const config = ENVIRONMENT === "production"
       host: "localhost",
       database: "postgres",
       username: "postgres",
-      password: "password",
+      password: "your_password",
     };
 
 const sql = postgres(config) // will use psql environment variables

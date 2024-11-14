@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS block_confirmations (
+CREATE TABLE IF NOT EXISTS public.block_confirmations (
     -- Primary key (using the block hash)
     hash VARCHAR(64) PRIMARY KEY,
     
