@@ -8,7 +8,7 @@ export class NanoPriceCaller extends PeriodicalCaller<NanoPriceData> {
     private readonly baseUrl = "https://api.coingecko.com/api/v3";
     private readonly SUPPORTED_CURRENCIES = [
         'usd', 'eur', 'jpy', 'chf', 'gbp', 
-        'cny', 'ars', 'brl', 'ils', 'xau'
+        'cny', 'ars', 'brl', 'ils', 'xau', 'inr'
     ];
 
     constructor(apiKey: string, intervalMs: number) {
