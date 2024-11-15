@@ -76,6 +76,7 @@ CREATE OR REPLACE VIEW nano_prices_5m AS
         value_transmitted_in_currency
     FROM
         final_result
+;
 
 CREATE OR REPLACE VIEW nano_prices_1h AS
     SELECT
@@ -89,6 +90,7 @@ CREATE OR REPLACE VIEW nano_prices_1h AS
     GROUP BY
         interval_1h,
         currency
+;
 
 CREATE OR REPLACE VIEW nano_prices_1d AS
     SELECT
@@ -102,3 +104,4 @@ CREATE OR REPLACE VIEW nano_prices_1d AS
     GROUP BY
         interval_1d,
         currency
+;
