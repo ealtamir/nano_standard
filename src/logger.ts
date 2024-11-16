@@ -47,6 +47,7 @@ export class Logger {
     const timestamp = new Date().toISOString();
     const logEntry = `[${timestamp}] [${level}] ${message}\n`;
 
+    console.log(logEntry.trim());
     try {
       await Deno.writeTextFile(
         this.currentLogFile,

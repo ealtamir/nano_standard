@@ -1,0 +1,23 @@
+node_ws_url = "ws://192.168.1.70:7078"
+healthcheck_port = 8080
+
+[nano_price_caller]
+interval_ms = 30000
+supported_currencies = [
+    'usd',
+    'eur',
+    'jpy',
+    'chf',
+    'gbp',
+    'cny',
+    'ars',
+    'brl',
+    'ils',
+    'xau',
+    'inr'
+]
+
+[propagator]
+updates_channel_name = "nano:timeseries:updates"
+prices_latest_key = "nano:prices:latest"
+updates_key = "nano:timeseries:latest"

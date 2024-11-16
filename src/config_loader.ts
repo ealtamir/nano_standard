@@ -1,14 +1,25 @@
-import { Config } from "https://deno.land/x/config/mod.ts"
+import { parse } from "toml";
 
-export const PROJECT_ROOT = new URL("..", import.meta.url).pathname;
-
-
-export const config = await Config.load({
-    file: 'default.config',
-    searchDir: PROJECT_ROOT
-});
-
-if (!config) {
-    console.error(`Failed to load config file`);
-    Deno.exit(1);
+interface Config {
+  node_ws_url: string;
+  healthcheck_port: number;
+  propagator: {
+    updates_channel_name: string;
+    prices_latest_key: string;
+    updates_key: string;
+  }
+  nano_price_caller: {
+    interval_ms: number;
+    supported_currencies: string[];
+  }
 }
+
+// Read and parse the TOML file
+async function loadConfig() {
+  const currentDir = new URL('.', import.meta.url).pathname;
+  const configPath = `${currentDir}/config.toml`;
+  const configText = await Deno.readTextFile(configPath);
+  return parse(configText);
+}
+
+export const config = await loadConfig() as unknown as Config;
