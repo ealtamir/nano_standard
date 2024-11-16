@@ -1,26 +1,46 @@
 import { NanoPriceData, NanoPriceDataSchema } from "../prices_models.ts";
-import sql from "../db.ts";
-import { logger } from "../logger.ts";
+import { sql } from "../../db.ts";
+import { logger } from "../../logger.ts";
 import { PeriodicalCaller } from "./periodical_caller.ts";
+import { SubscriptionManager } from "../subscription_manager.ts";
+import { config } from "../../config_loader.ts";
 
 export class NanoPriceCaller extends PeriodicalCaller<NanoPriceData> {
     private readonly apiKey: string;
     private readonly baseUrl = "https://api.coingecko.com/api/v3";
-    private readonly SUPPORTED_CURRENCIES = [
-        'usd', 'eur', 'jpy', 'chf', 'gbp', 
-        'cny', 'ars', 'brl', 'ils', 'xau', 'inr'
-    ];
+    private readonly SUPPORTED_CURRENCIES = config.nano_price_caller.supported_currencies;
+
+    private subscriptionManager: SubscriptionManager;
 
     constructor(apiKey: string, intervalMs: number) {
         super(intervalMs, async (result) => {
             if (result.success) {
-                await this.storePrices(result.data);
-                await logger.log("Successfully stored Nano prices");
+                try {
+                    await this.storePrices(result.data);
+                    await logger.log("Successfully stored Nano prices");
+                } catch (error) {
+                    await logger.log(`Failed to store Nano prices: ${error}`, "ERROR");
+                }
+                finally {
+                    this.subscriptionManager.notifySubscribers('nano-price-update', result.data);
+                }
             } else {
                 await logger.log(`Failed to store Nano prices: ${result.error}`, "ERROR");
             }
         });
         this.apiKey = apiKey;
+        this.subscriptionManager = new class extends SubscriptionManager {
+            protected onFirstSubscription() {}
+            protected onLastUnsubscription() {}
+        };
+    }
+
+    getSubscriptionManager(): SubscriptionManager {
+        return this.subscriptionManager;
+    }
+
+    subscribe<T>(topic: string, handler: (data: T) => void): () => void {
+        return this.subscriptionManager.subscribe(topic, handler);
     }
 
     protected async makeCall(): Promise<NanoPriceData> {

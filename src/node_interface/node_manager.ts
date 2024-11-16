@@ -1,10 +1,6 @@
-import { TopicMessage } from './models.ts';
-
-type MessageHandler<T> = (data: T) => void;
-
-export class NodeManager {
-    private ws: WebSocket;
-    private subscribers: Map<string, Set<MessageHandler<any>>>;
+import { SubscriptionManager } from './subscription_manager.ts';
+export class NodeManager extends SubscriptionManager {
+    private ws!: WebSocket;
     private reconnectAttempts: number = 0;
     private readonly maxReconnectAttempts: number = 5;
     private readonly reconnectDelay: number = 1000;
@@ -14,7 +10,7 @@ export class NodeManager {
     private pongReceived: boolean = false;
 
     constructor(private readonly nodeAddress: string) {
-        this.subscribers = new Map();
+        super();
         this.connect();
     }
 
@@ -25,14 +21,13 @@ export class NodeManager {
             console.log('Connected to Nano node');
             this.reconnectAttempts = 0;
             this.resubscribeAll();
-            this.startPingInterval(); // Start ping mechanism after connection
+            this.startPingInterval();
         });
 
         this.ws.addEventListener('message', (event: MessageEvent) => {
             try {
                 const message = JSON.parse(event.data);
                 
-                // Handle pong response
                 if (message.ack && message.ack === 'pong') {
                     this.pongReceived = true;
                     return;
@@ -40,8 +35,7 @@ export class NodeManager {
 
                 const topic = message.topic;
                 if (this.subscribers.has(topic)) {
-                    const handlers = this.subscribers.get(topic)!;
-                    handlers.forEach(handler => handler(message));
+                    this.notifySubscribers(topic, message);
                 }
             } catch (error) {
                 console.error('Error processing message:', error);
@@ -83,39 +77,19 @@ export class NodeManager {
         this.ws.send(JSON.stringify(subscription));
     }
 
-    /**
-     * Subscribe to a specific topic with type safety
-     */
-    subscribe<T extends TopicMessage<any>>(
-        topic: string,
-        handler: MessageHandler<T>
-    ): () => void {
-        if (!this.subscribers.has(topic)) {
-            this.subscribers.set(topic, new Set());
-            if (this.ws.readyState === WebSocket.OPEN) {
-                this.sendSubscription(topic);
-            }
+    protected onFirstSubscription(topic: string): void {
+        if (this.ws.readyState === WebSocket.OPEN) {
+            this.sendSubscription(topic);
         }
+    }
 
-        const handlers = this.subscribers.get(topic)!;
-        handlers.add(handler);
-
-        // Return unsubscribe function
-        return () => {
-            const handlers = this.subscribers.get(topic);
-            if (handlers) {
-                handlers.delete(handler);
-                if (handlers.size === 0) {
-                    this.subscribers.delete(topic);
-                    if (this.ws.readyState === WebSocket.OPEN) {
-                        this.ws.send(JSON.stringify({
-                            action: 'unsubscribe',
-                            topic: topic
-                        }));
-                    }
-                }
-            }
-        };
+    protected onLastUnsubscription(topic: string): void {
+        if (this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({
+                action: 'unsubscribe',
+                topic: topic
+            }));
+        }
     }
 
     /**
@@ -152,5 +126,13 @@ export class NodeManager {
                 }
             }, this.pingTimeout);
         }
+    }
+
+    /**
+     * Check if the WebSocket connection is currently open
+     * @returns boolean indicating if the connection is open
+     */
+    isConnected(): boolean {
+        return this.ws.readyState === WebSocket.OPEN;
     }
 }

@@ -1,5 +1,5 @@
 import { TopicMessage, NanoMessage } from "../models.ts";
-import sql from "../db.ts";
+import { sql } from "../../db.ts";
 
 export class DbStore {
     constructor() {}

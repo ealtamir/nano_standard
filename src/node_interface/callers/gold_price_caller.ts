@@ -1,6 +1,6 @@
 import { MetalPriceData, MetalPriceDataSchema } from "../prices_models.ts";
-import sql from "../db.ts";
-import { logger } from "../logger.ts";
+import { sql } from "../../db.ts";
+import { logger } from "../../logger.ts";
 import { PeriodicalCaller } from "./periodical_caller.ts";
 
 export class GoldPriceCaller extends PeriodicalCaller<MetalPriceData> {
