@@ -27,8 +27,9 @@ export const redis: RedisClientType = createClient(ENVIRONMENT === "production"
       url: Deno.env.get("REDIS_URL"),
       password: Deno.env.get("REDIS_PASSWORD"),
       socket: {
-        tls: true,
-        ca: await Deno.readTextFile("./resources/redis_ca.crt")
+        tls: false,
+        ca: await Deno.readTextFile("./resources/redis_ca.crt"),
+	rejectUnauthorized: false
       }
     }
   : {
