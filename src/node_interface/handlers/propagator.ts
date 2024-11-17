@@ -1,5 +1,5 @@
 import { NanoPriceData } from "../prices_models.ts";
-import { SubscriptionManager } from "../subscription_manager.ts";
+import { SubscriptionManager } from "../../subscription_manager.ts";
 import {sql, redis } from "../../db.ts";
 import { logger } from "../../logger.ts";
 import { config } from "../../config_loader.ts";
