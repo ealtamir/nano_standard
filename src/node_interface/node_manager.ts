@@ -1,4 +1,4 @@
-import { SubscriptionManager } from './subscription_manager.ts';
+import { SubscriptionManager } from '../subscription_manager.ts';
 export class NodeManager extends SubscriptionManager {
     private ws!: WebSocket;
     private reconnectAttempts: number = 0;

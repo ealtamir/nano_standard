@@ -6,7 +6,8 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
 import * as $index from "./routes/index.tsx";
-import * as $Counter from "./islands/Counter.tsx";
+import * as $SocketManager from "./islands/SocketManager.tsx";
+import * as $data from "./api/data.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -15,9 +16,10 @@ const manifest = {
     "./routes/_app.tsx": $_app,
     "./routes/_middleware.ts": $_middleware,
     "./routes/index.tsx": $index,
+    "./routes/api/data.tsx": $data,
   },
   islands: {
-    "./islands/Counter.tsx": $Counter,
+    "./islands/SocketManager.tsx": $SocketManager,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

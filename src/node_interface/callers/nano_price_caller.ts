@@ -2,7 +2,7 @@ import { NanoPriceData, NanoPriceDataSchema } from "../prices_models.ts";
 import { sql } from "../../db.ts";
 import { logger } from "../../logger.ts";
 import { PeriodicalCaller } from "./periodical_caller.ts";
-import { SubscriptionManager } from "../subscription_manager.ts";
+import { SubscriptionManager } from "../../subscription_manager.ts";
 import { config } from "../../config_loader.ts";
 
 export class NanoPriceCaller extends PeriodicalCaller<NanoPriceData> {

@@ -127,6 +127,21 @@ export class DataListener extends SubscriptionManager {
         }
     }
 
+    override subscribe<T>(topic: string, handler: (data: T) => void): () => void {
+        const unsubscribeFunc = super.subscribe(topic, handler);
+        // Send initial data to new subscriber if available
+        const topicType = topic.startsWith('timeseries-')
+            ? topic.split('-')[1] as ViewType
+            : topic;
+
+        const cachedData = this.cachedData.get(topicType);
+        if (cachedData) {
+            handler(cachedData as T);
+        }
+
+        return unsubscribeFunc;
+    }
+
     // Updated get methods to return the timestamp
     public getTimeSeriesData(viewType: ViewType): DataUpdate | null {
         return this.cachedData.get(viewType) || null;
@@ -136,15 +151,8 @@ export class DataListener extends SubscriptionManager {
         return this.cachedData.get('prices') || null;
     }
 
-    protected onFirstSubscription(topic: string): void {
-        const topicType = topic.startsWith('timeseries-') 
-            ? topic.split('-')[1] as ViewType 
-            : topic;
-        
-        const cachedData = this.cachedData.get(topicType);
-        if (cachedData) {
-            this.notifySubscribers(topic, cachedData);
-        }
+    protected onFirstSubscription(_topic: string): void {
+        // No action needed
     }
 
     protected onLastUnsubscription(_topic: string): void {
@@ -155,4 +163,5 @@ export class DataListener extends SubscriptionManager {
     public async cleanup(): Promise<void> {
         await this.subscriberClient.quit();
     }
+
 }

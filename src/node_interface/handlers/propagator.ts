@@ -4,7 +4,7 @@ import {sql, redis } from "../../db.ts";
 import { logger } from "../../logger.ts";
 import { config } from "../../config_loader.ts";
 
-interface TimeSeriesData {
+export interface TimeSeriesData {
     interval_time: Date;
     currency: string;
     price: number;
