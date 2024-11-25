@@ -5,9 +5,12 @@
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
+import * as $api_data from "./routes/api/data.tsx";
 import * as $index from "./routes/index.tsx";
+import * as $Home from "./islands/Home.tsx";
+import * as $PriceCharts from "./islands/PriceCharts.tsx";
+import * as $PriceTracker from "./islands/PriceTracker.tsx";
 import * as $SocketManager from "./islands/SocketManager.tsx";
-import * as $data from "./api/data.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -15,10 +18,13 @@ const manifest = {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
     "./routes/_middleware.ts": $_middleware,
+    "./routes/api/data.tsx": $api_data,
     "./routes/index.tsx": $index,
-    "./routes/api/data.tsx": $data,
   },
   islands: {
+    "./islands/Home.tsx": $Home,
+    "./islands/PriceCharts.tsx": $PriceCharts,
+    "./islands/PriceTracker.tsx": $PriceTracker,
     "./islands/SocketManager.tsx": $SocketManager,
   },
   baseUrl: import.meta.url,

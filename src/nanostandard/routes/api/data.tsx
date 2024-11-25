@@ -1,11 +1,11 @@
 import { Handlers } from "$fresh/server.ts";
-import { DataListener } from "../data_listener.ts";
-import { TimeSeriesData } from "../../node_interface/handlers/propagator.ts";
+import { DataListener } from "../../data_listener.ts";
+import { TimeSeriesData } from "../../../node_interface/handlers/propagator.ts";
 
 type TopicName = 'timeseries-5m' | 'timeseries-1h' | 'timeseries-1d' | 'prices' | '*';
 
-type SocketMessage = {
-  type: 'subscribe' | 'unsubscribe';
+export type SocketMessage = {
+  type: 'subscribe' | 'unsubscribe' | 'keepalive';
   topics: TopicName[];
 };
 
@@ -40,7 +40,9 @@ export const handler: Handlers = {
         const message = JSON.parse(event.data) as SocketMessage;
         const topics = message.topics.includes("*") ? ALL_TOPICS : message.topics;
         
+        console.log(`Received message: ${event.data}`)
         if (message.type === 'subscribe') {
+          console.log(`Subscribing to topics: ${topics}`)
           topics.forEach(topic => {
             const topicHandler = (data: Record<string, number> | TimeSeriesData) => handleUpdate(topic, data);
             const unsubscribeFunc = dataListener.subscribe(topic, topicHandler);

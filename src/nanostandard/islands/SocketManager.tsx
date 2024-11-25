@@ -1,6 +1,7 @@
 import { createContext } from 'preact'
 import { useEffect, useState, useContext } from 'preact/hooks'
 import type { ComponentChildren } from 'preact'
+import type { SocketMessage } from '../routes/api/data.tsx'
 
 interface SocketManagerProps {
   children: ComponentChildren
@@ -24,7 +25,9 @@ export function SocketManager({
 
   useEffect(() => {
     // Create WebSocket connection
-    const ws = new WebSocket(`ws://${window.location.host}${endpoint}`)
+    const url = `ws://${window.location.host}${endpoint}`
+    console.log(`Connecting to ${url}`)
+    const ws = new WebSocket(url)
 
     // Connection opened
     ws.addEventListener('open', () => {
@@ -32,19 +35,31 @@ export function SocketManager({
       setSocketData(prev => ({ ...prev, connected: true }))
       
       // Subscribe to all available topics
+      console.log('Subscribing to all topics')
       ws.send(JSON.stringify({ 
-        action: 'subscribe',
+        type: 'subscribe',
         topics: ['*'] // Use '*' to subscribe to all topics
-      }))
+      } as SocketMessage))
     })
+
+    // Set up keepalive interval
+    const keepaliveInterval = setInterval(() => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ 
+          type: 'keepalive',  
+          topics: []
+        } as SocketMessage))
+      }
+    }, 40000) // 40 seconds
 
     // Listen for messages
     ws.addEventListener('message', (event) => {
       try {
+        console.log('Received message:', event.data.slice(0, 100))
         const message = JSON.parse(event.data)
         setSocketData(prev => ({
           ...prev,
-          data: { ...prev.data, ...message }
+          data: message
         }))
       } catch (error) {
         console.error('Failed to parse WebSocket message:', error)
@@ -66,6 +81,7 @@ export function SocketManager({
 
     // Cleanup on unmount
     return () => {
+      clearInterval(keepaliveInterval)
       ws.close()
     }
   }, [endpoint])

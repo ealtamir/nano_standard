@@ -116,7 +116,7 @@ export class Propagator {
     }
 
     private async fetchLatestPrices(): Promise<Record<string, number>> {
-        const lookbackMinutes = 15; // Adjust based on your update frequency + buffer
+        const lookbackMinutes = 1000; // Adjust based on your update frequency + buffer
 
         const latestPrices = await sql<Array<{currency: string, price: number}>>`
             WITH LatestTimestamps AS (

@@ -38,7 +38,8 @@
         "tailwindcss": "npm:tailwindcss@3.4.1",
         "tailwindcss/": "npm:/tailwindcss@3.4.1/",
         "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
-        "$std/": "https://deno.land/std@0.216.0/"
+        "$std/": "https://deno.land/std@0.216.0/",
+        "plotly": "npm:plotly.js@2.35.2"
     },
     "compilerOptions": {
         "jsx": "react-jsx",

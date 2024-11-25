@@ -2,6 +2,7 @@ import { SubscriptionManager } from "../subscription_manager.ts";
 import { redis } from "../db.ts";
 import { logger } from "../logger.ts";
 import { config } from "../config_loader.ts";
+import { PriceTrackerData } from "./models.ts";
 
 interface TimeSeriesData {
     interval_time: Date;
@@ -106,6 +107,9 @@ export class DataListener extends SubscriptionManager {
                         timestamp: Date.now(),
                         data: JSON.parse(data)
                     };
+                    cachedData.data.data.map((d: TimeSeriesData) => {
+                        d.interval_time = new Date(d.interval_time);
+                    });
                     this.cachedData.set(update.viewType, cachedData);
                     this.notifySubscribers(`timeseries-${update.viewType}`, cachedData);
                 }
@@ -135,6 +139,10 @@ export class DataListener extends SubscriptionManager {
             : topic;
 
         const cachedData = this.cachedData.get(topicType);
+        console.log(`Subscriber found sending cached data for ${topicType}:`, cachedData?.timestamp);
+        if (topicType === 'prices') {
+            console.log(cachedData?.data);
+        }
         if (cachedData) {
             handler(cachedData as T);
         }
