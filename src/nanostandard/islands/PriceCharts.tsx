@@ -90,6 +90,15 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
   // Use Plotly only when it's ready
   useEffect(() => {
     if (chartData.time.length > 0 && plotlyReady && window.Plotly) {
+      const config = {
+        responsive: true,
+        displayModeBar: true,
+        scrollZoom: true,
+        displaylogo: false,
+        modeBarButtonsToAdd: ['select2d', 'lasso2d'],
+        modeBarButtonsToRemove: ['autoScale2d'],
+      };
+
       const layout = {
         title: {
           text: `Nano Transactions (${selectedCurrency})`,
@@ -112,7 +121,10 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           tickmode: 'auto',
           tickfont: { size: 11 },
           gridcolor: '#e2e8f0',
-          linecolor: '#cbd5e0'
+          linecolor: '#cbd5e0',
+          rangeslider: { visible: false },
+          autorange: true,
+          rangemode: 'normal',
         },
         yaxis: {
           title: 'Total Nano Transmitted',
@@ -172,6 +184,7 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           orientation: 'v',
           font: { size: 8 }
         },
+        responsive: true,
       };
 
       const traces = [
@@ -235,11 +248,6 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
         }
       ];
 
-      const config = {
-        responsive: true,
-        displayModeBar: true
-      };
-
       window.Plotly.newPlot('price-chart', traces, layout, config);
     }
   }, [chartData, plotlyReady, selectedCurrency]);
@@ -292,7 +300,17 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
       <div id="price-chart" class="w-full" />
       <div class="text-xs text-gray-500 mt-4 space-y-1">
         <p>* Only confirmed "send" blocks that reached active quorum are counted in these statistics.</p>
-        <p>† Gini coefficient measures wealth distribution (0 = perfect equality, 1 = perfect inequality).</p>
+        <p class="flex items-center gap-2">
+          † Gini coefficient measures wealth distribution (0 = perfect equality, 1 = perfect inequality). It's defined as:
+          <a href="/gini_coefficient.png" target="_blank">
+            <img 
+              src="/gini_coefficient.png" 
+              alt="Gini Coefficient Formula" 
+              class="w-auto inline cursor-pointer hover:opacity-80 transition-opacity"
+              style="height: 60px;"
+            />
+          </a>
+        </p>
       </div>
     </div>
     
