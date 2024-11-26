@@ -79,7 +79,8 @@ export class NanoPriceCaller extends PeriodicalCaller<NanoPriceData> {
             { code: "ARS", data: { price: nano.ars, market_cap: nano.ars_market_cap, volume_24h: nano.ars_24h_vol, percent_change_24h: nano.ars_24h_change } },
             { code: "BRL", data: { price: nano.brl, market_cap: nano.brl_market_cap, volume_24h: nano.brl_24h_vol, percent_change_24h: nano.brl_24h_change } },
             { code: "ILS", data: { price: nano.ils, market_cap: nano.ils_market_cap, volume_24h: nano.ils_24h_vol, percent_change_24h: nano.ils_24h_change } },
-            { code: "XAU", data: { price: nano.xau, market_cap: nano.xau_market_cap, volume_24h: nano.xau_24h_vol, percent_change_24h: nano.xau_24h_change } }
+            { code: "XAU", data: { price: nano.xau, market_cap: nano.xau_market_cap, volume_24h: nano.xau_24h_vol, percent_change_24h: nano.xau_24h_change } },
+            { code: "INR", data: { price: nano.inr, market_cap: nano.inr_market_cap, volume_24h: nano.inr_24h_vol, percent_change_24h: nano.inr_24h_change } }
         ];
 
         // Process in chunks of 3 concurrent operations

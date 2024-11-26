@@ -67,6 +67,10 @@ export const CurrencyPriceDataSchema = z.object({
     xau_market_cap: z.number(),
     xau_24h_vol: z.number(),
     xau_24h_change: z.number(),
+    inr: z.number(),
+    inr_market_cap: z.number(),
+    inr_24h_vol: z.number(),
+    inr_24h_change: z.number(),
     last_updated_at: z.number()
 });
 

@@ -20,11 +20,15 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
     nanoTransmitted: number[];
     valueTransmitted: number[];
     price: number[];
+    confirmationCount?: number[];
+    giniCoefficient?: number[];
   }>({
     time: [],
     nanoTransmitted: [],
     valueTransmitted: [],
     price: [],
+    confirmationCount: [],
+    giniCoefficient: [],
   });
 
   const [viewType, setViewType] = useState<'5m' | '1h' | '1d'>('5m');
@@ -67,6 +71,8 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
         nanoTransmitted: filteredData.map((d: TimeSeriesData) => d.total_nano_transmitted),
         valueTransmitted: filteredData.map((d: TimeSeriesData) => d.value_transmitted_in_currency || 0),
         price: filteredData.map((d: TimeSeriesData) => d.price || 0),
+        confirmationCount: filteredData.map((d: TimeSeriesData) => d.confirmation_count || 0),
+        giniCoefficient: filteredData.map((d: TimeSeriesData) => d.gini_coefficient || 0),
       });
     }
   }, [viewType, selectedCurrency, cachedData]);
@@ -137,6 +143,26 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           position: 0.85,
           tickfont: { size: 11 }
         },
+        yaxis4: {
+          title: 'Confirmation Count',
+          type: 'linear',
+          rangemode: 'tozero',
+          tickformat: '.0f',
+          overlaying: 'y',
+          side: 'right',
+          position: 0.95,
+          tickfont: { size: 11 }
+        },
+        yaxis5: {
+          title: 'Gini Coefficient',
+          type: 'linear',
+          rangemode: 'tozero',
+          tickformat: '.3f',
+          overlaying: 'y',
+          side: 'left',
+          position: 0.15,
+          tickfont: { size: 11 }
+        },
         legend: {
           x: 0.01,
           y: 0.99,
@@ -144,7 +170,7 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           bordercolor: '#e2e8f0',
           borderwidth: 1,
           orientation: 'v',
-          font: { size: 12 }
+          font: { size: 8 }
         },
       };
 
@@ -181,6 +207,30 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
             color: '#F6AD55',
             width: 2,
             dash: 'dot'
+          }
+        },
+        {
+          x: chartData.time,
+          y: chartData.confirmationCount,
+          name: 'Confirmations',
+          type: 'scatter',
+          yaxis: 'y4',
+          line: { 
+            color: '#9F7AEA', // Purple
+            width: 2,
+            dash: 'dashdot'
+          }
+        },
+        {
+          x: chartData.time,
+          y: chartData.giniCoefficient,
+          name: 'Gini Coefficient',
+          type: 'scatter',
+          yaxis: 'y5',
+          line: { 
+            color: '#ED64A6', // Pink
+            width: 2,
+            dash: 'solid'
           }
         }
       ];

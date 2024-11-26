@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer class="py-6 px-4 border-t border-gray-200 mt-auto">
+    <footer class="py-6 px-4 border-t border-gray-200 mt-12">
       <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
         <div class="mb-4 sm:mb-0">
           <span>© {new Date().getFullYear()} NanoStandard.</span>
