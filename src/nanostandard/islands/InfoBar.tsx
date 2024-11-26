@@ -49,7 +49,7 @@ export default function InfoBar() {
   ];
 
   return (
-    <div className="bg-gray-50 border border-gray-200 rounded-lg mx-4 px-4 py-2">
+    <div className="bg-gray-50 border border-gray-200 rounded-lg mx-4 mb-5 px-4 py-2">
       <div className="flex flex-wrap gap-4 text-sm text-gray-600">
         {infoItems.map((item, index) => (
           <div key={index} className="flex items-center gap-2">

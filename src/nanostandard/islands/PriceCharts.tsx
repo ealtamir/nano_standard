@@ -290,6 +290,11 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
         </div>
       </div>
       <div id="price-chart" class="w-full" />
+      <div class="text-xs text-gray-500 mt-4 space-y-1">
+        <p>* Only confirmed "send" blocks that reached active quorum are counted in these statistics.</p>
+        <p>† Gini coefficient measures wealth distribution (0 = perfect equality, 1 = perfect inequality).</p>
+      </div>
     </div>
+    
   );
 }

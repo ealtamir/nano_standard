@@ -44,40 +44,45 @@ export function PriceTracker({ onCurrencyClick }: { onCurrencyClick: (currency: 
 
   const priceData = prices.value.data;
   return (
-    <div class="grid grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3 p-4">
-      {Object.entries(priceData)
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([currency, price]) => {
-          const meta = CURRENCY_META[currency.toUpperCase() as keyof typeof CURRENCY_META];
-          if (!meta) return null;
+    <div>
+      <p class="text-gray-500 text-sm px-4 pb-2">
+        Current Nano prices across different currencies. Click any price to update the charts.
+      </p>
+      <div class="grid grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3 p-4">
+        {Object.entries(priceData)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([currency, price]) => {
+            const meta = CURRENCY_META[currency.toUpperCase() as keyof typeof CURRENCY_META];
+            if (!meta) return null;
 
-          return (
-            <div 
-              key={currency} 
-              class="bg-white rounded-lg shadow p-3 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer"
-              onClick={() => handleCurrencyClick(currency)}
-            >
-              <div class="flex items-center gap-2 mb-1">
-                <span class="text-2xl" role="img" aria-label={`${meta.name} flag`}>
-                  {meta.flag}
-                </span>
-                <span class="text-gray-500 uppercase text-lg font-light">
-                  {currency}
-                </span>
+            return (
+              <div 
+                key={currency} 
+                class="bg-white rounded-lg shadow p-3 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer"
+                onClick={() => handleCurrencyClick(currency)}
+              >
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-2xl" role="img" aria-label={`${meta.name} flag`}>
+                    {meta.flag}
+                  </span>
+                  <span class="text-gray-500 uppercase text-lg font-light">
+                    {currency}
+                  </span>
+                </div>
+                <div class="text-2xl font-medium">
+                  {new Intl.NumberFormat('en-US', {
+                    style: 'decimal',
+                    minimumFractionDigits: currency.toUpperCase() === 'XAU' ? 5 : 2,
+                    maximumFractionDigits: currency.toUpperCase() === 'XAU' ? 5 : 2
+                  }).format(price as number)}
+                </div>
+                <div class="text-sm text-gray-400 mt-1">
+                  {meta.name}
+                </div>
               </div>
-              <div class="text-2xl font-medium">
-                {new Intl.NumberFormat('en-US', {
-                  style: 'decimal',
-                  minimumFractionDigits: currency.toUpperCase() === 'XAU' ? 5 : 2,
-                  maximumFractionDigits: currency.toUpperCase() === 'XAU' ? 5 : 2
-                }).format(price as number)}
-              </div>
-              <div class="text-sm text-gray-400 mt-1">
-                {meta.name}
-              </div>
-            </div>
-          );
-      })}
+            );
+        })}
+      </div>
     </div>
   );
 }

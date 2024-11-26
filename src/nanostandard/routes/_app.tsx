@@ -11,7 +11,7 @@ export default function App({ Component }: PageProps) {
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet"></link>
         <link rel="stylesheet" href="/styles.css" />
       </head>
-      <body class="min-h-screen flex flex-col">
+      <body class="min-h-screen flex flex-col bg-[#F4FAFF]">
         <Component />
       </body>
     </html>
