@@ -87,9 +87,11 @@ export function SocketManager({
   }, [endpoint])
 
   return (
-    <SocketContext.Provider value={socketData}>
-      {children}
-    </SocketContext.Provider>
+    <div className="container mx-auto max-w-[2000px] px-4">
+      <SocketContext.Provider value={socketData}>
+        {children}
+      </SocketContext.Provider>
+    </div>
   )
 }
 

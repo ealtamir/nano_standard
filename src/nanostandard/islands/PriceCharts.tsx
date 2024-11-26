@@ -19,10 +19,12 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
     time: string[];
     nanoTransmitted: number[];
     valueTransmitted: number[];
+    price: number[];
   }>({
     time: [],
     nanoTransmitted: [],
     valueTransmitted: [],
+    price: [],
   });
 
   const [viewType, setViewType] = useState<'5m' | '1h' | '1d'>('5m');
@@ -64,6 +66,7 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
         time: filteredData.map((d: TimeSeriesData) => d.interval_time.toLocaleString()),
         nanoTransmitted: filteredData.map((d: TimeSeriesData) => d.total_nano_transmitted),
         valueTransmitted: filteredData.map((d: TimeSeriesData) => d.value_transmitted_in_currency || 0),
+        price: filteredData.map((d: TimeSeriesData) => d.price || 0),
       });
     }
   }, [viewType, selectedCurrency, cachedData]);
@@ -82,41 +85,80 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
   useEffect(() => {
     if (chartData.time.length > 0 && plotlyReady && window.Plotly) {
       const layout = {
-        title: `Nano Transactions (${selectedCurrency})`,
+        title: {
+          text: `Nano Transactions (${selectedCurrency})`,
+          font: {
+            size: 24,
+            color: '#2d3748'
+          }
+        },
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        autosize: true,
+        height: 500,
+        margin: { t: 50, r: 80, b: 80, l: 80 },
         xaxis: {
           title: 'Time',
           type: 'date',
           tickformat: '%b %d, %H:%M',
+          nticks: Math.min(chartData.time.length, 50),
+          tickangle: -45,
+          tickmode: 'auto',
+          tickfont: { size: 11 },
+          gridcolor: '#e2e8f0',
+          linecolor: '#cbd5e0'
         },
         yaxis: {
           title: 'Total Nano Transmitted',
           type: 'linear',
           rangemode: 'tozero',
-          tickformat: ',',
+          tickformat: '.2~s',
+          gridcolor: '#e2e8f0',
+          linecolor: '#cbd5e0',
+          tickfont: { size: 11 }
         },
         yaxis2: {
-          title: `Value in ${selectedCurrency}`,
+          title: `Transmitted Value in ${selectedCurrency}`,
           type: 'linear',
           rangemode: 'tozero',
-          tickformat: ',',
+          tickformat: '.2~s',
           overlaying: 'y',
           side: 'right',
+          gridcolor: '#e2e8f0',
+          tickfont: { size: 11 }
+        },
+        yaxis3: {
+          title: `1 XNO Price (${selectedCurrency})`,
+          type: 'linear',
+          rangemode: 'tozero',
+          tickformat: '.3f',
+          overlaying: 'y',
+          side: 'right',
+          position: 0.85,
+          tickfont: { size: 11 }
         },
         legend: {
           x: 0.01,
           y: 0.99,
-          bgcolor: 'rgba(255, 255, 255, 0.5)',
-          bordercolor: 'transparent',
+          bgcolor: 'rgba(255, 255, 255, 0.8)',
+          bordercolor: '#e2e8f0',
+          borderwidth: 1,
+          orientation: 'v',
+          font: { size: 12 }
         },
       };
 
-      window.Plotly.newPlot('price-chart', [
+      const traces = [
         {
           x: chartData.time,
           y: chartData.nanoTransmitted,
           name: 'Total Nano Transmitted',
           type: 'scatter',
           yaxis: 'y',
+          line: { 
+            color: '#4299E1',
+            width: 2
+          }
         },
         {
           x: chartData.time,
@@ -124,8 +166,31 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           name: `Value (${selectedCurrency})`,
           type: 'scatter',
           yaxis: 'y2',
+          line: { 
+            color: '#48BB78',
+            width: 2
+          }
         },
-      ], layout);
+        {
+          x: chartData.time,
+          y: chartData.price,
+          name: `Price (${selectedCurrency})`,
+          type: 'scatter',
+          yaxis: 'y3',
+          line: { 
+            color: '#F6AD55',
+            width: 2,
+            dash: 'dot'
+          }
+        }
+      ];
+
+      const config = {
+        responsive: true,
+        displayModeBar: true
+      };
+
+      window.Plotly.newPlot('price-chart', traces, layout, config);
     }
   }, [chartData, plotlyReady, selectedCurrency]);
 
@@ -139,28 +204,42 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
   }
 
   return (
-    <div>
-      <div class="flex justify-center mb-4">
-        <button
-          class={`px-4 py-2 rounded-l ${viewType === '5m' ? 'bg-gray-200' : 'bg-white'}`}
-          onClick={() => setViewType('5m')}
-        >
-          5m
-        </button>
-        <button
-          class={`px-4 py-2 ${viewType === '1h' ? 'bg-gray-200' : 'bg-white'}`}
-          onClick={() => setViewType('1h')}
-        >
-          1h
-        </button>
-        <button
-          class={`px-4 py-2 rounded-r ${viewType === '1d' ? 'bg-gray-200' : 'bg-white'}`}
-          onClick={() => setViewType('1d')}
-        >
-          1d
-        </button>
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <div class="flex justify-center mb-6">
+        <div class="inline-flex rounded-md shadow-sm">
+          <button
+            class={`px-6 py-2 text-sm font-medium border transition-colors duration-200 ease-in-out
+              ${viewType === '5m' 
+                ? 'bg-blue-500 text-white border-blue-500' 
+                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'} 
+              rounded-l-lg focus:z-10 focus:ring-2 focus:ring-blue-500 focus:outline-none`}
+            onClick={() => setViewType('5m')}
+          >
+            5m
+          </button>
+          <button
+            class={`px-6 py-2 text-sm font-medium border-t border-b transition-colors duration-200 ease-in-out
+              ${viewType === '1h'
+                ? 'bg-blue-500 text-white border-blue-500'
+                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}
+              focus:z-10 focus:ring-2 focus:ring-blue-500 focus:outline-none`}
+            onClick={() => setViewType('1h')}
+          >
+            1h
+          </button>
+          <button
+            class={`px-6 py-2 text-sm font-medium border transition-colors duration-200 ease-in-out
+              ${viewType === '1d'
+                ? 'bg-blue-500 text-white border-blue-500'
+                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}
+              rounded-r-lg focus:z-10 focus:ring-2 focus:ring-blue-500 focus:outline-none`}
+            onClick={() => setViewType('1d')}
+          >
+            1d
+          </button>
+        </div>
       </div>
-      <div id="price-chart" />
+      <div id="price-chart" class="w-full" />
     </div>
   );
 }

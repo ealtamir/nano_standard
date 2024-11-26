@@ -14,7 +14,7 @@ const CURRENCY_META = {
   ARS: { flag: "🇦🇷", name: "Argentine Peso" },
   BRL: { flag: "🇧🇷", name: "Brazilian Real" },
   ILS: { flag: "🇮🇱", name: "Israeli Shekel" },
-  XAU: { flag: "🪙", name: "Gold (oz)" }, // Gold coin emoji
+  XAU: { flag: "🏅", name: "Gold (oz)" }, // Gold medal emoji
   INR: { flag: "🇮🇳", name: "Indian Rupee" },
 } as const;
 
@@ -23,7 +23,6 @@ export function PriceTracker({ onCurrencyClick }: { onCurrencyClick: (currency: 
   const prices = useSignal<PriceTrackerData>({ topic: '', data: { timestamp: 0, data: {} } });
 
   useEffect(() => {
-    console.log('Data:', data)
     if (data.topic === 'prices' && data.data) {
       prices.value = data.data;
     }
@@ -45,7 +44,7 @@ export function PriceTracker({ onCurrencyClick }: { onCurrencyClick: (currency: 
 
   const priceData = prices.value.data;
   return (
-    <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 p-4">
+    <div class="grid grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3 p-4">
       {Object.entries(priceData)
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([currency, price]) => {
@@ -55,25 +54,25 @@ export function PriceTracker({ onCurrencyClick }: { onCurrencyClick: (currency: 
           return (
             <div 
               key={currency} 
-              class="bg-white rounded-lg shadow p-3 hover:shadow-lg transition-shadow duration-200"
+              class="bg-white rounded-lg shadow p-3 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer"
               onClick={() => handleCurrencyClick(currency)}
             >
               <div class="flex items-center gap-2 mb-1">
-                <span class="text-xl" role="img" aria-label={`${meta.name} flag`}>
+                <span class="text-2xl" role="img" aria-label={`${meta.name} flag`}>
                   {meta.flag}
                 </span>
-                <span class="text-gray-500 uppercase text-sm font-medium">
+                <span class="text-gray-500 uppercase text-lg font-light">
                   {currency}
                 </span>
               </div>
-              <div class="text-xl font-bold">
+              <div class="text-2xl font-medium">
                 {new Intl.NumberFormat('en-US', {
                   style: 'decimal',
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                }).format(price)}
+                  minimumFractionDigits: currency.toUpperCase() === 'XAU' ? 5 : 2,
+                  maximumFractionDigits: currency.toUpperCase() === 'XAU' ? 5 : 2
+                }).format(price as number)}
               </div>
-              <div class="text-xs text-gray-400 mt-1">
+              <div class="text-sm text-gray-400 mt-1">
                 {meta.name}
               </div>
             </div>
