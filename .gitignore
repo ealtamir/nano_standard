@@ -41,3 +41,4 @@ logs
 prod.flyway.conf
 flyway-*
 .env
+redis

@@ -11,6 +11,7 @@ interface SocketManagerProps {
 interface SocketContext {
   data: Record<string, any>
   connected: boolean
+  reconnect: () => void
 }
 
 export function SocketManager({ 
@@ -20,8 +21,17 @@ export function SocketManager({
   const [socket, setSocket] = useState<WebSocket | null>(null)
   const [socketData, setSocketData] = useState<SocketContext>({
     data: {},
-    connected: false
+    connected: false,
+    reconnect: () => {}
   })
+
+  const reconnect = () => {
+    if (socket) {
+      socket.close()
+      setSocket(null)
+      setSocketData(prev => ({ ...prev, connected: false }))
+    }
+  }
 
   useEffect(() => {
     // Create WebSocket connection
@@ -88,17 +98,18 @@ export function SocketManager({
 
   return (
     <div className="container mx-auto max-w-[2000px] px-4">
-      <SocketContext.Provider value={socketData}>
+      <SocketContext.Provider value={{ ...socketData, reconnect }}>
         {children}
       </SocketContext.Provider>
     </div>
   )
 }
 
-// Update context creation to only include data and connection status
+// Update context creation to include reconnect function
 export const SocketContext = createContext<SocketContext>({
   data: {},
-  connected: false
+  connected: false,
+  reconnect: () => {}
 })
 
 // Rename hook to better reflect its purpose

@@ -2,15 +2,16 @@ import { useSocketData } from "./SocketManager.tsx";
 import { useSignal } from "@preact/signals";
 import { useEffect } from "preact/hooks";
 import { PriceTrackerData } from "../models.ts";
+import { JSX } from "preact/jsx-runtime";
 
 interface InfoItem {
   icon: string;
   label: string;
-  value: string | number;
+  value: string | number | JSX.Element | null;
 }
 
 export default function InfoBar() {
-  const { data, connected } = useSocketData();
+  const { data, connected, reconnect } = useSocketData();
   const lastUpdateTime = useSignal<number>(0);
   
   useEffect(() => {
@@ -34,6 +35,11 @@ export default function InfoBar() {
   // Array of info items - easily extensible
   const infoItems: InfoItem[] = [
     {
+      icon: "🔄",
+      label: "",
+      value: connected ? null : <button onClick={reconnect}>Reconnect</button>
+    },
+    {
       icon: connected ? "🟢" : "🔴",
       label: "Status",
       value: connected ? "Connected" : "Disconnected"
@@ -42,7 +48,7 @@ export default function InfoBar() {
       icon: "🕒",
       label: "Last Update",
       value: lastUpdate
-    }
+    },
     // Add more items here as needed, for example:
     // { icon: "📊", label: "Active Pairs", value: 12 },
     // { icon: "📈", label: "24h Volume", value: "$1.2M" },
@@ -52,11 +58,13 @@ export default function InfoBar() {
     <div className="bg-gray-50 border border-gray-200 rounded-lg mx-4 mb-5 px-4 py-2">
       <div className="flex flex-wrap gap-4 text-sm text-gray-600">
         {infoItems.map((item, index) => (
-          <div key={index} className="flex items-center gap-2">
-            <span role="img" aria-label={item.label}>{item.icon}</span>
-            <span className="font-medium">{item.label}:</span>
-            <span>{item.value}</span>
-          </div>
+          item.value && (
+            <div key={index} className="flex items-center gap-2">
+              <span role="img" aria-label={item.label}>{item.icon}</span>
+              <span className="font-medium">{item.label}:</span>
+              <span>{item.value}</span>
+            </div>
+          )
         ))}
       </div>
     </div>
