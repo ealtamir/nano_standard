@@ -30,7 +30,7 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: "enzo-nano-xperim-78"
-          entrypoint: "main.ts"
+          entrypoint: "src/nanostandard/main.ts"
           root: "."
           
           
