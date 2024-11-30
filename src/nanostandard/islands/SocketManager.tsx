@@ -35,7 +35,7 @@ export function SocketManager({
 
   useEffect(() => {
     // Create WebSocket connection
-    const url = `ws://${window.location.host}${endpoint}`
+    const url = `${Deno.env.get('ENV') === 'development' ? "ws": "wss"}://${window.location.host}${endpoint}`
     console.debug(`Connecting to ${url}`)
     const ws = new WebSocket(url)
 
