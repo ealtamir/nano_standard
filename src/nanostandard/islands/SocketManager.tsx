@@ -6,6 +6,7 @@ import type { SocketMessage } from '../routes/api/data.tsx'
 interface SocketManagerProps {
   children: ComponentChildren
   endpoint?: string
+  protocol?: 'ws' | 'wss'
 }
 
 interface SocketContext {
@@ -16,7 +17,8 @@ interface SocketContext {
 
 export function SocketManager({ 
   children, 
-  endpoint = '/api/data' 
+  endpoint = '/api/data',
+  protocol = 'wss'
 }: SocketManagerProps) {
   const [socket, setSocket] = useState<WebSocket | null>(null)
   const [socketData, setSocketData] = useState<SocketContext>({
@@ -35,7 +37,7 @@ export function SocketManager({
 
   useEffect(() => {
     // Create WebSocket connection
-    const url = `${Deno.env.get('ENV') === 'development' ? "ws": "wss"}://${window.location.host}${endpoint}`
+    const url = `${protocol}://${window.location.host}${endpoint}`
     console.debug(`Connecting to ${url}`)
     const ws = new WebSocket(url)
 
@@ -94,7 +96,7 @@ export function SocketManager({
       clearInterval(keepaliveInterval)
       ws.close()
     }
-  }, [endpoint])
+  }, [endpoint, protocol])
 
   return (
     <div className="container mx-auto max-w-[2000px] px-4">

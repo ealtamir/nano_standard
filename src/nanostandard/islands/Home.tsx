@@ -6,13 +6,16 @@ import InfoBar from "./InfoBar.tsx";
 import NanoInfo from "../components/NanoInfo.tsx";
 import Footer from "../components/Footer.tsx";
 
-export default function Home() {
-  const [selectedCurrency, setSelectedCurrency] = useState("USD");
+interface HomeProps {
+  wsProtocol: "ws" | "wss";
+}
 
+export default function Home({ wsProtocol }: HomeProps) {
+  const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
   return <>
     <NanoInfo />
-    <SocketManager>
+    <SocketManager protocol={wsProtocol}>
       <InfoBar />
       <PriceTracker onCurrencyClick={setSelectedCurrency} />
       <PriceCharts selectedCurrency={selectedCurrency} />
