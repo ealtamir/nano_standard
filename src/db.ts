@@ -2,6 +2,8 @@ import postgres from 'postgres'
 import { createClient, RedisClientType } from 'redis'
 
 const ENVIRONMENT = Deno.env.get("ENVIRONMENT") || "development";
+const currentDir = new URL('.', import.meta.url).pathname;
+const configPath = `${currentDir}/../resources/ca.crt`;
 
 const config = ENVIRONMENT === "production" 
   ? {
@@ -28,7 +30,7 @@ export const redis: RedisClientType = createClient(ENVIRONMENT === "production"
       password: Deno.env.get("REDIS_PASSWORD"),
       socket: {
         tls: true,
-        ca: [await Deno.readTextFile("./resources/ca.crt")]
+        ca: [await Deno.readTextFile(configPath)]
       }
     }
   : {
