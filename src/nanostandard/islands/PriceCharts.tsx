@@ -41,8 +41,8 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
   });
 
   useEffect(() => {
-    console.log('Executing with viewType: ' + viewType)
-    console.log('Data is: ', data.data)
+    console.debug('Executing with viewType: ' + viewType)
+    console.debug('Data is: ', data.data)
     if (data.topic?.startsWith('timeseries-') && data.data) {
       const currentViewType = data.topic.replace('timeseries-', '') as '5m' | '1h' | '1d';
       
@@ -54,7 +54,7 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
   }, [data]);
 
   useEffect(() => {
-    console.log('Currency/ViewType Effect triggered:', {
+    console.debug('Currency/ViewType Effect triggered:', {
       selectedCurrency,
       viewType,
       rawDataLength: cachedData[viewType].data.length

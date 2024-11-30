@@ -28,7 +28,7 @@ export const handler: Handlers = {
     function resetTimeout() {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
-        console.log('Connection timed out - closing socket');
+        console.debug('Connection timed out - closing socket');
         socket.close();
       }, TIMEOUT_DURATION); // 60 seconds timeout
     }
@@ -40,9 +40,9 @@ export const handler: Handlers = {
         const message = JSON.parse(event.data) as SocketMessage;
         const topics = message.topics.includes("*") ? ALL_TOPICS : message.topics;
         
-        console.log(`Received message: ${event.data}`)
+        console.debug(`Received message: ${event.data}`)
         if (message.type === 'subscribe') {
-          console.log(`Subscribing to topics: ${topics}`)
+          console.debug(`Subscribing to topics: ${topics}`)
           topics.forEach(topic => {
             const topicHandler = (data: Record<string, number> | TimeSeriesData) => handleUpdate(topic, data);
             const unsubscribeFunc = dataListener.subscribe(topic, topicHandler);
@@ -64,7 +64,7 @@ export const handler: Handlers = {
     };
 
     socket.onclose = () => {
-      console.log('WebSocket closed - cleaning up subscriptions');
+      console.debug('WebSocket closed - cleaning up subscriptions');
       clearTimeout(timeoutId);
       unsubscribeMap.forEach(unsubscribe => unsubscribe());
       unsubscribeMap.clear();

@@ -61,9 +61,9 @@ export class DataListener extends SubscriptionManager {
                 this.fetchAndCachePrices()
             ]);
 
-            await logger.log("DataListener initialized successfully");
+            console.debug("DataListener initialized successfully");
         } catch (error) {
-            await logger.log(`Error initializing DataListener: ${error}`, "ERROR");
+            console.error(`Error initializing DataListener: ${error}`, "ERROR");
             throw error;
         }
     }
@@ -126,7 +126,7 @@ export class DataListener extends SubscriptionManager {
                 }
             }
         } catch (error) {
-            await logger.log(`Error handling Redis message: ${error}`, "ERROR");
+            console.error(`Error handling Redis message: ${error}`, "ERROR");
         }
     }
 
@@ -138,10 +138,7 @@ export class DataListener extends SubscriptionManager {
             : topic;
 
         const cachedData = this.cachedData.get(topicType);
-        console.log(`Subscriber found sending cached data for ${topicType}:`, cachedData?.timestamp);
-        if (topicType === 'prices') {
-            console.log(cachedData?.data);
-        }
+        console.debug(`Subscriber found sending cached data for ${topicType}:`, cachedData?.timestamp);
         if (cachedData) {
             handler(cachedData as T);
         }

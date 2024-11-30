@@ -36,16 +36,16 @@ export function SocketManager({
   useEffect(() => {
     // Create WebSocket connection
     const url = `ws://${window.location.host}${endpoint}`
-    console.log(`Connecting to ${url}`)
+    console.debug(`Connecting to ${url}`)
     const ws = new WebSocket(url)
 
     // Connection opened
     ws.addEventListener('open', () => {
-      console.log('Connected to WebSocket')
+      console.debug('Connected to WebSocket')
       setSocketData(prev => ({ ...prev, connected: true }))
       
       // Subscribe to all available topics
-      console.log('Subscribing to all topics')
+      console.debug('Subscribing to all topics')
       ws.send(JSON.stringify({ 
         type: 'subscribe',
         topics: ['*'] // Use '*' to subscribe to all topics
@@ -65,7 +65,7 @@ export function SocketManager({
     // Listen for messages
     ws.addEventListener('message', (event) => {
       try {
-        console.log('Received message:', event.data.slice(0, 100))
+        console.debug('Received message:', event.data.slice(0, 100))
         const message = JSON.parse(event.data)
         setSocketData(prev => ({
           ...prev,
@@ -78,7 +78,7 @@ export function SocketManager({
 
     // Handle connection close
     ws.addEventListener('close', () => {
-      console.log('Disconnected from WebSocket')
+      console.debug('Disconnected from WebSocket')
       setSocketData(prev => ({ ...prev, connected: false }))
     })
 

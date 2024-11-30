@@ -29,7 +29,7 @@ export function PriceTracker({ onCurrencyClick }: { onCurrencyClick: (currency: 
   }, [data]);
 
   const handleCurrencyClick = (currency: string) => {
-    console.log('PriceTracker: Currency clicked:', currency);
+    console.debug('PriceTracker: Currency clicked:', currency);
     onCurrencyClick(currency.toUpperCase());
   };
 
