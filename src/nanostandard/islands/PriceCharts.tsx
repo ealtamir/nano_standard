@@ -14,7 +14,7 @@ interface PriceChartsProps {
 }
 
 export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
-  const { data, connected } = useSocketData() as { data: ChartsData, connected: boolean };
+  const { data, connected } = useSocketData() as unknown as { data: ChartsData, connected: boolean };
   const [chartData, setChartData] = useState<{
     time: string[];
     nanoTransmitted: number[];

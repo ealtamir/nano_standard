@@ -31,7 +31,7 @@ export async function handler(
   ctx: FreshContext<State>,
 ) {
   // Initialize on first request if not already initialized
-  if (ctx.destination === 'route') {
+  if (ctx.destination === 'route' && !Deno.args.includes("build")) {
     ctx.state.dataListener = DataListenerContext.getInstance();
   }
 

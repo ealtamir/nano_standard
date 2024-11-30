@@ -17,5 +17,3 @@ export const redis: RedisClientType = createClient(ENVIRONMENT === "production"
         url: "redis://localhost:6379"
       }
   );
-  
-await redis.connect();

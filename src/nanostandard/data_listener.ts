@@ -1,6 +1,5 @@
 import { SubscriptionManager } from "../subscription_manager.ts";
 import { redis } from "../redis_client.ts";
-import { logger } from "../logger.ts";
 import { config } from "../config_loader.ts";
 
 interface TimeSeriesData {
@@ -31,19 +30,20 @@ interface DataUpdate {
 
 export class DataListener extends SubscriptionManager {
     private cachedData: Map<string, CachedData> = new Map();
-    private subscriberClient: typeof redis;
+    private subscriberClient!: typeof redis;
     private commandClient: typeof redis;
     
     constructor(redisClient: typeof redis) {
         super();
         this.commandClient = redisClient;
         // Create a new connection for subscriptions
-        this.subscriberClient = redisClient.duplicate();
         this.initialize();
     }
 
     private async initialize(): Promise<void> {
         try {
+            await this.commandClient.connect();
+            this.subscriberClient = this.commandClient.duplicate();
             // Connect the subscriber client
             await this.subscriberClient.connect();
             
