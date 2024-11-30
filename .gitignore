@@ -42,3 +42,4 @@ prod.flyway.conf
 flyway-*
 .env
 pid
+redis

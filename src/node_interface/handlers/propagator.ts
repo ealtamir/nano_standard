@@ -1,15 +1,17 @@
 import { NanoPriceData } from "../prices_models.ts";
-import { SubscriptionManager } from "../subscription_manager.ts";
+import { SubscriptionManager } from "../../subscription_manager.ts";
 import {sql, redis } from "../../db.ts";
 import { logger } from "../../logger.ts";
 import { config } from "../../config_loader.ts";
 
-interface TimeSeriesData {
+export interface TimeSeriesData {
     interval_time: Date;
     currency: string;
     price: number;
     total_nano_transmitted: number;
     value_transmitted_in_currency: number;
+    confirmation_count?: number;
+    gini_coefficient?: number;
 }
 
 interface TimeSeriesUpdate {
@@ -37,19 +39,17 @@ export class Propagator {
         try {
             const timestamp = new Date().toISOString();
 
+            // Refresh materialized view before fetching any data
+            await sql`REFRESH MATERIALIZED VIEW nano_prices_5m`;
+
             // Fetch data from all views with their respective intervals
             const [data5m, data1h, data1d, nano_prices] = await Promise.all([
-                this.fetchTimeSeriesData('nano_prices_5m', '24 hours'),
-                this.fetchTimeSeriesData('nano_prices_1h', '7 days'),
-                this.fetchTimeSeriesData('nano_prices_1d', '30 days'),
+                this.fetchTimeSeriesData('integrated_metrics_5m', '12 hours'),
+                this.fetchTimeSeriesData('integrated_metrics_1h', '7 days'),
+                this.fetchTimeSeriesData('integrated_metrics_1d', '30 days'),
                 this.fetchLatestPrices()
             ]);
 
-            // Sequential execution - slower
-            // const data5m = await this.fetchTimeSeriesData('nano_prices_5m', '24 hours');
-            // const data1h = await this.fetchTimeSeriesData('nano_prices_1h', '7 days');
-            // const data1d = await this.fetchTimeSeriesData('nano_prices_1d', '30 days');
-            // const nano_prices = await this.fetchLatestPrices();
 
             const pipeline = this.redisClient.multi();
 
@@ -108,7 +108,9 @@ export class Propagator {
                 currency,
                 price,
                 total_nano_transmitted,
-                value_transmitted_in_currency
+                value_transmitted_in_currency,
+                confirmation_count,
+                gini_coefficient
             FROM ${sql(viewName)}
             WHERE interval_time >= NOW() - ${interval}::interval
             ORDER BY interval_time DESC, currency;
@@ -116,7 +118,7 @@ export class Propagator {
     }
 
     private async fetchLatestPrices(): Promise<Record<string, number>> {
-        const lookbackMinutes = 15; // Adjust based on your update frequency + buffer
+        const lookbackMinutes = 1000; // Adjust based on your update frequency + buffer
 
         const latestPrices = await sql<Array<{currency: string, price: number}>>`
             WITH LatestTimestamps AS (

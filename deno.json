@@ -1,7 +1,26 @@
 {
+    "lock": false,
     "tasks": {
-        "dev": "deno run --watch main.ts"
+        "dev": "deno run --watch ./src/node_interface/main.ts",
+        "check": "deno fmt --check && deno lint && deno check ./src/nanostandard/**/*.ts && deno check src/nanostandard/**/*.tsx",
+        "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable -A -",
+        "manifest": "deno task cli manifest $(pwd)",
+        "start": "deno run -A --watch=./src/nanostandard/static/,./src/nanostandard/routes/ ./src/nanostandard/dev.ts",
+        "build": "deno run -A ./src/nanostandard/dev.ts build",
+        "preview": "deno run -A ./src/nanostandard/main.ts",
+        "update": "deno run -A -r https://fresh.deno.dev/update ."
     },
+    "lint": {
+        "rules": {
+            "tags": [
+                "fresh",
+                "recommended"
+            ]
+        }
+    },
+    "exclude": [
+        "**/_fresh/*"
+    ],
     "imports": {
         "@std/assert": "jsr:@std/assert@1",
         "@std/testing": "jsr:@std/testing@1",
@@ -10,6 +29,20 @@
         "zod": "https://deno.land/x/zod@v3.23.8/mod.ts",
         "redis": "npm:redis@^4.5",
         "toml": "jsr:@std/toml",
-        "http": "jsr:@std/http"
+        "http": "jsr:@std/http",
+        "$fresh/": "https://deno.land/x/fresh@1.7.3/",
+        "preact": "https://esm.sh/preact@10.22.0",
+        "preact/": "https://esm.sh/preact@10.22.0/",
+        "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
+        "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
+        "tailwindcss": "npm:tailwindcss@3.4.1",
+        "tailwindcss/": "npm:/tailwindcss@3.4.1/",
+        "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
+        "$std/": "https://deno.land/std@0.216.0/",
+        "plotly": "npm:plotly.js@2.35.2"
+    },
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "jsxImportSource": "preact"
     }
 }

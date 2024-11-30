@@ -19,5 +19,6 @@ supported_currencies = [
 
 [propagator]
 updates_channel_name = "nano:timeseries:updates"
+prices_channel_name = "nano:prices:updates"
 prices_latest_key = "nano:prices:latest"
 updates_key = "nano:timeseries:latest"

@@ -5,6 +5,7 @@ interface Config {
   healthcheck_port: number;
   propagator: {
     updates_channel_name: string;
+    prices_channel_name: string;
     prices_latest_key: string;
     updates_key: string;
   }
