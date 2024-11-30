@@ -1,9 +1,6 @@
 import postgres from 'postgres'
-import { createClient, RedisClientType } from 'redis'
 
 const ENVIRONMENT = Deno.env.get("ENVIRONMENT") || "development";
-const currentDir = new URL('.', import.meta.url).pathname;
-const configPath = `${currentDir}/../resources/ca.crt`;
 
 const config = ENVIRONMENT === "production" 
   ? {
@@ -23,19 +20,3 @@ const config = ENVIRONMENT === "production"
 export const sql = postgres(config); // will use psql environment variables
 // Remove connected check since it's not a valid property
 // Could add proper connection check if needed
-
-export const redis: RedisClientType = createClient(ENVIRONMENT === "production" 
-  ? {
-      url: Deno.env.get("REDIS_URL"),
-      password: Deno.env.get("REDIS_PASSWORD"),
-      socket: {
-        tls: true,
-        ca: [await Deno.readTextFile(configPath)]
-      }
-    }
-  : {
-      url: "redis://localhost:6379"
-    }
-);
-
-await redis.connect();

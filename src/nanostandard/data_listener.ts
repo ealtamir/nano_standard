@@ -1,8 +1,7 @@
 import { SubscriptionManager } from "../subscription_manager.ts";
-import { redis } from "../db.ts";
+import { redis } from "../redis_client.ts";
 import { logger } from "../logger.ts";
 import { config } from "../config_loader.ts";
-import { PriceTrackerData } from "./models.ts";
 
 interface TimeSeriesData {
     interval_time: Date;

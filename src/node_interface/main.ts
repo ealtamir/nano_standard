@@ -7,7 +7,7 @@ import { GoldPriceCaller } from "./callers/gold_price_caller.ts";
 import { MINUTE, HOUR } from "@std/datetime";
 import { config } from "../config_loader.ts";
 import { Propagator } from "./handlers/propagator.ts";
-import { redis } from "../db.ts";
+import { redis } from "../redis_client.ts";
 
 const nodeManager = new NodeManager(config.node_ws_url);
 const dbStore = new DbStore();

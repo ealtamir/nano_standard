@@ -1,5 +1,5 @@
 import { FreshContext } from "$fresh/server.ts";
-import { redis } from "../../db.ts";
+import { redis } from "../../redis_client.ts";
 import { DataListener } from "../data_listener.ts";
 
 export interface State {
