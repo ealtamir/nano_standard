@@ -13,6 +13,7 @@ interface PriceChartsProps {
   selectedCurrency: string;
 }
 
+
 export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
   const { data, connected } = useSocketData() as unknown as { data: ChartsData, connected: boolean };
   const [chartData, setChartData] = useState<{
@@ -69,14 +70,7 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
       
       setChartData({
         time: filteredData.map((d: TimeSeriesData) => {
-          return d.interval_time.toLocaleString(userLocale, {
-            timeZone: IS_BROWSER ? Intl.DateTimeFormat().resolvedOptions().timeZone : 'UTC',
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          });
+          return new Date(d.interval_time).toISOString();
         }),
         nanoTransmitted: filteredData.map((d: TimeSeriesData) => d.total_nano_transmitted),
         valueTransmitted: filteredData.map((d: TimeSeriesData) => d.value_transmitted_in_currency || 0),
