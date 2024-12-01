@@ -70,7 +70,7 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
       
       setChartData({
         time: filteredData.map((d: TimeSeriesData) => {
-          return new Date(d.interval_time).toISOString();
+          return new Date(d.interval_time);
         }),
         nanoTransmitted: filteredData.map((d: TimeSeriesData) => d.total_nano_transmitted),
         valueTransmitted: filteredData.map((d: TimeSeriesData) => d.value_transmitted_in_currency || 0),
@@ -129,6 +129,7 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           rangeslider: { visible: false },
           autorange: true,
           rangemode: 'normal',
+          hoverformat: '%Y-%m-%d (%a) %H:%M:%S'
         },
         yaxis: {
           title: 'Total Nano Transmitted',

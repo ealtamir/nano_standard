@@ -6,7 +6,7 @@ import { logger } from "../../logger.ts";
 import { config } from "../../config_loader.ts";
 
 export interface TimeSeriesData {
-    interval_time: Date;
+    interval_time: string;
     currency: string;
     price: number;
     total_nano_transmitted: number;
