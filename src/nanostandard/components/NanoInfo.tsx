@@ -10,7 +10,7 @@ export default function NanoInfo() {
       </div>
       
       <p className="text-base mb-6 max-w-2xl">
-        Welcome to this website, dedicated to tracking the evolution and adoption of Nano as a worldwide money standard. 
+        Welcome to NANO standard, a website dedicated to tracking the evolution and adoption of Nano as a worldwide money standard. 
         To understand Nano's progress, we monitor several key metrics that provide valuable insights into its growth and usage:
       </p>
 
