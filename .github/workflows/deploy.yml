@@ -29,7 +29,7 @@ jobs:
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
-          project: "enzo-nano-xperim-78"
+          project: "vyomcmkcfa"
           entrypoint: "src/nanostandard/main.ts"
           root: "."
           
