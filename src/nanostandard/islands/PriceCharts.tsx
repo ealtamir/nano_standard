@@ -62,12 +62,22 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
 
     const rawData = cachedData[viewType].data;
     if (rawData.length > 0) {
+      const userLocale = IS_BROWSER ? navigator.language : 'en-US';
       const filteredData = rawData.filter((d: TimeSeriesData) => {
         return d.currency === selectedCurrency;
       });
       
       setChartData({
-        time: filteredData.map((d: TimeSeriesData) => d.interval_time.toLocaleString()),
+        time: filteredData.map((d: TimeSeriesData) => {
+          return d.interval_time.toLocaleString(userLocale, {
+            timeZone: IS_BROWSER ? Intl.DateTimeFormat().resolvedOptions().timeZone : 'UTC',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+        }),
         nanoTransmitted: filteredData.map((d: TimeSeriesData) => d.total_nano_transmitted),
         valueTransmitted: filteredData.map((d: TimeSeriesData) => d.value_transmitted_in_currency || 0),
         price: filteredData.map((d: TimeSeriesData) => d.price || 0),

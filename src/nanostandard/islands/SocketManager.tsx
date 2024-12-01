@@ -26,6 +26,7 @@ export function SocketManager({
     connected: false,
     reconnect: () => {}
   })
+  const [reconnectTrigger, setReconnectTrigger] = useState(0)
 
   const reconnect = () => {
     if (socket) {
@@ -33,6 +34,7 @@ export function SocketManager({
       setSocket(null)
       setSocketData(prev => ({ ...prev, connected: false }))
     }
+    setReconnectTrigger(prev => prev + 1)
   }
 
   useEffect(() => {
@@ -96,7 +98,7 @@ export function SocketManager({
       clearInterval(keepaliveInterval)
       ws.close()
     }
-  }, [endpoint, protocol])
+  }, [endpoint, protocol, reconnectTrigger])
 
   return (
     <div className="container mx-auto max-w-[2000px] px-4">

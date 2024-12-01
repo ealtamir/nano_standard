@@ -35,11 +35,6 @@ export default function InfoBar() {
   // Array of info items - easily extensible
   const infoItems: InfoItem[] = [
     {
-      icon: "🔄",
-      label: "",
-      value: connected ? null : <button onClick={reconnect}>Reconnect</button>
-    },
-    {
       icon: connected ? "🟢" : "🔴",
       label: "Status",
       value: connected ? "Connected" : "Disconnected"
@@ -57,14 +52,20 @@ export default function InfoBar() {
   return (
     <div className="bg-gray-50 border border-gray-200 rounded-lg mx-4 mb-5 px-4 py-2">
       <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+        {!connected && (
+          <button 
+            onClick={reconnect}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+          >
+            Reconnect
+          </button>
+        )}
         {infoItems.map((item, index) => (
-          item.value && (
             <div key={index} className="flex items-center gap-2">
               <span role="img" aria-label={item.label}>{item.icon}</span>
               <span className="font-medium">{item.label}:</span>
               <span>{item.value}</span>
             </div>
-          )
         ))}
       </div>
     </div>
