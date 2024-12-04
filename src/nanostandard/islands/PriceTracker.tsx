@@ -1,5 +1,5 @@
 import { useSocketData } from "./SocketManager.tsx";
-import { useEffect } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 import { PriceTrackerData } from "../models.ts";
 
@@ -22,14 +22,21 @@ export function PriceTracker({ onCurrencyClick }: { onCurrencyClick: (currency: 
   const { data, connected } = useSocketData();
   const prices = useSignal<PriceTrackerData>({ topic: '', data: { timestamp: 0, data: {} } });
 
+  const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
+
   useEffect(() => {
     if (data.topic === 'prices' && data.data) {
       prices.value = data.data;
+      if (!selectedCurrency) {
+        setSelectedCurrency('USD');
+        onCurrencyClick('USD');
+      }
     }
   }, [data]);
 
   const handleCurrencyClick = (currency: string) => {
     console.debug('PriceTracker: Currency clicked:', currency);
+    setSelectedCurrency(currency);
     onCurrencyClick(currency.toUpperCase());
   };
 
@@ -48,17 +55,19 @@ export function PriceTracker({ onCurrencyClick }: { onCurrencyClick: (currency: 
       <p class="text-gray-500 text-sm px-4 pb-2">
         Current Nano prices across different currencies. Click any price to update the charts.
       </p>
-      <div class="grid grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3 p-4">
+      <div class="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-8 gap-3 p-4">
         {Object.entries(priceData)
           .sort(([a], [b]) => a.localeCompare(b))
           .map(([currency, price]) => {
             const meta = CURRENCY_META[currency.toUpperCase() as keyof typeof CURRENCY_META];
             if (!meta) return null;
 
+            const isSelected = selectedCurrency?.toUpperCase() === currency.toUpperCase();
+
             return (
               <div 
                 key={currency} 
-                class="bg-white rounded-lg shadow p-3 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer"
+                class={`bg-white rounded-lg shadow p-3 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer ${isSelected ? 'border-2 border-blue-500' : ''}`}
                 onClick={() => handleCurrencyClick(currency)}
               >
                 <div class="flex items-center gap-2 mb-1">
