@@ -94,6 +94,8 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
   // Use Plotly only when it's ready
   useEffect(() => {
     if (chartData.time.length > 0 && plotlyReady && window.Plotly) {
+      const isMobile = window.innerWidth < 768;
+
       const config = {
         responsive: true,
         displayModeBar: true,
@@ -114,16 +116,18 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
         paper_bgcolor: 'rgba(0,0,0,0)',
         plot_bgcolor: 'rgba(0,0,0,0)',
         autosize: true,
-        height: 500,
-        margin: { t: 50, r: 80, b: 80, l: 80 },
+        height: isMobile ? 400 : 500,
+        margin: isMobile 
+          ? { t: 30, r: 45, b: 50, l: 45 } 
+          : { t: 50, r: 80, b: 80, l: 80 },
         xaxis: {
           title: 'Time',
           type: 'date',
           tickformat: '%b %d, %H:%M',
-          nticks: Math.min(chartData.time.length, 50),
-          tickangle: -45,
+          nticks: isMobile ? Math.min(chartData.time.length, 6) : Math.min(chartData.time.length, 50),
+          tickangle: isMobile ? -90 : -45,
           tickmode: 'auto',
-          tickfont: { size: 11 },
+          tickfont: { size: isMobile ? 9 : 11 },
           gridcolor: '#e2e8f0',
           linecolor: '#cbd5e0',
           rangeslider: { visible: false },
@@ -138,7 +142,8 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           tickformat: '.2~s',
           gridcolor: '#e2e8f0',
           linecolor: '#cbd5e0',
-          tickfont: { size: 11 }
+          tickfont: { size: isMobile ? 9 : 11 },
+          showticklabels: isMobile ? 'first last' : true,
         },
         yaxis2: {
           title: `Transmitted Value in ${selectedCurrency}`,
@@ -148,7 +153,8 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           overlaying: 'y',
           side: 'right',
           gridcolor: '#e2e8f0',
-          tickfont: { size: 11 }
+          tickfont: { size: isMobile ? 9 : 11 },
+          showticklabels: isMobile ? 'first last' : true,
         },
         yaxis3: {
           title: `1 XNO Price (${selectedCurrency})`,
@@ -157,8 +163,9 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           tickformat: '.3f',
           overlaying: 'y',
           side: 'right',
-          position: 0.85,
-          tickfont: { size: 11 }
+          position: isMobile ? 0.9 : 0.85,
+          tickfont: { size: isMobile ? 9 : 11 },
+          showticklabels: isMobile ? 'first last' : true,
         },
         yaxis4: {
           title: 'Confirmation Count',
@@ -167,8 +174,9 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           tickformat: '.0f',
           overlaying: 'y',
           side: 'right',
-          position: 0.95,
-          tickfont: { size: 11 }
+          position: isMobile ? 0.98 : 0.95,
+          tickfont: { size: isMobile ? 9 : 11 },
+          showticklabels: isMobile ? 'first last' : true,
         },
         yaxis5: {
           title: 'Gini Coefficient',
@@ -177,17 +185,19 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           tickformat: '.3f',
           overlaying: 'y',
           side: 'left',
-          position: 0.15,
-          tickfont: { size: 11 }
+          position: isMobile ? 0.1 : 0.15,
+          tickfont: { size: isMobile ? 9 : 11 },
+          showticklabels: isMobile ? 'first last' : true,
         },
         legend: {
-          x: 0.01,
-          y: 0.99,
+          x: isMobile ? 0.5 : 0.01,
+          y: isMobile ? -0.2 : 0.99,
           bgcolor: 'rgba(255, 255, 255, 0.8)',
           bordercolor: '#e2e8f0',
           borderwidth: 1,
-          orientation: 'v',
-          font: { size: 8 }
+          orientation: isMobile ? 'h' : 'v',
+          font: { size: isMobile ? 7 : 8 },
+          xanchor: isMobile ? 'center' : 'left',
         },
         responsive: true,
       };
