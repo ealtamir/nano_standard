@@ -4,7 +4,8 @@ const ENVIRONMENT = Deno.env.get("ENVIRONMENT") || "development";
 const currentDir = new URL('.', import.meta.url).pathname;
 const configPath = `${currentDir}/../resources/ca.crt`;
 
-const redisTLS = (Deno.env.get("REDIS_TLS") === "true") || false;
+// MAde this true by default
+const redisTLS = (Deno.env.get("REDIS_TLS") === "true") && true;
 export const redis: RedisClientType = createClient(ENVIRONMENT === "production" 
     ? {
         url: Deno.env.get("REDIS_URL"),
