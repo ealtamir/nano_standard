@@ -37,6 +37,9 @@ export class Propagator {
     }
 
     private async propagateTimeSeriesData(): Promise<void> {
+        if (!this.redisClient.isOpen) {
+            await this.redisClient.connect();
+        }
         try {
             const timestamp = new Date().toISOString();
 

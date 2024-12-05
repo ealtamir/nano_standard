@@ -192,7 +192,7 @@ BEGIN
             fr.*
         FROM
             final_result fr
-        LEFT JOIN nano_prices np
+        LEFT JOIN nano_prices_5m np
             ON fr.interval_time = np.interval_time AND fr.currency = np.currency
         WHERE np.interval_time IS NULL -- Exclude already present rows
     ) fr;
