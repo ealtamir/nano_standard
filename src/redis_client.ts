@@ -4,13 +4,14 @@ const ENVIRONMENT = Deno.env.get("ENVIRONMENT") || "development";
 const currentDir = new URL('.', import.meta.url).pathname;
 const configPath = `${currentDir}/../resources/ca.crt`;
 
+const redisTLS = (Deno.env.get("REDIS_TLS") === "true") || false;
 export const redis: RedisClientType = createClient(ENVIRONMENT === "production" 
     ? {
         url: Deno.env.get("REDIS_URL"),
         password: Deno.env.get("REDIS_PASSWORD"),
         socket: {
-          tls: true,
-          ca: [await Deno.readTextFile(configPath)]
+          tls: redisTLS,
+          ca: redisTLS ? [await Deno.readTextFile(configPath)]: []
         }
       }
     : {
