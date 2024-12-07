@@ -15,6 +15,7 @@ CREATE TABLE nano_prices_5m (
     PRIMARY KEY (interval_time, currency)
 );
 
+
 INSERT INTO nano_prices_5m
     WITH normalized_transactions AS (
         SELECT
@@ -102,7 +103,6 @@ INSERT INTO nano_prices_5m
 CREATE INDEX ON nano_prices_5m (interval_time);
 CREATE INDEX ON nano_prices_5m (currency);
 
-
 CREATE OR REPLACE FUNCTION update_nano_prices()
 RETURNS void AS $$
 BEGIN
@@ -116,88 +116,89 @@ BEGIN
         fr.confirmation_count
     FROM (
         WITH normalized_transactions AS (
-            SELECT
-                bc.confirmation_time,
-                (bc.amount::numeric / 1e30) AS amount_nano
-            FROM
-                block_confirmations bc
-            WHERE bc.confirmation_type = 'active_quorum' 
-              AND bc.block_subtype = 'send'
-        ),
-        aggregated_transactions AS (
-            SELECT
-                time_bucket('5 minutes', nt.confirmation_time) AS interval_time,
-                SUM(nt.amount_nano) AS total_nano_transmitted,
-                COUNT(*) AS confirmation_count
-            FROM
-                normalized_transactions nt
-            GROUP BY
-                interval_time
-        ),
-        currencies AS (
-            SELECT DISTINCT currency
-            FROM crypto_prices
-            WHERE symbol = 'NANO'
-        ),
-        intervals AS (
-            SELECT DISTINCT interval_time
-            FROM aggregated_transactions
-        ),
-        interval_currency_pairs AS (
-            SELECT i.interval_time, c.currency
-            FROM intervals i CROSS JOIN currencies c
-        ),
-        latest_prices AS (
-            SELECT
-                cp.currency,
-                cp.last_updated_at,
-                cp.price,
-                i.interval_time,
-                ROW_NUMBER() OVER (
-                    PARTITION BY i.interval_time, cp.currency
-                    ORDER BY cp.last_updated_at DESC
-                ) AS rn
-            FROM
-                crypto_prices cp
-            INNER JOIN interval_currency_pairs i
-                ON cp.currency = i.currency
-                AND cp.last_updated_at <= i.interval_time
-            WHERE
-                cp.symbol = 'NANO'
-                AND cp.last_updated_at > NOW() - INTERVAL '5 minutes' -- Include only updates from the last 5 minutes
-        ),
-        selected_prices AS (
-            SELECT
-                currency,
-                interval_time,
-                price
-            FROM
-                latest_prices
-            WHERE rn = 1
-        ),
-        final_result AS (
-            SELECT
-                at.interval_time,
-                sp.currency,
-                sp.price,
-                at.total_nano_transmitted,
-                at.total_nano_transmitted * sp.price AS value_transmitted_in_currency,
-                at.confirmation_count
-            FROM
-                aggregated_transactions at
-            INNER JOIN selected_prices sp
-                ON at.interval_time = sp.interval_time
-        )
         SELECT
-            fr.*
+            bc.confirmation_time,
+            (bc.amount::numeric / 1e30) AS amount_nano
         FROM
-            final_result fr
-        LEFT JOIN nano_prices_5m np
-            ON fr.interval_time = np.interval_time AND fr.currency = np.currency
-        WHERE np.interval_time IS NULL -- Exclude already present rows
+            block_confirmations bc
+        WHERE bc.confirmation_type = 'active_quorum' and bc.block_subtype = 'send' AND bc.confirmation_time >= date_trunc('minute', NOW()) - (EXTRACT(MINUTE FROM NOW()) % 5) * INTERVAL '1 minute'
+    ),
+    aggregated_transactions AS (
+        SELECT
+            time_bucket('5 minutes', nt.confirmation_time) AS interval_time,
+            SUM(nt.amount_nano) AS total_nano_transmitted,
+            COUNT(*) AS confirmation_count
+        FROM
+            normalized_transactions nt
+        GROUP BY
+            interval_time
+    ),
+    currencies AS (
+        SELECT DISTINCT currency
+        FROM crypto_prices
+        WHERE symbol = 'NANO'
+    ),
+    intervals AS (
+        SELECT DISTINCT interval_time
+        FROM aggregated_transactions
+    ),
+    interval_currency_pairs AS (
+        SELECT i.interval_time, c.currency
+        FROM intervals i CROSS JOIN currencies c
+    ),
+    latest_prices AS (
+        SELECT
+            cp.currency,
+            cp.last_updated_at,
+            cp.price,
+            i.interval_time,
+            ROW_NUMBER() OVER (
+                PARTITION BY i.interval_time, cp.currency
+                ORDER BY cp.last_updated_at DESC
+            ) AS rn
+        FROM
+            crypto_prices cp
+        INNER JOIN interval_currency_pairs i
+            ON cp.currency = i.currency
+            AND cp.last_updated_at <= i.interval_time
+        WHERE
+            cp.symbol = 'NANO'
+    ),
+    selected_prices AS (
+        SELECT
+            currency,
+            interval_time,
+            price
+        FROM
+            latest_prices
+        WHERE rn = 1
+    ),
+    final_result AS (
+        SELECT
+            at.interval_time,
+            sp.currency,
+            sp.price,
+            at.total_nano_transmitted,
+            at.total_nano_transmitted * sp.price AS value_transmitted_in_currency,
+            at.confirmation_count
+        FROM
+            aggregated_transactions at
+        INNER JOIN selected_prices sp
+            ON at.interval_time = sp.interval_time
+    )
+    SELECT
+        interval_time,
+        currency,
+        price,
+        total_nano_transmitted,
+        value_transmitted_in_currency,
+        confirmation_count
+    FROM
+        final_result
     ) fr;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE VIEW nano_prices_1h AS
     SELECT

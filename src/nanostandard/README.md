@@ -1,16 +1,4 @@
-# Fresh project
+NANO Standard
+-------------
 
-Your new Fresh project is ready to go. You can follow the Fresh "Getting
-Started" guide here: https://fresh.deno.dev/docs/getting-started
-
-### Usage
-
-Make sure to install Deno: https://deno.land/manual/getting_started/installation
-
-Then start the project:
-
-```
-deno task start
-```
-
-This will watch the project directory and restart as necessary.
+This repository powers the Nano Standard website, a platform dedicated to monitoring the growth, adoption, and utility of Nano cryptocurrency. It includes tools, data pipelines, and visualizations to track key metrics like price, transaction volume, network activity, and adoption trends. The goal is to provide transparent insights into Nano’s progress toward becoming a worldwide, feeless, and eco-friendly currency.
