@@ -4,17 +4,24 @@ healthcheck_port = 8080
 [nano_price_caller]
 interval_ms = 30000
 supported_currencies = [
-    'usd',
-    'eur',
-    'jpy',
-    'chf',
-    'gbp',
-    'cny',
-    'ars',
-    'brl',
-    'ils',
-    'xau',
-    'inr'
+    'AED',
+    'ARS',
+    'AUD',
+    'BRL',
+    'CHF',
+    'CNY',
+    'EUR',
+    'GBP',
+    'ILS',
+    'INR',
+    'JPY',
+    'MXN',
+    'NGN',
+    'TRY',
+    'USD',
+    'XAG',
+    'XAU',
+    'ZAR',
 ]
 
 [propagator]
