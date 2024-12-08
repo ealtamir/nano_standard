@@ -1,104 +1,108 @@
-import { createContext } from 'preact'
-import { useEffect, useState, useContext } from 'preact/hooks'
-import type { ComponentChildren } from 'preact'
-import type { SocketMessage } from '../routes/api/data.tsx'
+import { createContext } from "preact";
+import { useContext, useEffect, useState } from "preact/hooks";
+import type { ComponentChildren } from "preact";
+import type { SocketMessage } from "../routes/api/data.tsx";
+import { Packr } from "npm:msgpackr";
 
 interface SocketManagerProps {
-  children: ComponentChildren
-  endpoint?: string
-  protocol?: 'ws' | 'wss'
+  children: ComponentChildren;
+  endpoint?: string;
+  protocol?: "ws" | "wss";
 }
 
 interface SocketContext {
-  data: Record<string, any>
-  connected: boolean
-  reconnect: () => void
+  data: Record<string, any>;
+  connected: boolean;
+  reconnect: () => void;
 }
 
-export function SocketManager({ 
-  children, 
-  endpoint = '/api/data',
-  protocol = 'wss'
+export function SocketManager({
+  children,
+  endpoint = "/api/data",
+  protocol = "wss",
 }: SocketManagerProps) {
-  const [socket, setSocket] = useState<WebSocket | null>(null)
+  const packr = new Packr();
+  const [socket, setSocket] = useState<WebSocket | null>(null);
   const [socketData, setSocketData] = useState<SocketContext>({
     data: {},
     connected: false,
-    reconnect: () => {}
-  })
-  const [reconnectTrigger, setReconnectTrigger] = useState(0)
+    reconnect: () => {},
+  });
+  const [reconnectTrigger, setReconnectTrigger] = useState(0);
 
   const reconnect = () => {
     if (socket) {
-      socket.close()
-      setSocket(null)
-      setSocketData(prev => ({ ...prev, connected: false }))
+      socket.close();
+      setSocket(null);
+      setSocketData((prev) => ({ ...prev, connected: false }));
     }
-    setReconnectTrigger(prev => prev + 1)
-  }
+    setReconnectTrigger((prev) => prev + 1);
+  };
 
   useEffect(() => {
     // Create WebSocket connection
-    const url = `${protocol}://${window.location.host}${endpoint}`
-    console.debug(`Connecting to ${url}`)
-    const ws = new WebSocket(url)
+    const url = `${protocol}://${window.location.host}${endpoint}`;
+    console.debug(`Connecting to ${url}`);
+    const ws = new WebSocket(url);
 
     // Connection opened
-    ws.addEventListener('open', () => {
-      console.debug('Connected to WebSocket')
-      setSocketData(prev => ({ ...prev, connected: true }))
-      
+    ws.addEventListener("open", () => {
+      console.debug("Connected to WebSocket");
+      setSocketData((prev) => ({ ...prev, connected: true }));
+
       // Subscribe to all available topics
-      console.debug('Subscribing to all topics')
-      ws.send(JSON.stringify({ 
-        type: 'subscribe',
-        topics: ['*'] // Use '*' to subscribe to all topics
-      } as SocketMessage))
-    })
+      console.debug("Subscribing to all topics");
+      ws.send(JSON.stringify({
+        type: "subscribe",
+        topics: ["*"], // Use '*' to subscribe to all topics
+      } as SocketMessage));
+    });
 
     // Set up keepalive interval
     const keepaliveInterval = setInterval(() => {
       if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ 
-          type: 'keepalive',  
-          topics: []
-        } as SocketMessage))
+        ws.send(JSON.stringify({
+          type: "keepalive",
+          topics: [],
+        } as SocketMessage));
       }
-    }, 40000) // 40 seconds
+    }, 40000); // 40 seconds
 
     // Listen for messages
-    ws.addEventListener('message', (event) => {
+    ws.addEventListener("message", async (event) => {
       try {
-        console.debug('Received message:', event.data.slice(0, 100))
-        const message = JSON.parse(event.data)
-        setSocketData(prev => ({
+        console.debug("Received message:", event.data.slice(0, 100));
+        const arrayBuffer = await event.data.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
+        const message = packr.unpack(uint8Array);
+        setSocketData((prev) => ({
           ...prev,
-          data: message
-        }))
+          data: message,
+        }));
       } catch (error) {
-        console.error('Failed to parse WebSocket message:', error)
+        console.error("Failed to parse WebSocket message:", error);
       }
-    })
+    });
 
     // Handle connection close
-    ws.addEventListener('close', () => {
-      console.debug('Disconnected from WebSocket')
-      setSocketData(prev => ({ ...prev, connected: false }))
-    })
+    ws.addEventListener("close", () => {
+      console.debug("Disconnected from WebSocket");
+      setSocketData((prev) => ({ ...prev, connected: false }));
+    });
 
     // Handle errors
-    ws.addEventListener('error', (error) => {
-      console.error('WebSocket error:', error)
-    })
+    ws.addEventListener("error", (error) => {
+      console.error("WebSocket error:", error);
+    });
 
-    setSocket(ws)
+    setSocket(ws);
 
     // Cleanup on unmount
     return () => {
-      clearInterval(keepaliveInterval)
-      ws.close()
-    }
-  }, [endpoint, protocol, reconnectTrigger])
+      clearInterval(keepaliveInterval);
+      ws.close();
+    };
+  }, [endpoint, protocol, reconnectTrigger]);
 
   return (
     <div className="container mx-auto max-w-[2000px] px-4">
@@ -106,17 +110,17 @@ export function SocketManager({
         {children}
       </SocketContext.Provider>
     </div>
-  )
+  );
 }
 
 // Update context creation to include reconnect function
 export const SocketContext = createContext<SocketContext>({
   data: {},
   connected: false,
-  reconnect: () => {}
-})
+  reconnect: () => {},
+});
 
 // Rename hook to better reflect its purpose
 export function useSocketData() {
-  return useContext(SocketContext)
+  return useContext(SocketContext);
 }

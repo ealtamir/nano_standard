@@ -4,14 +4,28 @@ import { sql } from "../../db.ts";
 import { redis } from "../../redis_client.ts";
 import { logger } from "../../logger.ts";
 import { config } from "../../config_loader.ts";
-import { TimeSeriesData, TimeSeriesUpdate } from "../../avro_schemas.ts";
-import { timeSeriesUpdateSchema } from "../../avro_schemas.ts";
-import { Buffer } from "node:buffer";
-import { brotliCompressSync, deflateRaw } from "node:zlib";
+import { Packr } from "npm:msgpackr";
+
+export interface TimeSeriesData {
+  interval_time: string | Date;
+  currency: string;
+  price: number;
+  total_nano_transmitted: number;
+  value_transmitted_in_currency: number;
+  confirmation_count?: number;
+  gini_coefficient?: number;
+}
+
+export interface TimeSeriesUpdate {
+  timestamp: string;
+  viewType: "5m" | "1h" | "1d";
+  data: TimeSeriesData[];
+}
 
 export class Propagator {
   private readonly CHANNEL_NAME = "nano:timeseries:updates";
   private lastPricesUpdateTime: string | null = null;
+  private packr = new Packr();
 
   constructor(
     subscriptionManager: SubscriptionManager,
@@ -39,9 +53,9 @@ export class Propagator {
 
       // Fetch data from all views with their respective intervals
       const [data5m, data1h, data1d, nano_prices] = await Promise.all([
-        this.fetchTimeSeriesData("integrated_metrics_5m", "12 hours"),
-        this.fetchTimeSeriesData("integrated_metrics_1h", "7 days"),
-        this.fetchTimeSeriesData("integrated_metrics_1d", "30 days"),
+        this.fetchTimeSeriesData("integrated_metrics_5m", "24 hours"),
+        this.fetchTimeSeriesData("integrated_metrics_1h", "30 days"),
+        this.fetchTimeSeriesData("integrated_metrics_1d", "365 days"),
         this.fetchLatestPrices(),
       ]);
 
@@ -56,11 +70,10 @@ export class Propagator {
 
       // Store and publish time series updates
       for (const update of updates) {
-        const buffer = timeSeriesUpdateSchema.toBuffer(update);
         this.publishToRedis(
           pipeline,
           `${config.propagator.updates_key}:${update.viewType}`,
-          buffer,
+          JSON.stringify(update),
           {
             type: "update",
             viewType: update.viewType,

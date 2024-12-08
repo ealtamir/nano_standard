@@ -1,5 +1,4 @@
 import { useEffect, useState } from "preact/hooks";
-import { signal } from "@preact/signals";
 import { useSocketData } from "./SocketManager.tsx";
 import { TimeSeriesData } from "../../node_interface/handlers/propagator.ts";
 import { IS_BROWSER } from "$fresh/runtime.ts";
@@ -155,20 +154,37 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           rangeselector: {
             buttons: viewType === "5m"
               ? [
-                { count: 1, label: "1H", step: "hour", stepmode: "backward" },
+                {
+                  count: 1,
+                  label: "1H",
+                  step: "hour",
+                  stepmode: "backward",
+                  selected: 1,
+                },
                 { count: 6, label: "6H", step: "hour", stepmode: "backward" },
-                { count: 24, label: "24H", step: "hour", stepmode: "backward" },
                 { step: "all", label: "All" },
               ]
               : viewType === "1h"
               ? [
-                { count: 6, label: "6H", step: "hour", stepmode: "backward" },
-                { count: 24, label: "24H", step: "hour", stepmode: "backward" },
+                {
+                  count: 1,
+                  label: "1D",
+                  step: "day",
+                  stepmode: "backward",
+                  selected: 1,
+                },
+                { count: 7, label: "7D", step: "day", stepmode: "backward" },
                 { step: "all", label: "All" },
               ]
               : [ // 1d view
-                { count: 3, label: "3D", step: "day", stepmode: "backward" },
-                { count: 7, label: "7D", step: "day", stepmode: "backward" },
+                {
+                  count: 7,
+                  label: "7D",
+                  step: "day",
+                  stepmode: "backward",
+                  selected: 1,
+                },
+                { count: 30, label: "30D", step: "day", stepmode: "backward" },
                 { step: "all", label: "All" },
               ],
             y: isMobile ? 1.1 : 1.02,

@@ -1,9 +1,8 @@
 import { SubscriptionManager } from "../subscription_manager.ts";
 import { redis } from "../redis_client.ts";
 import { config } from "../config_loader.ts";
-import { TimeSeriesData, timeSeriesUpdateSchema } from "../avro_schemas.ts";
-import { Buffer } from "node:buffer";
-import { brotliDecompressSync } from "node:zlib";
+import { Packr } from "npm:msgpackr";
+import { TimeSeriesData } from "../node_interface/handlers/propagator.ts";
 
 type ViewType = "5m" | "1h" | "1d";
 type UpdateMessage = {
@@ -27,6 +26,7 @@ export class DataListener extends SubscriptionManager {
   private cachedData: Map<string, CachedData> = new Map();
   private subscriberClient!: typeof redis;
   private commandClient: typeof redis;
+  private packr = new Packr();
 
   constructor(redisClient: typeof redis) {
     super();
@@ -67,10 +67,9 @@ export class DataListener extends SubscriptionManager {
     const key = `${config.propagator.updates_key}:${viewType}`;
     const rawData = await this.commandClient.get(key);
     if (rawData) {
-      const buffer = Buffer.from(rawData);
       const cachedData = {
         timestamp: Date.now(),
-        data: timeSeriesUpdateSchema.fromBuffer(buffer),
+        data: JSON.parse(rawData),
       };
       this.cachedData.set(viewType, cachedData);
       this.notifySubscribers(`timeseries-${viewType}`, cachedData);
