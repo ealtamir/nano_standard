@@ -5,6 +5,19 @@ DROP VIEW IF EXISTS integrated_metrics_5m CASCADE;
 DROP VIEW IF EXISTS integrated_metrics_1h CASCADE;
 DROP VIEW IF EXISTS integrated_metrics_1d CASCADE;
 
+CREATE INDEX IF NOT EXISTS block_confirmations_composite_idx 
+    ON block_confirmations (confirmation_type, block_subtype, confirmation_time);
+    
+CREATE INDEX IF NOT EXISTS block_confirmations_time_idx 
+    ON block_confirmations (confirmation_time);
+    
+CREATE INDEX IF NOT EXISTS crypto_prices_composite_idx 
+    ON crypto_prices (currency, last_updated_at);
+    
+CREATE INDEX IF NOT EXISTS crypto_prices_time_idx 
+    ON crypto_prices (last_updated_at);
+
+
 ALTER TABLE public.block_confirmations
 DROP CONSTRAINT block_confirmations_pkey,
 ADD PRIMARY KEY (id, confirmation_time);
@@ -18,17 +31,6 @@ ADD PRIMARY KEY (id, last_updated_at);
 
 SELECT create_hypertable('crypto_prices', 'last_updated_at');
 
-CREATE INDEX IF NOT EXISTS block_confirmations_composite_idx 
-    ON block_confirmations (confirmation_type, block_subtype, confirmation_time);
-    
-CREATE INDEX IF NOT EXISTS block_confirmations_time_idx 
-    ON block_confirmations (confirmation_time);
-    
-CREATE INDEX IF NOT EXISTS crypto_prices_composite_idx 
-    ON crypto_prices (currency, last_updated_at);
-    
-CREATE INDEX IF NOT EXISTS crypto_prices_time_idx 
-    ON crypto_prices (last_updated_at);
 
 
 -- nano_aggregate_data
