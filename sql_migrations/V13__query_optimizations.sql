@@ -22,14 +22,14 @@ ALTER TABLE public.block_confirmations
 DROP CONSTRAINT block_confirmations_pkey,
 ADD PRIMARY KEY (id, confirmation_time);
 
-SELECT create_hypertable('block_confirmations', 'confirmation_time');
+SELECT create_hypertable('block_confirmations', 'confirmation_time', migrate_data => true);
 
 
 ALTER TABLE crypto_prices
 DROP CONSTRAINT IF EXISTS crypto_prices_pkey,
 ADD PRIMARY KEY (id, last_updated_at);
 
-SELECT create_hypertable('crypto_prices', 'last_updated_at');
+SELECT create_hypertable('crypto_prices', 'last_updated_at', migrate_data => true);
 
 
 
