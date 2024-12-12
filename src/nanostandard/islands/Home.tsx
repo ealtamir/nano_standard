@@ -13,13 +13,19 @@ interface HomeProps {
 export default function Home({ wsProtocol }: HomeProps) {
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
-  return <>
-    <NanoInfo />
-    <SocketManager protocol={wsProtocol}>
-      <InfoBar />
-      <PriceTracker onCurrencyClick={setSelectedCurrency} />
-      <PriceCharts selectedCurrency={selectedCurrency} />
-    </SocketManager>
-    <Footer />
-  </>;
+  return (
+    <>
+      <NanoInfo />
+      <div className="block md:hidden text-sm text-gray-600 text-center px-4 py-2 bg-amber-50 rounded-md mx-4 mb-4">
+        For the best experience viewing our charts and data, please consider
+        using a desktop browser.
+      </div>
+      <SocketManager protocol={wsProtocol}>
+        <InfoBar />
+        <PriceTracker onCurrencyClick={setSelectedCurrency} />
+        <PriceCharts selectedCurrency={selectedCurrency} />
+      </SocketManager>
+      <Footer />
+    </>
+  );
 }
