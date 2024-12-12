@@ -32,7 +32,7 @@ export class DbStore {
                     ${block.balance},
                     ${block.link_as_account}
                 )
-                ON CONFLICT (id) DO NOTHING
+                ON CONFLICT (id, confirmation_time) DO NOTHING
             `;
         } catch (error) {
             console.error('Error storing confirmation:', error);
