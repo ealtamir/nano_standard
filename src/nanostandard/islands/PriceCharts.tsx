@@ -117,20 +117,21 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
         displaylogo: false,
         modeBarButtonsToAdd: ["pan2d", "zoomIn2d", "zoomOut2d", "resetScale2d"],
         modeBarButtonsToRemove: ["autoScale2d"],
+        dragmode: "pan",
       };
 
       const layout = {
         title: {
           text: `Nano Transactions (${selectedCurrency})`,
           font: {
-            size: 24,
+            size: 16,
             color: "#2d3748",
           },
         },
         paper_bgcolor: "rgba(0,0,0,0)",
         plot_bgcolor: "rgba(0,0,0,0)",
         autosize: true,
-        height: isMobile ? 400 : 500,
+        height: isMobile ? 500 : 800,
         margin: isMobile
           ? { t: 50, r: 45, b: 70, l: 45 }
           : { t: 70, r: 80, b: 100, l: 80 },
@@ -272,14 +273,15 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           spikethickness: 1,
         },
         legend: {
-          x: isMobile ? 0.5 : 0.01,
-          y: isMobile ? -0.2 : 0.99,
+          x: 0.5, // Center horizontally
+          y: -0.6, // Position below chart (-0.3 means 30% below)
           bgcolor: "rgba(255, 255, 255, 0.8)",
           bordercolor: "#e2e8f0",
           borderwidth: 1,
-          orientation: isMobile ? "h" : "v",
-          font: { size: isMobile ? 7 : 8 },
-          xanchor: isMobile ? "center" : "left",
+          orientation: "h", // Always horizontal
+          font: { size: isMobile ? 9 : 10 }, // Slightly larger font
+          xanchor: "center", // Center anchor point
+          yanchor: "top", // Top anchor point
         },
         responsive: true,
       };
@@ -295,16 +297,26 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
             color: "#4299E1",
             width: 2,
           },
+          mode: "lines+markers", // Added markers
+          marker: {
+            size: 5,
+            opacity: 0.7,
+          },
         },
         {
           x: chartData.time,
           y: chartData.valueTransmitted,
           name: `Value (${selectedCurrency})`,
           type: "scatter",
-          yaxis: "y2",
+          yaxis: "y",
           line: {
             color: "#48BB78",
             width: 2,
+          },
+          mode: "lines+markers", // Added markers
+          marker: {
+            size: 5,
+            opacity: 0.7,
           },
         },
         {
@@ -318,6 +330,11 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
             width: 2,
             dash: "dot",
           },
+          mode: "lines+markers", // Added markers
+          marker: {
+            size: 5,
+            opacity: 0.7,
+          },
         },
         {
           x: chartData.time,
@@ -326,9 +343,14 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           type: "scatter",
           yaxis: "y4",
           line: {
-            color: "#9F7AEA", // Purple
+            color: "#9F7AEA",
             width: 2,
             dash: "dashdot",
+          },
+          mode: "lines+markers", // Added markers
+          marker: {
+            size: 5,
+            opacity: 0.7,
           },
         },
         {
@@ -338,9 +360,14 @@ export default function PriceCharts({ selectedCurrency }: PriceChartsProps) {
           type: "scatter",
           yaxis: "y5",
           line: {
-            color: "#ED64A6", // Pink
+            color: "#ED64A6",
             width: 2,
             dash: "solid",
+          },
+          mode: "lines+markers", // Added markers
+          marker: {
+            size: 5,
+            opacity: 0.7,
           },
         },
       ];

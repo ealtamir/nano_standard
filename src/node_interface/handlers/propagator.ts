@@ -49,12 +49,13 @@ export class Propagator {
       const timestamp = new Date().toISOString();
 
       // Refresh materialized view before fetching any data
-      await sql`SELECT update_nano_prices()`;
+      await sql`REFRESH MATERIALIZED VIEW nano_prices_5m_base;`;
+      await sql`REFRESH MATERIALIZED VIEW nano_prices_5m;`;
 
       // Fetch data from all views with their respective intervals
       const [data5m, data1h, data1d, nano_prices] = await Promise.all([
         this.fetchTimeSeriesData("integrated_metrics_5m", "24 hours"),
-        this.fetchTimeSeriesData("integrated_metrics_1h", "30 days"),
+        this.fetchTimeSeriesData("integrated_metrics_1h", "15 days"),
         this.fetchTimeSeriesData("integrated_metrics_1d", "365 days"),
         this.fetchLatestPrices(),
       ]);
