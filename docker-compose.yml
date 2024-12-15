@@ -3,11 +3,17 @@ services:
     image: timescale/timescaledb-ha:pg16
     container_name: timescaledb
     restart: always
-    user: "1000:1000"
+    # Uncomment and modify if specific user permissions are required
+    # user: "1000:1000"
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-your_password}
-      PGDATA: /var/lib/postgresql/data # Data directory for PostgreSQL
+      # PGDATA: /var/lib/postgresql/data # Optional custom data directory
     volumes:
-      - './timescale_data:/var/lib/postgresql/data'
-      - './postgresql.conf:/etc/postgresql/postgresql.conf'
+      - timescale_data:/var/lib/postgresql/data
+      # Uncomment if custom configuration files are needed
+      # - './postgresql.conf:/etc/postgresql/postgresql.conf'
     network_mode: host
+
+volumes:
+  timescale_data:
+    driver: local
