@@ -37,7 +37,7 @@ SELECT create_hypertable('crypto_prices', 'last_updated_at', migrate_data => tru
 CREATE MATERIALIZED VIEW nano_aggregate_data
 WITH (timescaledb.continuous) AS
 SELECT
-    time_bucket('5 minutes', confirmation_time AT TIME ZONE 'UTC') AS interval_time,
+    time_bucket('5 minutes', confirmation_time) AS interval_time,
     SUM((amount::numeric / 1e30)) AS total_nano_transmitted,
     COUNT(*) AS confirmation_count
 FROM
@@ -53,7 +53,7 @@ WITH NO DATA;
 CREATE MATERIALIZED VIEW crypto_price_aggregate
 WITH (timescaledb.continuous) AS
 SELECT
-    time_bucket('5 minutes', last_updated_at AT TIME ZONE 'UTC') AS interval_time,
+    time_bucket('5 minutes', last_updated_at) AS interval_time,
     currency,
     AVG(price) AS avg_price
 FROM
@@ -85,8 +85,8 @@ SELECT add_continuous_aggregate_policy(
     schedule_interval => INTERVAL '5 minutes'
 );
 
-CALL refresh_continuous_aggregate('nano_aggregate_data', NULL, NULL);
-CALL refresh_continuous_aggregate('crypto_price_aggregate', NULL, NULL);
+--CALL refresh_continuous_aggregate('nano_aggregate_data', NULL, NULL);
+--CALL refresh_continuous_aggregate('crypto_price_aggregate', NULL, NULL);
 
 CREATE MATERIALIZED VIEW nano_prices_5m_base AS
 WITH base_data AS (

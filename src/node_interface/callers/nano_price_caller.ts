@@ -291,6 +291,7 @@ export class NanoPriceCaller extends PeriodicalCaller<NanoPriceData> {
                     to_timestamp(${data.last_updated_at}),
                     ${timestamp}
                 )
+		ON CONFLICT DO NOTHING;
             `;
     } catch (error) {
       await logger.log(
