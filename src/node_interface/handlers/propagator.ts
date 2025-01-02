@@ -6,6 +6,11 @@ import { logger } from "../../logger.ts";
 import { config } from "../../config_loader.ts";
 import { Packr } from "npm:msgpackr";
 import { QueryManager } from "./query_manager.ts";
+import {
+  NanoConfirmationData,
+  NanoUniqueAccountsData,
+  NanoVolumeData,
+} from "../models.ts";
 
 export interface TimeSeriesData {
   interval_time: string | Date;
@@ -21,6 +26,14 @@ export interface TimeSeriesUpdate {
   timestamp: string;
   viewType: "5m" | "1h" | "1d";
   data: TimeSeriesData[];
+}
+
+export interface DataQuery {
+  volume_data: NanoVolumeData[];
+  price_data: NanoPriceData[];
+  confirmation_data: NanoConfirmationData[];
+  unique_accounts_data: NanoUniqueAccountsData[];
+  bucket_distribution_data: any[];
 }
 
 export class Propagator {
@@ -51,6 +64,7 @@ export class Propagator {
 
       // Use QueryManager to refresh materialized views
       await QueryManager.refreshMaterializedViews();
+      const data = await this.callQueries("5m");
 
       // // Fetch data from all views with their respective intervals
       // const [data5m, data1h, data1d, nano_prices] = await Promise.all([
@@ -60,29 +74,12 @@ export class Propagator {
       //   this.fetchLatestPrices(),
       // ]);
 
-      // const pipeline = this.redisClient.multi();
-
       // // Prepare update messages for each time series
       // const updates: TimeSeriesUpdate[] = [
       //   { timestamp, viewType: "5m", data: data5m },
       //   { timestamp, viewType: "1h", data: data1h },
       //   { timestamp, viewType: "1d", data: data1d },
       // ];
-
-      // // Store and publish time series updates
-      // for (const update of updates) {
-      //   this.publishToRedis(
-      //     pipeline,
-      //     `${config.propagator.updates_key}:${update.viewType}`,
-      //     JSON.stringify(update),
-      //     {
-      //       type: "update",
-      //       viewType: update.viewType,
-      //       timestamp: update.timestamp,
-      //     },
-      //     config.propagator.updates_channel_name,
-      //   );
-      // }
 
       // // Store and publish latest prices
       // this.publishToRedis(
@@ -102,6 +99,49 @@ export class Propagator {
     } catch (error) {
       await logger.log(`Error propagating time series data: ${error}`, "ERROR");
       throw error;
+    }
+  }
+
+  private async callQueries(
+    interval: "5m" | "1h" | "1d",
+  ): Promise<DataQuery> {
+    const volume_data = await QueryManager.getNanoVolume(interval);
+    const price_data = await QueryManager.getNanoPrices(interval);
+    const confirmation_data = await QueryManager.getNanoConfirmations(interval);
+    const unique_accounts_data = await QueryManager.getNanoUniqueAccounts(
+      interval,
+    );
+    const bucket_distribution_data = await QueryManager
+      .getNanoBucketDistribution(
+        interval,
+      );
+
+    return {
+      volume_data: volume_data as unknown as NanoVolumeData[],
+      price_data: price_data as unknown as NanoPriceData[],
+      confirmation_data: confirmation_data as unknown as NanoConfirmationData[],
+      unique_accounts_data:
+        unique_accounts_data as unknown as NanoUniqueAccountsData[],
+      bucket_distribution_data: bucket_distribution_data as unknown as any[],
+    };
+  }
+
+  private processQueryData(topics: string[], data: DataQuery) {
+    // Store and publish time series updates
+
+    const pipeline = this.redisClient.multi();
+    for (const update of updates) {
+      this.publishToRedis(
+        pipeline,
+        `${config.propagator.updates_key}:${update.viewType}`,
+        JSON.stringify(update),
+        {
+          type: "update",
+          viewType: update.viewType,
+          timestamp: update.timestamp,
+        },
+        config.propagator.updates_channel_name,
+      );
     }
   }
 
