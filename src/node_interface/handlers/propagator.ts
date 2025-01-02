@@ -5,6 +5,7 @@ import { redis } from "../../redis_client.ts";
 import { logger } from "../../logger.ts";
 import { config } from "../../config_loader.ts";
 import { Packr } from "npm:msgpackr";
+import { QueryManager } from "./query_manager.ts";
 
 export interface TimeSeriesData {
   interval_time: string | Date;
@@ -48,54 +49,53 @@ export class Propagator {
     try {
       const timestamp = new Date().toISOString();
 
-      // Refresh materialized view before fetching any data
-      await sql`REFRESH MATERIALIZED VIEW nano_prices_5m_base;`;
-      await sql`REFRESH MATERIALIZED VIEW nano_prices_5m;`;
+      // Use QueryManager to refresh materialized views
+      await QueryManager.refreshMaterializedViews();
 
-      // Fetch data from all views with their respective intervals
-      const [data5m, data1h, data1d, nano_prices] = await Promise.all([
-        this.fetchTimeSeriesData("integrated_metrics_5m", "24 hours"),
-        this.fetchTimeSeriesData("integrated_metrics_1h", "15 days"),
-        this.fetchTimeSeriesData("integrated_metrics_1d", "365 days"),
-        this.fetchLatestPrices(),
-      ]);
+      // // Fetch data from all views with their respective intervals
+      // const [data5m, data1h, data1d, nano_prices] = await Promise.all([
+      //   this.fetchTimeSeriesData("integrated_metrics_5m", "24 hours"),
+      //   this.fetchTimeSeriesData("integrated_metrics_1h", "15 days"),
+      //   this.fetchTimeSeriesData("integrated_metrics_1d", "365 days"),
+      //   this.fetchLatestPrices(),
+      // ]);
 
-      const pipeline = this.redisClient.multi();
+      // const pipeline = this.redisClient.multi();
 
-      // Prepare update messages for each time series
-      const updates: TimeSeriesUpdate[] = [
-        { timestamp, viewType: "5m", data: data5m },
-        { timestamp, viewType: "1h", data: data1h },
-        { timestamp, viewType: "1d", data: data1d },
-      ];
+      // // Prepare update messages for each time series
+      // const updates: TimeSeriesUpdate[] = [
+      //   { timestamp, viewType: "5m", data: data5m },
+      //   { timestamp, viewType: "1h", data: data1h },
+      //   { timestamp, viewType: "1d", data: data1d },
+      // ];
 
-      // Store and publish time series updates
-      for (const update of updates) {
-        this.publishToRedis(
-          pipeline,
-          `${config.propagator.updates_key}:${update.viewType}`,
-          JSON.stringify(update),
-          {
-            type: "update",
-            viewType: update.viewType,
-            timestamp: update.timestamp,
-          },
-          config.propagator.updates_channel_name,
-        );
-      }
+      // // Store and publish time series updates
+      // for (const update of updates) {
+      //   this.publishToRedis(
+      //     pipeline,
+      //     `${config.propagator.updates_key}:${update.viewType}`,
+      //     JSON.stringify(update),
+      //     {
+      //       type: "update",
+      //       viewType: update.viewType,
+      //       timestamp: update.timestamp,
+      //     },
+      //     config.propagator.updates_channel_name,
+      //   );
+      // }
 
-      // Store and publish latest prices
-      this.publishToRedis(
-        pipeline,
-        config.propagator.prices_latest_key,
-        JSON.stringify(nano_prices),
-        {
-          type: "prices",
-          timestamp: timestamp,
-          data: nano_prices,
-        },
-        config.propagator.updates_channel_name,
-      );
+      // // Store and publish latest prices
+      // this.publishToRedis(
+      //   pipeline,
+      //   config.propagator.prices_latest_key,
+      //   JSON.stringify(nano_prices),
+      //   {
+      //     type: "prices",
+      //     timestamp: timestamp,
+      //     data: nano_prices,
+      //   },
+      //   config.propagator.updates_channel_name,
+      // );
 
       await pipeline.exec();
       await logger.log("Successfully propagated time series data to Redis");

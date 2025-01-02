@@ -24,8 +24,40 @@ supported_currencies = [
     'ZAR',
 ]
 
+
+
 [propagator]
+range_5m = '1 day'
+median_5m = '2 hour'
+
+range_1h = '2 weeks'
+median_1h = '1 day'
+
+range_1d = '1 year'
+median_1d = '1 week'
+
 updates_channel_name = "nano:timeseries:updates"
 prices_channel_name = "nano:prices:updates"
 prices_latest_key = "nano:prices:latest"
 updates_key = "nano:timeseries:latest"
+
+nano_volume_5m_key = "nano:volume:5m"
+nano_volume_1h_key = "nano:volume:1h"
+nano_volume_1d_key = "nano:volume:1d"
+
+nano_prices_5m_key = "nano:prices:5m"
+nano_prices_1h_key = "nano:prices:1h"
+nano_prices_1d_key = "nano:prices:1d"
+
+nano_confirmations_5m_key = "nano:confirmations:5m"
+nano_confirmations_1h_key = "nano:confirmations:1h"
+nano_confirmations_1d_key = "nano:confirmations:1d"
+
+nano_unique_accounts_5m_key = "nano:unique_accounts:5m"
+nano_unique_accounts_1h_key = "nano:unique_accounts:1h"
+nano_unique_accounts_1d_key = "nano:unique_accounts:1d"
+
+nano_bucket_distribution_5m_key = "nano:bucket_distribution:5m"
+nano_bucket_distribution_1h_key = "nano:bucket_distribution:1h"
+nano_bucket_distribution_1d_key = "nano:bucket_distribution:1d"
+
