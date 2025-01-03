@@ -2,6 +2,7 @@ import { useSocketData } from "./SocketManager.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 import { PriceTrackerData } from "../models.ts";
+import { config } from "../../config_loader.ts";
 
 // Currency metadata including flags and symbols
 const CURRENCY_META = {
@@ -28,23 +29,27 @@ const CURRENCY_META = {
 export function PriceTracker(
   { onCurrencyClick }: { onCurrencyClick: (currency: string) => void },
 ) {
-  const { data, connected } = useSocketData();
+  const { socketContext, connected } = useSocketData();
   const prices = useSignal<PriceTrackerData>({
-    topic: "",
-    data: { timestamp: 0, data: {} },
+    timestamp: 0,
+    data: {},
   });
 
   const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
 
   useEffect(() => {
-    if (data.topic === "prices" && data.data) {
-      prices.value = data.data;
+    console.log("PriceTracker: socketContext", socketContext);
+    if (socketContext && config.propagator.prices_latest_key in socketContext) {
+      const newData = socketContext[config.propagator.prices_latest_key];
+      if (newData && newData.timestamp > prices.value.timestamp) {
+        prices.value = newData;
+      }
       if (!selectedCurrency) {
         setSelectedCurrency("USD");
         onCurrencyClick("USD");
       }
     }
-  }, [data]);
+  }, [socketContext]);
 
   const handleCurrencyClick = (currency: string) => {
     console.debug("PriceTracker: Currency clicked:", currency);

@@ -2,25 +2,27 @@ import { Handlers } from "$fresh/server.ts";
 import { DataListener } from "../../data_listener.ts";
 import { TimeSeriesData } from "../../../node_interface/handlers/propagator.ts";
 import { Packr } from "npm:msgpackr";
-
-type TopicName =
-  | "timeseries-5m"
-  | "timeseries-1h"
-  | "timeseries-1d"
-  | "prices"
-  | "*";
+import { config } from "../../../config_loader.ts";
 
 export type SocketMessage = {
   type: "subscribe" | "unsubscribe" | "keepalive";
-  topics: TopicName[];
+  topics: string[];
 };
 
 const TIMEOUT_DURATION = 60000; // 60 seconds
-const ALL_TOPICS: TopicName[] = [
-  "timeseries-5m",
-  "timeseries-1h",
-  "timeseries-1d",
-  "prices",
+const INTERVALS = ["5m", "1h", "1d"] as const;
+const TOPICS = [
+  config.propagator.nano_volume_key,
+  config.propagator.nano_prices_key,
+  config.propagator.nano_confirmations_key,
+  config.propagator.nano_unique_accounts_key,
+  config.propagator.nano_bucket_distribution_key,
+] as const;
+const ALL_TOPICS: string[] = [
+  ...TOPICS.flatMap((topic) =>
+    INTERVALS.map((interval) => `${topic}:${interval}`)
+  ),
+  config.propagator.prices_latest_key,
 ];
 const packr = new Packr();
 
@@ -56,7 +58,7 @@ export const handler: Handlers = {
           console.debug(`Subscribing to topics: ${topics}`);
           topics.forEach((topic) => {
             const topicHandler = (
-              data: Record<string, number> | TimeSeriesData,
+              data: any,
             ) => handleUpdate(topic, data);
             const unsubscribeFunc = dataListener.subscribe(topic, topicHandler);
             unsubscribeMap.set(topic, unsubscribeFunc);
@@ -87,8 +89,8 @@ export const handler: Handlers = {
 
     // Update handleUpdate to check socket state before sending
     function handleUpdate(
-      topic: TopicName,
-      data: Record<string, number> | TimeSeriesData,
+      topic: string,
+      data: any,
     ) {
       if (socket.readyState !== WebSocket.OPEN) {
         // If socket is not open, cleanup subscriptions

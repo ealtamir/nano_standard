@@ -11,7 +11,7 @@ interface SocketManagerProps {
 }
 
 interface SocketContext {
-  data: Record<string, any>;
+  socketContext: Record<string, any>;
   connected: boolean;
   reconnect: () => void;
 }
@@ -24,7 +24,7 @@ export function SocketManager({
   const packr = new Packr();
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [socketData, setSocketData] = useState<SocketContext>({
-    data: {},
+    socketContext: {},
     connected: false,
     reconnect: () => {},
   });
@@ -71,13 +71,17 @@ export function SocketManager({
     // Listen for messages
     ws.addEventListener("message", async (event) => {
       try {
-        console.debug("Received message:", event.data.slice(0, 100));
         const arrayBuffer = await event.data.arrayBuffer();
         const uint8Array = new Uint8Array(arrayBuffer);
-        const message = packr.unpack(uint8Array);
+        const message: { topic: string; data: any } = packr.unpack(uint8Array);
+        console.info("Client got message:", message);
+
         setSocketData((prev) => ({
           ...prev,
-          data: message,
+          socketContext: {
+            ...prev.socketContext,
+            [message.topic]: message.data,
+          },
         }));
       } catch (error) {
         console.error("Failed to parse WebSocket message:", error);
@@ -115,7 +119,7 @@ export function SocketManager({
 
 // Update context creation to include reconnect function
 export const SocketContext = createContext<SocketContext>({
-  data: {},
+  socketContext: {},
   connected: false,
   reconnect: () => {},
 });

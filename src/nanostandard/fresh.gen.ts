@@ -12,6 +12,12 @@ import * as $InfoBar from "./islands/InfoBar.tsx";
 import * as $PriceCharts from "./islands/PriceCharts.tsx";
 import * as $PriceTracker from "./islands/PriceTracker.tsx";
 import * as $SocketManager from "./islands/SocketManager.tsx";
+import * as $charts_ChartsContainer from "./islands/charts/ChartsContainer.tsx";
+import * as $charts_NanoAccountsChart from "./islands/charts/NanoAccountsChart.tsx";
+import * as $charts_NanoConfirmationsChart from "./islands/charts/NanoConfirmationsChart.tsx";
+import * as $charts_NanoDistributionChart from "./islands/charts/NanoDistributionChart.tsx";
+import * as $charts_NanoPricesChart from "./islands/charts/NanoPricesChart.tsx";
+import * as $charts_NanoVolumeChart from "./islands/charts/NanoVolumeChart.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -28,6 +34,13 @@ const manifest = {
     "./islands/PriceCharts.tsx": $PriceCharts,
     "./islands/PriceTracker.tsx": $PriceTracker,
     "./islands/SocketManager.tsx": $SocketManager,
+    "./islands/charts/ChartsContainer.tsx": $charts_ChartsContainer,
+    "./islands/charts/NanoAccountsChart.tsx": $charts_NanoAccountsChart,
+    "./islands/charts/NanoConfirmationsChart.tsx":
+      $charts_NanoConfirmationsChart,
+    "./islands/charts/NanoDistributionChart.tsx": $charts_NanoDistributionChart,
+    "./islands/charts/NanoPricesChart.tsx": $charts_NanoPricesChart,
+    "./islands/charts/NanoVolumeChart.tsx": $charts_NanoVolumeChart,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

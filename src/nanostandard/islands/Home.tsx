@@ -5,6 +5,8 @@ import PriceCharts from "../islands/PriceCharts.tsx";
 import InfoBar from "./InfoBar.tsx";
 import NanoInfo from "../components/NanoInfo.tsx";
 import Footer from "../components/Footer.tsx";
+import ChartsContainer from "./charts/ChartsContainer.tsx";
+import NanoConfirmationsChart from "./charts/NanoConfirmationsChart.tsx";
 
 interface HomeProps {
   wsProtocol: "ws" | "wss";
@@ -12,6 +14,7 @@ interface HomeProps {
 
 export default function Home({ wsProtocol }: HomeProps) {
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
+  const [viewType, setViewType] = useState<"5m" | "1h" | "1d">("5m");
 
   return (
     <>
@@ -23,7 +26,28 @@ export default function Home({ wsProtocol }: HomeProps) {
       <SocketManager protocol={wsProtocol}>
         <InfoBar />
         <PriceTracker onCurrencyClick={setSelectedCurrency} />
-        <PriceCharts selectedCurrency={selectedCurrency} />
+
+        <div className="flex justify-center gap-2 mb-4">
+          {["5m", "1h", "1d"].map((type) => (
+            <button
+              key={type}
+              onClick={() => setViewType(type as "5m" | "1h" | "1d")}
+              className={`px-4 py-2 rounded-md font-medium transition-colors
+                ${
+                viewType === type
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              {type}
+            </button>
+          ))}
+        </div>
+
+        <ChartsContainer>
+          <NanoConfirmationsChart viewType={viewType} />
+        </ChartsContainer>
+        {/* <PriceCharts selectedCurrency={selectedCurrency} /> */}
       </SocketManager>
       <Footer />
     </>

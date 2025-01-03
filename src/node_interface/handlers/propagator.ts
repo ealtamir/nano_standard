@@ -28,12 +28,27 @@ export interface TimeSeriesUpdate {
   data: TimeSeriesData[];
 }
 
-export interface DataQuery {
-  volume_data: NanoVolumeData[];
-  price_data: NanoPriceData[];
-  confirmation_data: NanoConfirmationData[];
-  unique_accounts_data: NanoUniqueAccountsData[];
-  bucket_distribution_data: any[];
+export interface QueryData {
+  volume: {
+    data: NanoVolumeData[];
+    key: string;
+  };
+  price: {
+    data: NanoPriceData[];
+    key: string;
+  };
+  confirmations: {
+    data: NanoConfirmationData[];
+    key: string;
+  };
+  unique_accounts: {
+    data: NanoUniqueAccountsData[];
+    key: string;
+  };
+  bucket_distribution: {
+    data: any[];
+    key: string;
+  };
 }
 
 export class Propagator {
@@ -42,107 +57,174 @@ export class Propagator {
   private packr = new Packr();
 
   constructor(
-    subscriptionManager: SubscriptionManager,
+    nano_caller: SubscriptionManager,
+    utc_caller: SubscriptionManager,
     private readonly redisClient: typeof redis,
   ) {
-    subscriptionManager.subscribe<NanoPriceData>(
+    nano_caller.subscribe<NanoPriceData>(
       "nano-price-update",
       async () => {
-        await this.propagateTimeSeriesData();
+        await this.propagateData5m();
         this.lastPricesUpdateTime = new Date().toISOString();
+      },
+    );
+    utc_caller.subscribe<{ interval: "1h" | "1d"; force?: boolean }>(
+      "interval-update",
+      async (data) => {
+        if (data.force || !(await this.hasRecentData(data.interval))) {
+          await this.propagateData(data.interval);
+          await logger.log(
+            `Successfully propagated ${data.interval} data to Redis`,
+          );
+        } else {
+          await logger.log(
+            `Skipping ${data.interval} propagation as recent data exists in Redis`,
+          );
+        }
       },
     );
     this.redisClient = redisClient;
   }
 
-  private async propagateTimeSeriesData(): Promise<void> {
+  private async hasRecentData(interval: "1h" | "1d"): Promise<boolean> {
+    if (!this.redisClient.isOpen) {
+      await this.redisClient.connect();
+    }
+
+    try {
+      // We get the key for one of the data categories, as they all
+      // get updated in transaction fashion.
+      const latestUpdateKey =
+        `${config.propagator.nano_volume_key}:${interval}:status`;
+      const latestUpdateStr = await this.redisClient.get(latestUpdateKey);
+
+      if (!latestUpdateStr) {
+        return false;
+      }
+
+      const latestUpdate: { viewType: string; timestamp: string } = JSON.parse(
+        latestUpdateStr,
+      );
+      const lastUpdateTime = new Date(latestUpdate.timestamp);
+      const now = new Date();
+
+      // Check if the data is fresh enough based on the interval
+      const thresholdMs = interval === "1h"
+        ? 60 * 60 * 1000
+        : 24 * 60 * 60 * 1000;
+      const ageMs = now.getTime() - lastUpdateTime.getTime();
+
+      return ageMs < thresholdMs;
+    } catch (error) {
+      await logger.log(
+        `Error checking Redis data freshness: ${error}`,
+        "ERROR",
+      );
+      return false;
+    }
+  }
+
+  private async propagateData5m(): Promise<void> {
     if (!this.redisClient.isOpen) {
       await this.redisClient.connect();
     }
     try {
-      const timestamp = new Date().toISOString();
-
       // Use QueryManager to refresh materialized views
       await QueryManager.refreshMaterializedViews();
-      const data = await this.callQueries("5m");
-
-      // // Fetch data from all views with their respective intervals
-      // const [data5m, data1h, data1d, nano_prices] = await Promise.all([
-      //   this.fetchTimeSeriesData("integrated_metrics_5m", "24 hours"),
-      //   this.fetchTimeSeriesData("integrated_metrics_1h", "15 days"),
-      //   this.fetchTimeSeriesData("integrated_metrics_1d", "365 days"),
-      //   this.fetchLatestPrices(),
-      // ]);
-
-      // // Prepare update messages for each time series
-      // const updates: TimeSeriesUpdate[] = [
-      //   { timestamp, viewType: "5m", data: data5m },
-      //   { timestamp, viewType: "1h", data: data1h },
-      //   { timestamp, viewType: "1d", data: data1d },
-      // ];
-
-      // // Store and publish latest prices
-      // this.publishToRedis(
-      //   pipeline,
-      //   config.propagator.prices_latest_key,
-      //   JSON.stringify(nano_prices),
-      //   {
-      //     type: "prices",
-      //     timestamp: timestamp,
-      //     data: nano_prices,
-      //   },
-      //   config.propagator.updates_channel_name,
-      // );
-
-      await pipeline.exec();
-      await logger.log("Successfully propagated time series data to Redis");
+      await this.propagateData("5m");
     } catch (error) {
       await logger.log(`Error propagating time series data: ${error}`, "ERROR");
       throw error;
     }
   }
 
+  public async propagateData(interval: "5m" | "1h" | "1d") {
+    const data = await this.callQueries(interval);
+    await this.processQueryData(data);
+    await logger.log(`Successfully propagated ${interval} data to Redis`);
+  }
+
   private async callQueries(
     interval: "5m" | "1h" | "1d",
-  ): Promise<DataQuery> {
-    const volume_data = await QueryManager.getNanoVolume(interval);
-    const price_data = await QueryManager.getNanoPrices(interval);
-    const confirmation_data = await QueryManager.getNanoConfirmations(interval);
-    const unique_accounts_data = await QueryManager.getNanoUniqueAccounts(
-      interval,
-    );
-    const bucket_distribution_data = await QueryManager
-      .getNanoBucketDistribution(
-        interval,
-      );
+  ): Promise<QueryData> {
+    const [
+      volume_data,
+      price_data,
+      confirmation_data,
+      unique_accounts_data,
+      bucket_distribution_data,
+    ] = await Promise.all([
+      QueryManager.getNanoVolume(interval),
+      QueryManager.getNanoPrices(interval),
+      QueryManager.getNanoConfirmations(interval),
+      QueryManager.getNanoUniqueAccounts(interval),
+      QueryManager.getNanoBucketDistribution(interval),
+    ]);
 
     return {
-      volume_data: volume_data as unknown as NanoVolumeData[],
-      price_data: price_data as unknown as NanoPriceData[],
-      confirmation_data: confirmation_data as unknown as NanoConfirmationData[],
-      unique_accounts_data:
-        unique_accounts_data as unknown as NanoUniqueAccountsData[],
-      bucket_distribution_data: bucket_distribution_data as unknown as any[],
+      volume: {
+        data: volume_data as unknown as NanoVolumeData[],
+        key: `${config.propagator.nano_volume_key}:${interval}`,
+      },
+      price: {
+        data: price_data as unknown as NanoPriceData[],
+        key: `${config.propagator.nano_prices_key}:${interval}`,
+      },
+      confirmations: {
+        data: confirmation_data as unknown as NanoConfirmationData[],
+        key: `${config.propagator.nano_confirmations_key}:${interval}`,
+      },
+      unique_accounts: {
+        data: unique_accounts_data as unknown as NanoUniqueAccountsData[],
+        key: `${config.propagator.nano_unique_accounts_key}:${interval}`,
+      },
+      bucket_distribution: {
+        data: bucket_distribution_data as unknown as any[],
+        key: `${config.propagator.nano_bucket_distribution_key}:${interval}`,
+      },
     };
   }
 
-  private processQueryData(topics: string[], data: DataQuery) {
+  private async processQueryData(data: QueryData) {
     // Store and publish time series updates
 
     const pipeline = this.redisClient.multi();
-    for (const update of updates) {
+    const latestPrices = await this.fetchLatestPrices();
+    await logger.log(
+      `Publishing prices to redis: ${JSON.stringify(latestPrices)}`,
+    );
+    this.publishToRedis(
+      pipeline,
+      config.propagator.prices_latest_key,
+      JSON.stringify(latestPrices),
+      {
+        type: "update",
+        viewType: config.propagator.prices_latest_key,
+        timestamp: new Date().toISOString(),
+      },
+      config.propagator.updates_channel_name,
+    );
+
+    for (const [entry, value] of Object.entries(data)) {
+      const key = value.key;
+      await logger.log(
+        `Publishing ${key} to redis: ${
+          JSON.stringify(value.data).slice(0, 50)
+        }`,
+      );
       this.publishToRedis(
         pipeline,
-        `${config.propagator.updates_key}:${update.viewType}`,
-        JSON.stringify(update),
+        key,
+        JSON.stringify(value.data),
         {
           type: "update",
-          viewType: update.viewType,
-          timestamp: update.timestamp,
+          viewType: key,
+          timestamp: new Date().toISOString(),
         },
         config.propagator.updates_channel_name,
       );
     }
+    await pipeline.exec();
   }
 
   private publishToRedis(
@@ -153,26 +235,8 @@ export class Propagator {
     channel_name: string,
   ): void {
     pipeline.set(key, data);
+    pipeline.set(`${key}:status`, JSON.stringify(publishData));
     pipeline.publish(channel_name, JSON.stringify(publishData));
-  }
-
-  private async fetchTimeSeriesData(
-    viewName: string,
-    interval: string,
-  ): Promise<TimeSeriesData[]> {
-    return await sql<TimeSeriesData[]>`
-            SELECT 
-                interval_time,
-                currency,
-                price,
-                total_nano_transmitted,
-                value_transmitted_in_currency,
-                confirmation_count,
-                gini_coefficient
-            FROM ${sql(viewName)}
-            WHERE interval_time >= NOW() - ${interval}::interval
-            ORDER BY interval_time DESC, currency;
-        `;
   }
 
   private async fetchLatestPrices(): Promise<Record<string, number>> {
@@ -211,27 +275,23 @@ export class Propagator {
   public async getLastUpdateTimes(): Promise<Record<string, string | null>> {
     try {
       const keys = [
-        "nano:timeseries:latest:5m",
-        "nano:timeseries:latest:1h",
-        "nano:timeseries:latest:1d",
-        "nano:prices:latest",
+        config.propagator.nano_volume_key + ":5m",
+        config.propagator.nano_prices_key + ":5m",
+        config.propagator.nano_confirmations_key + ":5m",
+        config.propagator.nano_unique_accounts_key + ":5m",
+        config.propagator.nano_bucket_distribution_key + ":5m",
+        config.propagator.prices_latest_key,
       ];
 
-      const results = await Promise.all(
+      const results: [string, string | null][] = await Promise.all(
         keys.map(async (key) => {
           const data = await this.redisClient.get(key);
-          if (!data) return null;
-          return JSON.parse(data).timestamp;
+          if (!data) return [key, null];
+          return [key, JSON.parse(data).timestamp];
         }),
       );
 
-      return {
-        "5m": results[0],
-        "1h": results[1],
-        "1d": results[2],
-        "prices": results[3],
-        "lastUpdate": this.lastPricesUpdateTime,
-      };
+      return Object.fromEntries(results);
     } catch (error) {
       await logger.log(`Error fetching last update times: ${error}`, "ERROR");
       throw error;

@@ -7,7 +7,7 @@ import { TimeSeriesData } from "../node_interface/handlers/propagator.ts";
 type ViewType = "5m" | "1h" | "1d";
 type UpdateMessage = {
   type: "update" | "prices";
-  viewType?: ViewType;
+  viewType: string;
   timestamp: string;
   data?: any;
 };
@@ -63,16 +63,25 @@ export class DataListener extends SubscriptionManager {
     }
   }
 
-  private async fetchAndCacheData(viewType: ViewType): Promise<void> {
-    const key = `${config.propagator.updates_key}:${viewType}`;
-    const rawData = await this.commandClient.get(key);
-    if (rawData) {
-      const cachedData = {
-        timestamp: Date.now(),
-        data: JSON.parse(rawData),
-      };
-      this.cachedData.set(viewType, cachedData);
-      this.notifySubscribers(`timeseries-${viewType}`, cachedData);
+  private async fetchAndCacheData(interval: "5m" | "1h" | "1d"): Promise<void> {
+    const viewTypes = [
+      config.propagator.nano_volume_key,
+      config.propagator.nano_prices_key,
+      config.propagator.nano_confirmations_key,
+      config.propagator.nano_unique_accounts_key,
+      config.propagator.nano_bucket_distribution_key,
+    ];
+    for (const viewType of viewTypes) {
+      const key = `${viewType}:${interval}`;
+      const rawData = await this.commandClient.get(key);
+      if (rawData) {
+        const cachedData = {
+          timestamp: Date.now(),
+          data: JSON.parse(rawData),
+        };
+        this.cachedData.set(key, cachedData);
+        this.notifySubscribers(key, cachedData);
+      }
     }
   }
 
@@ -85,41 +94,23 @@ export class DataListener extends SubscriptionManager {
         timestamp: Date.now(),
         data: JSON.parse(data),
       };
-      this.cachedData.set("prices", cachedData);
-      this.notifySubscribers("prices", cachedData);
+      this.cachedData.set(config.propagator.prices_latest_key, cachedData);
+      this.notifySubscribers(config.propagator.prices_latest_key, cachedData);
     }
   }
 
   private async handleRedisMessage(message: string): Promise<void> {
     try {
       const update = JSON.parse(message) as UpdateMessage;
-
       if (update.type === "update" && update.viewType) {
-        const data = await this.commandClient.get(
-          `${config.propagator.updates_key}:${update.viewType}`,
-        );
+        const data = await this.commandClient.get(update.viewType);
         if (data) {
           const cachedData = {
             timestamp: Date.now(),
             data: JSON.parse(data),
           };
-          cachedData.data.data.map((d: TimeSeriesData) => {
-            d.interval_time = new Date(d.interval_time);
-          });
           this.cachedData.set(update.viewType, cachedData);
-          this.notifySubscribers(`timeseries-${update.viewType}`, cachedData);
-        }
-      } else if (update.type === "prices") {
-        const data = await this.commandClient.get(
-          config.propagator.prices_latest_key,
-        );
-        if (data) {
-          const cachedData = {
-            timestamp: Date.now(),
-            data: JSON.parse(data),
-          };
-          this.cachedData.set("prices", cachedData);
-          this.notifySubscribers("prices", cachedData);
+          this.notifySubscribers(update.viewType, cachedData);
         }
       }
     } catch (error) {
@@ -130,31 +121,34 @@ export class DataListener extends SubscriptionManager {
   override subscribe<T>(topic: string, handler: (data: T) => void): () => void {
     const unsubscribeFunc = super.subscribe(topic, handler);
     // Send initial data to new subscriber if available
-    const topicType = topic.startsWith("timeseries-")
-      ? topic.split("-")[1] as ViewType
-      : topic;
 
-    const cachedData = this.cachedData.get(topicType);
-    console.debug(
-      `Subscriber found sending cached data for ${topicType}:`,
-      cachedData?.timestamp,
-    );
-    if (cachedData) {
-      handler(cachedData as T);
+    if (!topic.startsWith("nano:prices")) {
+      const intervals = ["5m", "1h", "1d"];
+      for (const interval of intervals) {
+        const cachedData = this.cachedData.get(topic);
+        if (cachedData) {
+          handler(cachedData as T);
+        }
+        console.debug(
+          `Subscriber found sending cached data for ${topic}:`,
+          cachedData?.timestamp,
+        );
+      }
+    } else {
+      const cachedData = this.cachedData.get(topic);
+      if (cachedData) {
+        handler(cachedData as T);
+      }
+      console.debug(
+        `Subscriber found sending cached data for ${topic}:`,
+        cachedData?.timestamp,
+      );
     }
 
     return unsubscribeFunc;
   }
 
   // Updated get methods to return the timestamp
-  public getTimeSeriesData(viewType: ViewType): DataUpdate | null {
-    return this.cachedData.get(viewType) || null;
-  }
-
-  public getPrices(): DataUpdate | null {
-    return this.cachedData.get("prices") || null;
-  }
-
   protected onFirstSubscription(_topic: string): void {
     // No action needed
   }
