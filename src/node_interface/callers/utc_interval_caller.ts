@@ -57,8 +57,8 @@ export class UTCIntervalCaller extends PeriodicalCaller<UTCIntervalUpdate> {
     this.initialUpdateDone = true;
 
     // Don't force updates on startup - let Redis freshness check decide
-    await this.handleUpdate({ type: "1h", timestamp: utcNow, force: false });
-    await this.handleUpdate({ type: "1d", timestamp: utcNow, force: false });
+    await this.handleUpdate({ type: "1h", timestamp: utcNow, force: true });
+    await this.handleUpdate({ type: "1d", timestamp: utcNow, force: true });
 
     await logger.log("Initial interval updates completed");
   }
@@ -105,7 +105,7 @@ export class UTCIntervalCaller extends PeriodicalCaller<UTCIntervalUpdate> {
     // );
     this.subscriptionManager.notifySubscribers("interval-update", {
       interval: update.type,
-      force: false,
+      force: update.force || false,
     });
   }
 

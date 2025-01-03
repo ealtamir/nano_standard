@@ -1,12 +1,14 @@
 import { PriceTracker } from "../islands/PriceTracker.tsx";
 import { SocketManager } from "../islands/SocketManager.tsx";
 import { useState } from "preact/hooks";
-import PriceCharts from "../islands/PriceCharts.tsx";
 import InfoBar from "./InfoBar.tsx";
 import NanoInfo from "../components/NanoInfo.tsx";
 import Footer from "../components/Footer.tsx";
 import ChartsContainer from "./charts/ChartsContainer.tsx";
 import NanoConfirmationsChart from "./charts/NanoConfirmationsChart.tsx";
+import NanoVolumeChart from "./charts/NanoVolumeChart.tsx";
+import NanoPricesChart from "./charts/NanoPricesChart.tsx";
+import NanoUniqueAccountsChart from "./charts/NanoAccountsChart.tsx";
 
 interface HomeProps {
   wsProtocol: "ws" | "wss";
@@ -45,7 +47,13 @@ export default function Home({ wsProtocol }: HomeProps) {
         </div>
 
         <ChartsContainer>
+          <NanoPricesChart
+            viewType={viewType}
+            selectedCurrency={selectedCurrency}
+          />
+          <NanoVolumeChart viewType={viewType} />
           <NanoConfirmationsChart viewType={viewType} />
+          <NanoUniqueAccountsChart viewType={viewType} />
         </ChartsContainer>
         {/* <PriceCharts selectedCurrency={selectedCurrency} /> */}
       </SocketManager>

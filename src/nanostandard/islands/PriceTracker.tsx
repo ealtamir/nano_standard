@@ -38,7 +38,6 @@ export function PriceTracker(
   const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log("PriceTracker: socketContext", socketContext);
     if (socketContext && config.propagator.prices_latest_key in socketContext) {
       const newData = socketContext[config.propagator.prices_latest_key];
       if (newData && newData.timestamp > prices.value.timestamp) {

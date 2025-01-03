@@ -121,8 +121,8 @@ export interface NanoPriceData {
   time_bucket: string;
   currency: string;
   price: number;
-  total_nano_transmitted: number;
   value_transmitted_in_currency: number;
+  rolling_median: number;
 }
 
 export interface NanoConfirmationData {
@@ -134,7 +134,7 @@ export interface NanoConfirmationData {
 
 export interface NanoUniqueAccountsData {
   time_bucket: string;
-  current_unique_accounts: number;
-  rolling_median: number;
-  cumulative_sum_unique_accounts: number;
+  new_accounts: number;
+  rolling_median_accounts: number;
+  cumulative_new_accounts: number;
 }

@@ -4,7 +4,7 @@ RETURNS TRIGGER AS $$
 BEGIN
     -- Only set bucket_id for send and receive transactions
     IF NEW.block_subtype IN ('send', 'receive') THEN
-        NEW.bucket_id := get_bucket_id(NEW.amount::numeric);
+        NEW.bucket_id := get_bucket_id(NEW.balance::numeric);
     END IF;
     RETURN NEW;
 END;

@@ -194,15 +194,19 @@ export class QueryManager {
   ): Promise<Array<Record<string, unknown>>> {
     let range = "";
     let bucket = "";
+    let median;
     if (interval === "5m") {
       range = config.propagator.range_5m;
       bucket = "5 minutes";
+      median = config.propagator.median_5m;
     } else if (interval === "1h") {
       range = config.propagator.range_1h;
       bucket = "1 hour";
+      median = config.propagator.median_1h;
     } else if (interval === "1d") {
       range = config.propagator.range_1d;
       bucket = "1 day";
+      median = config.propagator.median_1d;
     }
     try {
       return await sql<Array<Record<string, unknown>>>`
@@ -253,7 +257,7 @@ export class QueryManager {
               cumulative_accounts AS inner_bucket
           ON
               inner_bucket.time_bucket BETWEEN outer_bucket.time_bucket - '${
-        sql(range)
+        sql(median)
       }'::interval AND outer_bucket.time_bucket
           GROUP BY
               outer_bucket.time_bucket
