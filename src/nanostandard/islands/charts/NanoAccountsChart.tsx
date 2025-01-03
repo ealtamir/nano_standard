@@ -54,7 +54,7 @@ export default function NanoUniqueAccountsChart({ viewType }: ChartProps) {
   if (!connected) {
     return (
       <div class="flex items-center justify-center p-4 text-gray-600">
-        <div class="animate-spin mr-2">⌛</div>
+        <div class="mr-2">⌛</div>
         Loading chart...
       </div>
     );

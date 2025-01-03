@@ -9,6 +9,7 @@ import NanoConfirmationsChart from "./charts/NanoConfirmationsChart.tsx";
 import NanoVolumeChart from "./charts/NanoVolumeChart.tsx";
 import NanoPricesChart from "./charts/NanoPricesChart.tsx";
 import NanoUniqueAccountsChart from "./charts/NanoAccountsChart.tsx";
+import NanoDistributionChart from "./charts/NanoDistributionChart.tsx";
 
 interface HomeProps {
   wsProtocol: "ws" | "wss";
@@ -54,6 +55,7 @@ export default function Home({ wsProtocol }: HomeProps) {
           <NanoVolumeChart viewType={viewType} />
           <NanoConfirmationsChart viewType={viewType} />
           <NanoUniqueAccountsChart viewType={viewType} />
+          <NanoDistributionChart viewType={viewType} />
         </ChartsContainer>
         {/* <PriceCharts selectedCurrency={selectedCurrency} /> */}
       </SocketManager>
