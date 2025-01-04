@@ -37,7 +37,7 @@ export default function NanoVolumeChart({ viewType }: ChartProps) {
         const dataInCache = cachedData[interval];
         const newDataTimestamp = new Date(socketContext[key].timestamp);
 
-        if (dataInCache.updated && dataInCache.updated > newDataTimestamp) {
+        if (dataInCache.updated && dataInCache.updated >= newDataTimestamp) {
           return;
         }
         setCachedData((prev) => ({
@@ -62,14 +62,16 @@ export default function NanoVolumeChart({ viewType }: ChartProps) {
 
   // Use Plotly only when it's ready
   useEffect(() => {
-    if (cachedData[viewType].data.length > 0) {
+    if (cachedData[viewType].data.length === 0) {
+      console.log("No data found for NanoVolumeChart viewType: ", viewType);
+    } else {
       const isMobile = window.innerWidth < 768;
       const chartData = cachedData[viewType].data;
 
       const chartConfig = {
         responsive: true,
         displayModeBar: true,
-        scrollZoom: true,
+        scrollZoom: false,
         displaylogo: false,
         modeBarButtonsToAdd: ["pan2d", "zoomIn2d", "zoomOut2d", "resetScale2d"],
         modeBarButtonsToRemove: ["autoScale2d"],
@@ -184,6 +186,7 @@ export default function NanoVolumeChart({ viewType }: ChartProps) {
         },
       ];
 
+      console.log("Creating NanoVolumeChart");
       window.Plotly.newPlot("nano-volume-chart", traces, layout, chartConfig);
     }
   }, [cachedData, viewType]);

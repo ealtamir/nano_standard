@@ -69,7 +69,7 @@ export default function NanoConfirmationsChart({ viewType }: ChartProps) {
       const chartConfig = {
         responsive: true,
         displayModeBar: true,
-        scrollZoom: true,
+        scrollZoom: false,
         displaylogo: false,
         modeBarButtonsToAdd: ["pan2d", "zoomIn2d", "zoomOut2d", "resetScale2d"],
         modeBarButtonsToRemove: ["autoScale2d"],
@@ -138,6 +138,7 @@ export default function NanoConfirmationsChart({ viewType }: ChartProps) {
           bordercolor: "#e2e8f0",
           borderwidth: 1,
         },
+        barmode: "overlay",
       };
 
       const traces = [
@@ -175,16 +176,11 @@ export default function NanoConfirmationsChart({ viewType }: ChartProps) {
           x: chartData.map((d) => new Date(d.time_bucket)),
           y: chartData.map((d) => d.cumulative_sum_confirmations),
           name: "Cumulative Sum",
-          type: "scatter",
-          mode: "lines+markers",
+          type: "bar",
           yaxis: "y2",
-          line: {
-            color: "#F6AD55",
-            width: 2,
-          },
+          opacity: 0.1,
           marker: {
-            size: 6,
-            symbol: "circle",
+            color: "#4299E1",
           },
         },
       ];

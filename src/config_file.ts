@@ -21,7 +21,7 @@ interface Propagator {
   nano_bucket_distribution_key: string;
 }
 
-interface Config {
+export interface Config {
   node_ws_url: string;
   healthcheck_port: number;
   nano_price_caller: NanoPriceCaller;

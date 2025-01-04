@@ -75,7 +75,7 @@ export default function NanoPricesChart({
       const chartConfig = {
         responsive: true,
         displayModeBar: true,
-        scrollZoom: true,
+        scrollZoom: false,
         displaylogo: false,
         modeBarButtonsToAdd: ["pan2d", "zoomIn2d", "zoomOut2d", "resetScale2d"],
         modeBarButtonsToRemove: ["autoScale2d"],

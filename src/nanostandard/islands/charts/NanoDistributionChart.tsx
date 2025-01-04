@@ -36,7 +36,7 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
         const dataInCache = cachedData[interval];
         const newDataTimestamp = new Date(socketContext[key].timestamp);
 
-        if (dataInCache.updated && dataInCache.updated > newDataTimestamp) {
+        if (dataInCache.updated && dataInCache.updated >= newDataTimestamp) {
           return;
         }
         setCachedData((prev) => ({
@@ -64,7 +64,6 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
     if (cachedData[viewType].data.length > 0) {
       const isMobile = window.innerWidth < 768;
       const chartData = cachedData[viewType].data;
-      console.log(chartData);
 
       // Process the data to create normalized bucket data
       const traces = [];
@@ -122,7 +121,7 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
 
       const layout = {
         title: {
-          text: "Nano Balance Distribution Over Time",
+          text: "Distribution of NANO Balances by Bucket",
           font: {
             size: 16,
             color: "#2d3748",
@@ -133,13 +132,13 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
         autosize: true,
         height: isMobile ? 500 : 1200,
         margin: isMobile
-          ? { t: 50, r: 45, b: 70, l: 45 }
-          : { t: 50, r: 80, b: 50, l: 80 },
+          ? { t: 50, r: 150, b: 70, l: 45 }
+          : { t: 50, r: 200, b: 50, l: 80 },
         xaxis: {
           title: "Time",
           type: "date",
           tickformat: "%b %d, %H:%M",
-          nticks: isMobile ? 6 : Math.min(chartData.length, 12),
+          nticks: isMobile ? 6 : Math.min(chartData.length, 24),
           tickangle: isMobile ? -45 : -30,
           gridcolor: "#e2e8f0",
           linecolor: "#cbd5e0",
@@ -154,30 +153,39 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
         hovermode: "x unified",
         hoverlabel: {
           font: {
-            size: 9,
+            size: 10,
             family: "Arial",
           },
         },
         legend: {
           title: { text: "Buckets" },
-          x: 0.5,
-          y: -0.2,
-          xanchor: "center",
+          x: 1.02,
+          y: 1,
+          xanchor: "left",
           yanchor: "top",
-          orientation: "h",
+          orientation: "v",
+          yaxis: {
+            scrollZoom: true,
+          },
+          height: isMobile ? 400 : 1200,
           bgcolor: "rgba(255, 255, 255, 0.8)",
           bordercolor: "#e2e8f0",
           borderwidth: 1,
         },
       };
 
-      window.Plotly.newPlot("nano-volume-chart", traces, layout, chartConfig);
+      window.Plotly.newPlot(
+        "nano-distribution-chart",
+        traces,
+        layout,
+        chartConfig,
+      );
     }
   }, [cachedData, viewType]);
 
   return (
     <div class="bg-white rounded-lg shadow-lg p-6">
-      <div id="nano-volume-chart" class="w-full" />
+      <div id="nano-distribution-chart" class="w-full" />
     </div>
   );
 }

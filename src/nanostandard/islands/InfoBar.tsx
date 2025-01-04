@@ -3,6 +3,7 @@ import { useSignal } from "@preact/signals";
 import { useEffect } from "preact/hooks";
 import { PriceTrackerData } from "../models.ts";
 import { JSX } from "preact/jsx-runtime";
+import { config } from "../../config_file.ts";
 
 interface InfoItem {
   icon: string;
@@ -15,11 +16,8 @@ export default function InfoBar() {
   const lastUpdateTime = useSignal<number>(0);
 
   useEffect(() => {
-    // Only update timestamp when we receive price data
-    if (socketContext.topic === "prices" && socketContext.data) {
-      const priceData = socketContext as PriceTrackerData;
-      lastUpdateTime.value = priceData.data.timestamp;
-    }
+    // Update timestamp to current time
+    lastUpdateTime.value = Date.now();
   }, [socketContext]);
 
   // Format timestamp from prices data
