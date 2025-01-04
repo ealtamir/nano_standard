@@ -1,15 +1,24 @@
-import { ComponentChildren } from "preact";
+import { ComponentChildren, createContext } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { IS_BROWSER } from "$fresh/runtime.ts";
+import { useSocketData } from "../SocketManager.tsx";
 
 interface ChartsContainerProps {
   children: ComponentChildren;
 }
 
+export const ViewTypeContext = createContext<{
+  viewType: "5m" | "1h" | "1d";
+}>({ viewType: "5m" });
+
 export default function ChartsContainer({ children }: ChartsContainerProps) {
   const [plotlyReady, setPlotlyReady] = useState(IS_BROWSER && !!window.Plotly);
+  const { connected } = useSocketData() as unknown as {
+    connected: boolean;
+  };
+  const [viewType, setViewType] = useState<"5m" | "1h" | "1d">("5m");
+  const [isSticky, setIsSticky] = useState(false);
 
-  // Load Plotly script with onload handler
   useEffect(() => {
     if (IS_BROWSER && !window.Plotly) {
       const script = document.createElement("script");
@@ -19,14 +28,57 @@ export default function ChartsContainer({ children }: ChartsContainerProps) {
     }
   }, []);
 
-  if (!plotlyReady) {
+  useEffect(() => {
+    const handleScroll = () => {
+      const buttonsElement = document.querySelector(".chart-buttons");
+      const containerElement = document.querySelector(".charts-container");
+      if (buttonsElement && containerElement) {
+        const containerRect = containerElement.getBoundingClientRect();
+        setIsSticky(containerRect.top <= 100);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  if (!plotlyReady || !connected) {
     return (
       <div class="flex items-center justify-center p-4 text-gray-600">
-        <div class="mr-2">⌛</div>
+        <div class="animate-spin mr-2">⌛</div>
         Loading charts...
       </div>
     );
   }
 
-  return <>{children}</>;
+  return (
+    <ViewTypeContext.Provider value={{ viewType }}>
+      <div className="charts-container">
+        <div
+          className={`flex justify-center gap-2 mb-4 transition-all duration-300 chart-buttons
+          ${
+            isSticky
+              ? "fixed top-4 left-6 z-50 bg-white/95 backdrop-blur-md p-3 rounded-lg shadow-lg border-2 border-gray-800/10 scale-110"
+              : ""
+          }`}
+        >
+          {["5m", "1h", "1d"].map((type) => (
+            <button
+              key={type}
+              onClick={() => setViewType(type as "5m" | "1h" | "1d")}
+              className={`px-5 py-2.5 rounded-md font-medium transition-colors
+                ${
+                viewType === type
+                  ? "bg-blue-500 text-white shadow-sm"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              {type}
+            </button>
+          ))}
+        </div>
+        {children}
+      </div>
+    </ViewTypeContext.Provider>
+  );
 }

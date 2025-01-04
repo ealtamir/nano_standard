@@ -60,7 +60,7 @@ export function PriceTracker(
     return (
       <div class="flex items-center justify-center p-4 text-gray-600">
         <div class="animate-spin mr-2">⌛</div>
-        Connecting to price feed...
+        Loading price data...
       </div>
     );
   }

@@ -6,22 +6,24 @@ declare global {
 }
 
 import { NanoUniqueAccountsData } from "../../../node_interface/models.ts";
-import { ChartProps, ChartsData } from "../../models.ts";
+import { ChartsData } from "../../models.ts";
 import { useSocketData } from "../SocketManager.tsx";
-import { useEffect, useState } from "preact/hooks";
+import { useContext, useEffect, useState } from "preact/hooks";
 import { config } from "../../../config_loader.ts";
 import {
   defaultChartConfig,
   defaultLegendConfig,
   viewType2MedianRange,
 } from "./chart_data.ts";
+import { ViewTypeContext } from "./ChartsContainer.tsx";
 
 interface CachedChartData {
   data: NanoUniqueAccountsData[];
   updated: Date | null;
 }
 
-export default function NanoUniqueAccountsChart({ viewType }: ChartProps) {
+export default function NanoUniqueAccountsChart() {
+  const { viewType } = useContext(ViewTypeContext);
   const { socketContext, connected } = useSocketData() as unknown as {
     socketContext: Record<string, ChartsData<NanoUniqueAccountsData>>;
     connected: boolean;
@@ -133,7 +135,7 @@ export default function NanoUniqueAccountsChart({ viewType }: ChartProps) {
             width: 2,
           },
           marker: {
-            size: 6,
+            size: 4,
             symbol: "circle",
           },
         },
@@ -149,7 +151,7 @@ export default function NanoUniqueAccountsChart({ viewType }: ChartProps) {
             width: 2,
           },
           marker: {
-            size: 6,
+            size: 4,
             symbol: "circle",
           },
         },

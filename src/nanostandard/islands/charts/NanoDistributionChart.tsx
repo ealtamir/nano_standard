@@ -7,16 +7,18 @@ declare global {
 
 import { ChartProps, ChartsData } from "../../models.ts";
 import { useSocketData } from "../SocketManager.tsx";
-import { useEffect, useState } from "preact/hooks";
+import { useContext, useEffect, useState } from "preact/hooks";
 import { config } from "../../../config_loader.ts";
 import { defaultChartConfig } from "./chart_data.ts";
+import { ViewTypeContext } from "./ChartsContainer.tsx";
 
 interface CachedChartData {
   data: { [key: string]: string }[];
   updated: Date | null;
 }
 
-export default function NanoDistributionChart({ viewType }: ChartProps) {
+export default function NanoDistributionChart() {
+  const { viewType } = useContext(ViewTypeContext);
   const { socketContext, connected } = useSocketData() as unknown as {
     socketContext: Record<string, ChartsData<{ [key: string]: string }>>;
     connected: boolean;
@@ -50,10 +52,6 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
       }
     });
   }, [socketContext]);
-
-  if (!connected) {
-    return;
-  }
 
   // Use Plotly only when it's ready
   useEffect(() => {
@@ -141,7 +139,7 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
         hovermode: "x unified",
         hoverlabel: {
           font: {
-            size: 12,
+            size: 10,
             family: "Arial",
           },
         },
@@ -170,6 +168,10 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
       );
     }
   }, [cachedData, viewType]);
+
+  if (cachedData[viewType].data.length === 0 || !connected) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div class="bg-white rounded-lg shadow-lg p-6">

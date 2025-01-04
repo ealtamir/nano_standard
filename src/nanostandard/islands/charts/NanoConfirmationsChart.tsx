@@ -6,24 +6,25 @@ declare global {
 }
 
 import { NanoConfirmationData } from "../../../node_interface/models.ts";
-import { ChartProps, ChartsData } from "../../models.ts";
+import { ChartsData } from "../../models.ts";
 import { useSocketData } from "../SocketManager.tsx";
-import { useEffect, useState } from "preact/hooks";
+import { useContext, useEffect, useState } from "preact/hooks";
 import { config } from "../../../config_loader.ts";
-import { IS_BROWSER } from "$fresh/runtime.ts";
 import {
   chartRound,
   defaultChartConfig,
   defaultLegendConfig,
   viewType2MedianRange,
 } from "./chart_data.ts";
+import { ViewTypeContext } from "./ChartsContainer.tsx";
 
 interface CachedChartData {
   data: NanoConfirmationData[];
   updated: Date | null;
 }
 
-export default function NanoConfirmationsChart({ viewType }: ChartProps) {
+export default function NanoConfirmationsChart() {
+  const { viewType } = useContext(ViewTypeContext);
   const { socketContext, connected } = useSocketData() as unknown as {
     socketContext: Record<string, ChartsData<NanoConfirmationData>>;
     connected: boolean;
@@ -139,7 +140,7 @@ export default function NanoConfirmationsChart({ viewType }: ChartProps) {
             width: 2,
           },
           marker: {
-            size: 6,
+            size: 4,
             symbol: "circle",
           },
         },
@@ -154,7 +155,7 @@ export default function NanoConfirmationsChart({ viewType }: ChartProps) {
             width: 2,
           },
           marker: {
-            size: 6,
+            size: 4,
             symbol: "circle",
           },
         },
