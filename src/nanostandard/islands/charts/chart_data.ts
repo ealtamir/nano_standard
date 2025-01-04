@@ -10,12 +10,29 @@ export function viewType2MedianRange(viewType: "5m" | "1h" | "1d"): string {
 
 export const defaultChartConfig = {
   responsive: true,
-  displayModeBar: true,
+  //   displayModeBar: false,
   scrollZoom: false,
   displaylogo: false,
-  modeBarButtonsToAdd: ["pan2d", "zoomIn2d", "zoomOut2d", "resetScale2d"],
-  modeBarButtonsToRemove: ["autoScale2d"],
+  //   modeBarButtonsToAdd: ["pan2d", "zoomIn2d", "zoomOut2d", "resetScale2d"],
+  //   modeBarButtonsToRemove: ["autoScale2d"],
   dragmode: "pan",
+  //   modeBarOrientation: "h",
+  //   showAxisDragHandles: true,
+  toImageButtonOptions: {
+    format: "png",
+    filename: "nano_chart",
+  },
+};
+
+export const defaultLegendConfig = {
+  x: 0,
+  y: 1,
+  xanchor: "left",
+  yanchor: "top",
+  orientation: "v",
+  bgcolor: "rgba(255, 255, 255, 0.8)",
+  bordercolor: "#e2e8f0",
+  borderwidth: 1,
 };
 
 export function chartRound(val: number | string): number {

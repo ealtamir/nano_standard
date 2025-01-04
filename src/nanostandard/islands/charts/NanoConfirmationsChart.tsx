@@ -11,6 +11,12 @@ import { useSocketData } from "../SocketManager.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { config } from "../../../config_loader.ts";
 import { IS_BROWSER } from "$fresh/runtime.ts";
+import {
+  chartRound,
+  defaultChartConfig,
+  defaultLegendConfig,
+  viewType2MedianRange,
+} from "./chart_data.ts";
 
 interface CachedChartData {
   data: NanoConfirmationData[];
@@ -66,19 +72,9 @@ export default function NanoConfirmationsChart({ viewType }: ChartProps) {
       const isMobile = window.innerWidth < 768;
       const chartData = cachedData[viewType].data;
 
-      const chartConfig = {
-        responsive: true,
-        displayModeBar: true,
-        scrollZoom: false,
-        displaylogo: false,
-        modeBarButtonsToAdd: ["pan2d", "zoomIn2d", "zoomOut2d", "resetScale2d"],
-        modeBarButtonsToRemove: ["autoScale2d"],
-        dragmode: "pan",
-      };
-
       const layout = {
         title: {
-          text: "Nano Confirmations Over Time",
+          text: "Nano SEND Confirmations Over Time",
           font: {
             size: 16,
             color: "#2d3748",
@@ -92,16 +88,15 @@ export default function NanoConfirmationsChart({ viewType }: ChartProps) {
           ? { t: 50, r: 45, b: 70, l: 45 }
           : { t: 70, r: 80, b: 100, l: 80 },
         xaxis: {
-          title: "Time",
           type: "date",
           tickformat: "%b %d, %H:%M",
-          nticks: isMobile ? 6 : Math.min(chartData.length, 12),
+          nticks: isMobile ? 6 : Math.min(chartData.length, 24),
           tickangle: isMobile ? -45 : -30,
           gridcolor: "#e2e8f0",
           linecolor: "#cbd5e0",
         },
         yaxis: {
-          title: "Confirmations",
+          title: "SEND Confirmations",
           type: "log",
           rangemode: "tozero",
           gridcolor: "#e2e8f0",
@@ -114,7 +109,7 @@ export default function NanoConfirmationsChart({ viewType }: ChartProps) {
           spikethickness: 1,
         },
         yaxis2: {
-          title: "Cumulative Sum",
+          title: "Cumulative Confirmations Sum",
           type: "linear",
           overlaying: "y",
           side: "right",
@@ -128,24 +123,15 @@ export default function NanoConfirmationsChart({ viewType }: ChartProps) {
           spikethickness: 1,
         },
         hovermode: "x unified",
-        legend: {
-          x: 0.5,
-          y: -0.2,
-          xanchor: "center",
-          yanchor: "top",
-          orientation: "h",
-          bgcolor: "rgba(255, 255, 255, 0.8)",
-          bordercolor: "#e2e8f0",
-          borderwidth: 1,
-        },
+        legend: defaultLegendConfig,
         barmode: "overlay",
       };
 
       const traces = [
         {
           x: chartData.map((d) => new Date(d.time_bucket)),
-          y: chartData.map((d) => d.current_confirmations),
-          name: "Current Confirmations",
+          y: chartData.map((d) => chartRound(d.current_confirmations)),
+          name: "Total Confirmations",
           type: "scatter",
           mode: "lines+markers",
           line: {
@@ -159,8 +145,8 @@ export default function NanoConfirmationsChart({ viewType }: ChartProps) {
         },
         {
           x: chartData.map((d) => new Date(d.time_bucket)),
-          y: chartData.map((d) => d.rolling_median),
-          name: "Rolling Median",
+          y: chartData.map((d) => chartRound(d.rolling_median)),
+          name: `Rolling Median [${viewType2MedianRange(viewType)}]`,
           type: "scatter",
           mode: "lines+markers",
           line: {
@@ -175,7 +161,7 @@ export default function NanoConfirmationsChart({ viewType }: ChartProps) {
         {
           x: chartData.map((d) => new Date(d.time_bucket)),
           y: chartData.map((d) => d.cumulative_sum_confirmations),
-          name: "Cumulative Sum",
+          name: "Confirmations Cumulative Sum",
           type: "bar",
           yaxis: "y2",
           opacity: 0.1,
@@ -185,7 +171,12 @@ export default function NanoConfirmationsChart({ viewType }: ChartProps) {
         },
       ];
 
-      window.Plotly.newPlot("confirmations-chart", traces, layout, chartConfig);
+      window.Plotly.newPlot(
+        "confirmations-chart",
+        traces,
+        layout,
+        defaultChartConfig,
+      );
     }
   }, [cachedData, viewType]);
 

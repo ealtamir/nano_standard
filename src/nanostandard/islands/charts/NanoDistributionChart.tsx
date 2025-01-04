@@ -9,6 +9,7 @@ import { ChartProps, ChartsData } from "../../models.ts";
 import { useSocketData } from "../SocketManager.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { config } from "../../../config_loader.ts";
+import { defaultChartConfig } from "./chart_data.ts";
 
 interface CachedChartData {
   data: { [key: string]: string }[];
@@ -51,12 +52,7 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
   }, [socketContext]);
 
   if (!connected) {
-    return (
-      <div class="flex items-center justify-center p-4 text-gray-600">
-        <div class="mr-2">⌛</div>
-        Loading chart...
-      </div>
-    );
+    return;
   }
 
   // Use Plotly only when it's ready
@@ -68,11 +64,13 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
       // Process the data to create normalized bucket data
       const traces = [];
       const bucketCount = 64; // 0 to 63 buckets
+      const xData = chartData.map((d) => new Date(d.time_bucket));
 
       for (let bucket = 0; bucket < bucketCount; bucket++) {
         const bucketKey = bucket.toString();
         // Skip empty buckets
-        if (chartData.every((d) => d[bucketKey] === "0")) {
+        if (chartData.every((d) => Number(d[bucketKey]) === 0)) {
+          console.log("skipping distribution trace");
           continue;
         }
 
@@ -84,7 +82,7 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
           }`;
 
         traces.push({
-          x: chartData.map((d) => new Date(d.time_bucket)),
+          x: xData,
           y: chartData.map((d) => d[bucketKey]),
           name: `Bucket ${bucket} (${bucketInterval})`,
           type: "scatter",
@@ -109,19 +107,10 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
         });
       }
 
-      const chartConfig = {
-        responsive: true,
-        displayModeBar: true,
-        scrollZoom: false,
-        displaylogo: false,
-        modeBarButtonsToAdd: ["pan2d", "zoomIn2d", "zoomOut2d", "resetScale2d"],
-        modeBarButtonsToRemove: ["autoScale2d"],
-        dragmode: "pan",
-      };
-
       const layout = {
         title: {
-          text: "Distribution of NANO Balances by Bucket",
+          text:
+            "Distribution of account balances transacting over time by bucket",
           font: {
             size: 16,
             color: "#2d3748",
@@ -135,10 +124,9 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
           ? { t: 50, r: 150, b: 70, l: 45 }
           : { t: 50, r: 200, b: 50, l: 80 },
         xaxis: {
-          title: "Time",
           type: "date",
           tickformat: "%b %d, %H:%M",
-          nticks: isMobile ? 6 : Math.min(chartData.length, 24),
+          nticks: isMobile ? 6 : Math.min(chartData.length, 30),
           tickangle: isMobile ? -45 : -30,
           gridcolor: "#e2e8f0",
           linecolor: "#cbd5e0",
@@ -153,7 +141,7 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
         hovermode: "x unified",
         hoverlabel: {
           font: {
-            size: 10,
+            size: 12,
             family: "Arial",
           },
         },
@@ -178,7 +166,7 @@ export default function NanoDistributionChart({ viewType }: ChartProps) {
         "nano-distribution-chart",
         traces,
         layout,
-        chartConfig,
+        defaultChartConfig,
       );
     }
   }, [cachedData, viewType]);
@@ -258,7 +246,9 @@ const bucketLevels = [
 ];
 
 function formatNumber(number: number): string {
-  if (number >= 1) {
+  if (number === 0) {
+    return "0";
+  } else if (number >= 1) {
     if (number < 1000) { // Numbers less than 1K
       return number.toFixed(2);
     } else if (number < 1_000_000) { // Thousands (K)

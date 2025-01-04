@@ -10,6 +10,12 @@ import { ChartProps, ChartsData } from "../../models.ts";
 import { useSocketData } from "../SocketManager.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { config } from "../../../config_loader.ts";
+import {
+  chartRound,
+  defaultChartConfig,
+  defaultLegendConfig,
+  viewType2MedianRange,
+} from "./chart_data.ts";
 
 interface CachedChartData {
   data: NanoVolumeData[];
@@ -68,19 +74,11 @@ export default function NanoVolumeChart({ viewType }: ChartProps) {
       const isMobile = window.innerWidth < 768;
       const chartData = cachedData[viewType].data;
 
-      const chartConfig = {
-        responsive: true,
-        displayModeBar: true,
-        scrollZoom: false,
-        displaylogo: false,
-        modeBarButtonsToAdd: ["pan2d", "zoomIn2d", "zoomOut2d", "resetScale2d"],
-        modeBarButtonsToRemove: ["autoScale2d"],
-        dragmode: "pan",
-      };
+      const chartConfig = defaultChartConfig;
 
       const layout = {
         title: {
-          text: "Nano Volume Metrics Over Time",
+          text: "Nano Volume Over Time & Gini Coefficient",
           font: {
             size: 16,
             color: "#2d3748",
@@ -94,16 +92,17 @@ export default function NanoVolumeChart({ viewType }: ChartProps) {
           ? { t: 50, r: 45, b: 70, l: 45 }
           : { t: 50, r: 80, b: 50, l: 80 },
         xaxis: {
-          title: "Time",
           type: "date",
           tickformat: "%b %d, %H:%M",
-          nticks: isMobile ? 6 : Math.min(chartData.length, 12),
+          nticks: isMobile ? 6 : Math.min(chartData.length, 24),
           tickangle: isMobile ? -45 : -30,
           gridcolor: "#e2e8f0",
           linecolor: "#cbd5e0",
         },
         yaxis: {
-          title: "Amount Nano / Rolling Median",
+          title: `Transaction Volume / Rolling Median [${
+            viewType2MedianRange(viewType)
+          }] (Log Scale)`,
           type: "log",
           side: "left",
           gridcolor: "#e2e8f0",
@@ -119,27 +118,17 @@ export default function NanoVolumeChart({ viewType }: ChartProps) {
           gridcolor: "#e2e8f0",
           linecolor: "#cbd5e0",
           tickfont: { size: isMobile ? 9 : 11 },
-          showgrid: false,
+          showgrid: true,
         },
         hovermode: "x unified",
-        legend: {
-          title: { text: "Metrics" },
-          x: 0.5,
-          y: -0.2,
-          xanchor: "center",
-          yanchor: "top",
-          orientation: "h",
-          bgcolor: "rgba(255, 255, 255, 0.8)",
-          bordercolor: "#e2e8f0",
-          borderwidth: 1,
-        },
+        legend: defaultLegendConfig,
       };
 
       const traces = [
         {
           x: chartData.map((d) => new Date(d.time_bucket)),
-          y: chartData.map((d) => d.amount_nano),
-          name: "Amount Nano",
+          y: chartData.map((d) => chartRound(d.amount_nano)),
+          name: "Tansactions Volume [NANO]",
           type: "scatter",
           mode: "lines+markers",
           yaxis: "y1",
@@ -154,8 +143,8 @@ export default function NanoVolumeChart({ viewType }: ChartProps) {
         },
         {
           x: chartData.map((d) => new Date(d.time_bucket)),
-          y: chartData.map((d) => d.rolling_median),
-          name: "Rolling Median",
+          y: chartData.map((d) => chartRound(d.rolling_median)),
+          name: `Rolling Median [${viewType2MedianRange(viewType)}]`,
           type: "scatter",
           mode: "lines+markers",
           yaxis: "y1",

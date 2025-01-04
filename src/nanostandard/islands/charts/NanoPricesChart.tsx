@@ -13,6 +13,7 @@ import { config } from "../../../config_loader.ts";
 import {
   chartRound,
   defaultChartConfig,
+  defaultLegendConfig,
   viewType2MedianRange,
 } from "./chart_data.ts";
 
@@ -76,7 +77,7 @@ export default function NanoPricesChart({
 
       const layout = {
         title: {
-          text: `NANO Fiat Volume & Price Over Time (${selectedCurrency})`,
+          text: `Nano Fiat Volume & Price Over Time (${selectedCurrency})`,
           font: {
             size: 16,
             color: "#2d3748",
@@ -120,16 +121,7 @@ export default function NanoPricesChart({
           showgrid: true,
         },
         hovermode: "x unified",
-        legend: {
-          x: 0,
-          y: 1,
-          xanchor: "left",
-          yanchor: "top",
-          orientation: "v",
-          bgcolor: "rgba(255, 255, 255, 0.8)",
-          bordercolor: "#e2e8f0",
-          borderwidth: 1,
-        },
+        legend: defaultLegendConfig,
       };
 
       const traces = [
