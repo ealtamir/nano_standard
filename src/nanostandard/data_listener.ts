@@ -131,21 +131,6 @@ export class DataListener extends SubscriptionManager {
       cachedData?.timestamp,
     );
 
-    // if (!topic.startsWith("nano:prices")) {
-    //   const intervals = ["5m", "1h", "1d"];
-    //   for (const interval of intervals) {
-    //   }
-    // } else {
-    //   const cachedData = this.cachedData.get(topic);
-    //   if (cachedData) {
-    //     handler(cachedData as T);
-    //   }
-    //   console.debug(
-    //     `Subscriber found sending cached data for ${topic}:`,
-    //     cachedData?.timestamp,
-    //   );
-    // }
-
     return unsubscribeFunc;
   }
 
