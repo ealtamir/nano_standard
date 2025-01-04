@@ -249,7 +249,7 @@ RETURNS TRIGGER AS $$
 BEGIN
     -- Only set bucket_id for send and receive transactions
     IF NEW.block_subtype IN ('send', 'receive') THEN
-        NEW.bucket_id := get_bucket_id(NEW.amount::numeric);
+        NEW.bucket_id := get_bucket_id(NEW.balance::numeric);
     END IF;
     RETURN NEW;
 END;
@@ -263,8 +263,6 @@ CREATE TRIGGER set_bucket_id_trigger
 
 -- Add comment explaining the trigger
 COMMENT ON FUNCTION set_bucket_id() IS 'Trigger function to automatically set bucket_id for send and receive transactions based on their amount';
-
-
 
 UPDATE block_confirmations
 SET bucket_id = get_bucket_id(balance::numeric)
