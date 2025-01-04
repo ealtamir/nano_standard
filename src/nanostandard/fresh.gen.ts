@@ -18,6 +18,7 @@ import * as $charts_NanoConfirmationsChart from "./islands/charts/NanoConfirmati
 import * as $charts_NanoDistributionChart from "./islands/charts/NanoDistributionChart.tsx";
 import * as $charts_NanoPricesChart from "./islands/charts/NanoPricesChart.tsx";
 import * as $charts_NanoVolumeChart from "./islands/charts/NanoVolumeChart.tsx";
+import * as $charts_chart_data from "./islands/charts/chart_data.ts";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -41,6 +42,7 @@ const manifest = {
     "./islands/charts/NanoDistributionChart.tsx": $charts_NanoDistributionChart,
     "./islands/charts/NanoPricesChart.tsx": $charts_NanoPricesChart,
     "./islands/charts/NanoVolumeChart.tsx": $charts_NanoVolumeChart,
+    "./islands/charts/chart_data.ts": $charts_chart_data,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;
