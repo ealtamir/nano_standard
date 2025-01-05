@@ -77,6 +77,11 @@ export default function ChartsContainer({ children }: ChartsContainerProps) {
             </button>
           ))}
         </div>
+        <div className="bg-amber-50 border-l-4 border-amber-400 p-4 mb-4 text-amber-700 text-sm max-w-2xl mx-auto">
+          <b>Note:</b>{" "}
+          Charts only consider fully confirmed SEND blocks, as these are more
+          relevant in measuring Nano's adoption as a means of exchange.
+        </div>
         {children}
       </div>
     </ViewTypeContext.Provider>

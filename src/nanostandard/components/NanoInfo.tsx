@@ -108,15 +108,19 @@ export default function NanoInfo() {
           <ul className="list-disc pl-6 space-y-1.5 text-sm">
             <li>
               <span className="font-medium">Why It Matters:</span>{" "}
-              The total number of accounts making transactions is a rough
-              estimate of the number of people using Nano. The more accounts
-              using Nano in a given time period, the more likely it is that more
-              people are participanting in the network.
+              The number of unique accounts sending Nano is a straightforward
+              way to gauge how many people are actively participating in the
+              network. Each sender represents someone choosing Nano as their
+              method of payment or transfer, driving the ecosystem forward and
+              showcasing its real-world utility.
             </li>
             <li>
               <span className="font-medium">What I Expect:</span>{" "}
-              Over time, the number of unique accounts should trend upwards,
-              indicating more people are using Nano.
+              Over time, the number of unique senders should grow steadily,
+              reflecting increasing awareness and adoption of Nano for everyday
+              transactions. This growth signals a stronger, more active
+              community and reinforces Nano's role as a practical and widely
+              used currency.
             </li>
           </ul>
         </div>

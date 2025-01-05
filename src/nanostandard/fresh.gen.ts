@@ -9,7 +9,6 @@ import * as $api_data from "./routes/api/data.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $Home from "./islands/Home.tsx";
 import * as $InfoBar from "./islands/InfoBar.tsx";
-import * as $PriceCharts from "./islands/PriceCharts.tsx";
 import * as $PriceTracker from "./islands/PriceTracker.tsx";
 import * as $SocketManager from "./islands/SocketManager.tsx";
 import * as $charts_ChartsContainer from "./islands/charts/ChartsContainer.tsx";
@@ -32,7 +31,6 @@ const manifest = {
   islands: {
     "./islands/Home.tsx": $Home,
     "./islands/InfoBar.tsx": $InfoBar,
-    "./islands/PriceCharts.tsx": $PriceCharts,
     "./islands/PriceTracker.tsx": $PriceTracker,
     "./islands/SocketManager.tsx": $SocketManager,
     "./islands/charts/ChartsContainer.tsx": $charts_ChartsContainer,
