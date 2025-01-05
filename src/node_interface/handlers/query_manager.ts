@@ -67,6 +67,7 @@ export class QueryManager {
         FROM
             base_data bd1
         JOIN ${sql(gini_table)} gini ON bd1.time_bucket = gini.time_bucket
+        WHERE bd1.time_bucket <= NOW()
         ORDER BY
             bd1.time_bucket;
       `;
@@ -116,6 +117,7 @@ export class QueryManager {
         WHERE
             price IS NOT NULL
             AND interval_time >= NOW() - '${sql(range)}'::interval
+            AND interval_time <= NOW()
         ORDER BY interval_time;
       `;
     } catch (error) {
@@ -179,7 +181,9 @@ export class QueryManager {
             ) AS double precision) AS cumulative_sum_confirmations
         FROM
             all_buckets_within_window
-        WHERE time_bucket >= NOW() - '${sql(range)}'::interval
+        WHERE time_bucket >= NOW() - '${
+        sql(range)
+      }'::interval AND time_bucket <= NOW()
         GROUP BY time_bucket, current_confirmations
         ORDER BY time_bucket;
       `;
@@ -276,6 +280,7 @@ JOIN rolling_median
     ON cumulative_sum.time_bucket = rolling_median.current_bucket
 JOIN cumulative_accounts
 	on cumulative_accounts.time_bucket = cumulative_sum.time_bucket
+WHERE cumulative_sum.time_bucket <= NOW()
 ORDER BY cumulative_sum.time_bucket;
     `;
     } catch (error) {
@@ -380,6 +385,7 @@ ORDER BY cumulative_sum.time_bucket;
           CAST(COUNT(*) FILTER (WHERE bucket_id = 62) AS integer) AS "62",
           CAST(COUNT(*) FILTER (WHERE bucket_id = 63) AS integer) AS "63"
       FROM mapped_balances
+      WHERE time_bucket <= NOW()
       GROUP BY time_bucket
       ORDER BY time_bucket;
     `;
