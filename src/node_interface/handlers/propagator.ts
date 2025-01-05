@@ -186,45 +186,57 @@ export class Propagator {
   }
 
   private async processQueryData(data: QueryData) {
-    // Store and publish time series updates
+    // Ensure Redis connection is open
+    if (!this.redisClient.isOpen) {
+      await this.redisClient.connect();
+    }
 
-    const pipeline = this.redisClient.multi();
-    const latestPrices = await this.fetchLatestPrices();
-    await logger.log(
-      `Publishing prices to redis: ${JSON.stringify(latestPrices)}`,
-    );
-    this.publishToRedis(
-      pipeline,
-      config.propagator.prices_latest_key,
-      JSON.stringify(latestPrices),
-      {
-        type: "update",
-        viewType: config.propagator.prices_latest_key,
-        timestamp: new Date().toISOString(),
-      },
-      config.propagator.updates_channel_name,
-    );
+    try {
+      const pipeline = this.redisClient.multi();
+      const latestPrices = await this.fetchLatestPrices();
 
-    for (const [entry, value] of Object.entries(data)) {
-      const key = value.key;
-      await logger.log(
-        `Publishing ${key} to redis: ${
-          JSON.stringify(value.data).slice(0, 50)
-        }`,
-      );
       this.publishToRedis(
         pipeline,
-        key,
-        JSON.stringify(value.data),
+        config.propagator.prices_latest_key,
+        JSON.stringify(latestPrices),
         {
           type: "update",
-          viewType: key,
+          viewType: config.propagator.prices_latest_key,
           timestamp: new Date().toISOString(),
         },
         config.propagator.updates_channel_name,
       );
+
+      for (const [entry, value] of Object.entries(data)) {
+        const key = value.key;
+        await logger.log(
+          `Publishing ${key} to redis: ${
+            JSON.stringify(value.data).slice(0, 50)
+          }`,
+        );
+        this.publishToRedis(
+          pipeline,
+          key,
+          JSON.stringify(value.data),
+          {
+            type: "update",
+            viewType: key,
+            timestamp: new Date().toISOString(),
+          },
+          config.propagator.updates_channel_name,
+        );
+      }
+
+      // Execute pipeline within try-catch
+      return await pipeline.exec();
+    } catch (error) {
+      await logger.log(`Error in processQueryData: ${error}`, "ERROR");
+      // Attempt to reconnect on failure
+      if (!this.redisClient.isOpen) {
+        await this.redisClient.connect();
+      }
+      throw error;
     }
-    await pipeline.exec();
   }
 
   private publishToRedis(

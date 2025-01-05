@@ -194,7 +194,7 @@ export class QueryManager {
   ): Promise<Array<Record<string, unknown>>> {
     let range = "";
     let bucket = "";
-    let median;
+    let median = "";
     if (interval === "5m") {
       range = config.propagator.range_5m;
       bucket = "5 minutes";
@@ -210,71 +210,73 @@ export class QueryManager {
     }
     try {
       return await sql<Array<Record<string, unknown>>>`
-      WITH distinct_accounts AS (
-        SELECT DISTINCT ON (account)
-            time_bucket('${sql(bucket)}', confirmation_time) + '${
+WITH first_occurrence AS (
+    SELECT
+        account,
+        confirmation_time,
+        ROW_NUMBER() OVER (
+            PARTITION BY account
+            ORDER BY confirmation_time ASC
+        ) AS row_num
+    FROM block_confirmations
+    WHERE
+        block_subtype = 'send'
+        AND confirmation_type = 'active_quorum'
+        AND confirmation_time >= NOW() - '${sql(range)}'::interval
+),
+distinct_accounts AS (
+    SELECT
+        time_bucket('${sql(bucket)}', confirmation_time) + '${
         sql(bucket)
       }'::interval AS time_bucket,
-            account
-        FROM
-            block_confirmations
-        WHERE
-            block_subtype = 'send'
-            AND confirmation_type = 'active_quorum'
-            AND confirmation_time >= NOW() - '${sql(range)}'::interval
-        ORDER BY
-            account, time_bucket
-      ),
-      cumulative_accounts AS (
-          SELECT
-              time_bucket,
-              COUNT(DISTINCT account) AS new_accounts
-          FROM
-              distinct_accounts
-          GROUP BY
-              time_bucket
-          ORDER BY
-              time_bucket
-      ),
-      cumulative_sum AS (
-          SELECT
-              time_bucket,
-              new_accounts,
-              SUM(new_accounts) OVER (
-                  ORDER BY time_bucket
-                  ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-              ) AS cumulative_new_accounts
-          FROM
-              cumulative_accounts
-      ),
-      rolling_median AS (
-          SELECT
-              outer_bucket.time_bucket AS current_bucket,
-              PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY inner_bucket.new_accounts) AS rolling_median_accounts
-          FROM
-              cumulative_accounts AS outer_bucket
-          JOIN
-              cumulative_accounts AS inner_bucket
-          ON
-              inner_bucket.time_bucket BETWEEN outer_bucket.time_bucket - '${
-        sql(median)
-      }'::interval AND outer_bucket.time_bucket
-          GROUP BY
-              outer_bucket.time_bucket
-      )
-      SELECT
-          cumulative_sum.time_bucket,
-          CAST(cumulative_sum.new_accounts AS integer) AS new_accounts,
-          CAST(cumulative_sum.cumulative_new_accounts AS integer) AS cumulative_new_accounts,
-          CAST(rolling_median.rolling_median_accounts AS double precision) AS rolling_median_accounts
-      FROM
-          cumulative_sum
-      JOIN
-          rolling_median
-      ON
-          cumulative_sum.time_bucket = rolling_median.current_bucket
-      ORDER BY
-          cumulative_sum.time_bucket;
+        COUNT(account) account_num
+    FROM first_occurrence
+    WHERE row_num = 1
+    GROUP BY time_bucket
+),
+cumulative_accounts AS (
+    SELECT
+        time_bucket('${sql(bucket)}', confirmation_time) + '${
+        sql(bucket)
+      }'::interval AS time_bucket,
+        COUNT(DISTINCT account) AS new_accounts
+    FROM first_occurrence
+    GROUP BY time_bucket
+    ORDER BY time_bucket
+),
+cumulative_sum AS (
+    SELECT
+        time_bucket,
+        SUM(da.account_num) OVER (
+            ORDER BY time_bucket
+            ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+        ) AS cumulative_new_accounts
+    FROM distinct_accounts da
+),
+rolling_median AS (
+    SELECT
+        outer_bucket.time_bucket AS current_bucket,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY inner_bucket.new_accounts)
+            AS rolling_median_accounts
+    FROM cumulative_accounts AS outer_bucket
+    JOIN cumulative_accounts AS inner_bucket
+        ON inner_bucket.time_bucket
+           BETWEEN outer_bucket.time_bucket - '${sql(median)}'::interval
+               AND outer_bucket.time_bucket
+    GROUP BY
+        outer_bucket.time_bucket
+)
+SELECT
+    cumulative_sum.time_bucket,
+    CAST(cumulative_accounts.new_accounts AS integer) AS new_accounts,
+    CAST(cumulative_sum.cumulative_new_accounts AS integer) AS cumulative_new_accounts,
+    CAST(rolling_median.rolling_median_accounts AS double precision) AS rolling_median_accounts
+FROM cumulative_sum
+JOIN rolling_median
+    ON cumulative_sum.time_bucket = rolling_median.current_bucket
+JOIN cumulative_accounts
+	on cumulative_accounts.time_bucket = cumulative_sum.time_bucket
+ORDER BY cumulative_sum.time_bucket;
     `;
     } catch (error) {
       await logger.log(`Error in getNanoUniqueAccounts: ${error}`, "ERROR");
