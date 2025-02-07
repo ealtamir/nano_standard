@@ -129,7 +129,7 @@ export class Propagator {
       await this.redisClient.connect();
     }
     try {
-      // Use QueryManager to refresh materialized views
+      await logger.log("Refreshing materialized views");
       await QueryManager.refreshMaterializedViews();
       await this.propagateData("5m");
     } catch (error) {

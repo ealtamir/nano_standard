@@ -97,11 +97,6 @@ export class UTCIntervalCaller extends PeriodicalCaller<UTCIntervalUpdate> {
   private async handleUpdate(
     update: UTCIntervalUpdate & { force?: boolean },
   ): Promise<void> {
-    // await logger.log(
-    //   `Triggering ${update.type} update at ${update.timestamp.toISOString()}${
-    //     update.force ? " (forced)" : ""
-    //   }`,
-    // );
     this.subscriptionManager.notifySubscribers("interval-update", {
       interval: update.type,
       force: update.force || false,
