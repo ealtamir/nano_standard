@@ -131,15 +131,19 @@ export class QueryManager {
   ): Promise<Array<Record<string, unknown>>> {
     let range = "";
     let bucket = "";
+    let median = "";
     if (interval === "5m") {
       range = config.propagator.range_5m;
       bucket = "5 minutes";
+      median = config.propagator.median_5m;
     } else if (interval === "1h") {
       range = config.propagator.range_1h;
       bucket = "1 hour";
+      median = config.propagator.median_1h;
     } else if (interval === "1d") {
       range = config.propagator.range_1d;
       bucket = "1 day";
+      median = config.propagator.median_1d;
     }
 
     try {
@@ -169,7 +173,7 @@ export class QueryManager {
                 aggregated_buckets AS sub_bucket
             ON
                 sub_bucket.time_bucket BETWEEN outer_bucket.time_bucket - '${
-        sql(range)
+        sql(median)
       }'::interval AND outer_bucket.time_bucket
         )
         SELECT
