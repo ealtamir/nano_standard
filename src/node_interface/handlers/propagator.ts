@@ -147,6 +147,7 @@ export class Propagator {
   private async callQueries(
     interval: "5m" | "1h" | "1d",
   ): Promise<QueryData> {
+    await logger.log(`Calling queries for ${interval} data`);
     const [
       volume_data,
       price_data,

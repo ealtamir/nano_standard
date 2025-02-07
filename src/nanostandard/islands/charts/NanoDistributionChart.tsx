@@ -57,7 +57,10 @@ export default function NanoDistributionChart() {
   useEffect(() => {
     if (cachedData[viewType].data.length > 0) {
       const isMobile = window.innerWidth < 768;
-      const chartData = cachedData[viewType].data;
+      const chartData = cachedData[viewType].data as {
+        time_bucket: string;
+        [key: string]: string;
+      }[];
 
       // Process the data to create normalized bucket data
       const traces = [];

@@ -56,7 +56,6 @@ export class UTCIntervalCaller extends PeriodicalCaller<UTCIntervalUpdate> {
     this.lastDailyUpdate = utcNow;
     this.initialUpdateDone = true;
 
-    // Don't force updates on startup - let Redis freshness check decide
     await this.handleUpdate({ type: "1h", timestamp: utcNow, force: true });
     await this.handleUpdate({ type: "1d", timestamp: utcNow, force: true });
 
