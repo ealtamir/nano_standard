@@ -32,7 +32,6 @@ ADD PRIMARY KEY (id, last_updated_at);
 SELECT create_hypertable('crypto_prices', 'last_updated_at', migrate_data => true);
 
 
-
 -- nano_aggregate_data
 CREATE MATERIALIZED VIEW nano_aggregate_data
 WITH (timescaledb.continuous) AS
@@ -45,6 +44,7 @@ FROM
 WHERE
     confirmation_type = 'active_quorum'
     AND block_subtype = 'send'
+    AND confirmation_time >= NOW() - INTERVAL '2 YEARS'
 GROUP BY
     interval_time
 WITH NO DATA;
@@ -58,6 +58,8 @@ SELECT
     AVG(price) AS avg_price
 FROM
     crypto_prices
+WHERE
+    last_updated_at >= NOW() - INTERVAL '2 YEARS'
 GROUP BY
     interval_time, currency
 WITH NO DATA;
@@ -73,16 +75,16 @@ ALTER MATERIALIZED VIEW crypto_price_aggregate SET (timescaledb.materialized_onl
 
 SELECT add_continuous_aggregate_policy(
     'nano_aggregate_data',          -- Replace with your transactions CAGG name
-    start_offset => INTERVAL '6 hours', -- Recompute aggregates for the last 6 hours
-    end_offset => INTERVAL '5 minutes', -- Refresh up to 5 minutes before "now"
+    start_offset => INTERVAL '15 minutes', -- Recompute aggregates for the last 6 hours
+    end_offset => INTERVAL '30 seconds', -- Refresh up to 5 minutes before "now"
     schedule_interval => INTERVAL '5 minutes' -- Run the refresh every 5 minutes
 );
 
 SELECT add_continuous_aggregate_policy(
     'crypto_price_aggregate',       -- Replace with your prices CAGG name
-    start_offset => INTERVAL '6 hours', -- Same as above
-    end_offset => INTERVAL '5 minutes', -- Ensure alignment
-    schedule_interval => INTERVAL '5 minutes'
+    start_offset => INTERVAL '15 minutes', -- Recompute aggregates for the last 6 hours
+    end_offset => INTERVAL '30 seconds', -- Refresh up to 5 minutes before "now"
+    schedule_interval => INTERVAL '5 minutes' -- Run the refresh every 5 minutes
 );
 
 --CALL refresh_continuous_aggregate('nano_aggregate_data', NULL, NULL);
@@ -135,8 +137,8 @@ LEFT JOIN LATERAL (
     SELECT AVG(bd2.price) AS avg_price
     FROM nano_prices_5m_base bd2
     WHERE bd2.currency = bd.currency
-      AND bd2.interval_time BETWEEN bd.interval_time - INTERVAL '15 minutes'
-                               AND bd.interval_time + INTERVAL '15 minutes'
+      AND bd2.interval_time BETWEEN bd.interval_time - INTERVAL '10 minutes'
+                               AND bd.interval_time + INTERVAL '10 minutes'
       AND bd2.price IS NOT NULL
 ) sub ON TRUE
 WITH NO DATA; -- Again, create empty and refresh after

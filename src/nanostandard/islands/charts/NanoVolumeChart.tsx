@@ -80,7 +80,7 @@ export default function NanoVolumeChart() {
 
       const layout = {
         title: {
-          text: "Nano Volume Over Time & Gini Coefficient",
+          text: "Transaction Volume Over Time",
           font: {
             size: 16,
             color: "#2d3748",
@@ -111,20 +111,6 @@ export default function NanoVolumeChart() {
           linecolor: "#cbd5e0",
           tickfont: { size: isMobile ? 9 : 11 },
           showgrid: true,
-          showspikes: true,
-          spikemode: "across",
-          spikesnap: "cursor",
-          spikecolor: "#a0aec0",
-          spikethickness: 1,
-        },
-        yaxis2: {
-          title: "Gini Coefficient",
-          type: "linear",
-          overlaying: "y",
-          side: "right",
-          gridcolor: "#e2e8f0",
-          linecolor: "#cbd5e0",
-          tickfont: { size: isMobile ? 9 : 11 },
           showspikes: true,
           spikemode: "across",
           spikesnap: "cursor",
@@ -168,25 +154,8 @@ export default function NanoVolumeChart() {
             symbol: "circle",
           },
         },
-        {
-          x: chartData.map((d) => new Date(d.time_bucket)),
-          y: chartData.map((d) => d.gini_coefficient),
-          name: "Gini Coefficient",
-          type: "scatter",
-          mode: "lines+markers",
-          yaxis: "y2",
-          line: {
-            color: "#F6AD55",
-            width: 2,
-          },
-          marker: {
-            size: 4,
-            symbol: "circle",
-          },
-        },
       ];
 
-      console.log("Creating NanoVolumeChart");
       window.Plotly.newPlot("nano-volume-chart", traces, layout, chartConfig);
     }
   }, [cachedData, viewType]);

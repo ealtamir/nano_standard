@@ -74,6 +74,7 @@ export function SocketManager({
         const arrayBuffer = await event.data.arrayBuffer();
         const uint8Array = new Uint8Array(arrayBuffer);
         const message: { topic: string; data: any } = packr.unpack(uint8Array);
+        console.debug("SocketManager: Received message:", message);
 
         setSocketData((prev) => ({
           ...prev,

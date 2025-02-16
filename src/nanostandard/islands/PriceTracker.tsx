@@ -32,7 +32,7 @@ export function PriceTracker(
   const { socketContext, connected } = useSocketData();
   const prices = useSignal<PriceTrackerData>({
     timestamp: 0,
-    data: {},
+    data: [],
   });
 
   const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
@@ -51,7 +51,6 @@ export function PriceTracker(
   }, [socketContext]);
 
   const handleCurrencyClick = (currency: string) => {
-    console.debug("PriceTracker: Currency clicked:", currency);
     setSelectedCurrency(currency);
     onCurrencyClick(currency.toUpperCase());
   };
@@ -65,7 +64,10 @@ export function PriceTracker(
     );
   }
 
-  const priceData = prices.value.data;
+  const priceData = prices.value.data.reduce((acc, entry) => {
+    acc[entry.currency] = entry.price;
+    return acc;
+  }, {} as Record<string, string>);
   return (
     <div>
       <p class="text-gray-500 text-sm px-4 pb-2">
@@ -111,7 +113,7 @@ export function PriceTracker(
                       ["XAU", "XAG"].includes(currency.toUpperCase()) ? 5 : 2,
                     maximumFractionDigits:
                       ["XAU", "XAG"].includes(currency.toUpperCase()) ? 5 : 2,
-                  }).format(price as number)}
+                  }).format(price as unknown as number)}
                 </div>
                 <div class="text-sm text-gray-400 mt-1">
                   {meta.name}

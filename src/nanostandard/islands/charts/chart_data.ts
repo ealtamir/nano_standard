@@ -36,6 +36,9 @@ export const defaultLegendConfig = {
 };
 
 export function chartRound(val: number | string): number {
+  if (val === null || val === undefined) {
+    return 0;
+  }
   let num = typeof val === "string" ? parseFloat(val) : val;
 
   if (num > 10) {

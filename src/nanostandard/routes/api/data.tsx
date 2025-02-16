@@ -59,7 +59,10 @@ export const handler: Handlers = {
           topics.forEach((topic) => {
             const topicHandler = (
               data: any,
-            ) => handleUpdate(topic, data);
+            ) => {
+              console.debug(`Sending data request to socket: ${topic}`);
+              handleUpdate(topic, data);
+            };
             const unsubscribeFunc = dataListener.subscribe(topic, topicHandler);
             unsubscribeMap.set(topic, unsubscribeFunc);
           });

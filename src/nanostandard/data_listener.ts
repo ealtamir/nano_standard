@@ -80,7 +80,10 @@ export class DataListener extends SubscriptionManager {
           data: JSON.parse(rawData),
         };
         this.cachedData.set(key, cachedData);
+        console.debug(`Notifying subscribers for ${key}`);
         this.notifySubscribers(key, cachedData);
+      } else {
+        console.debug(`No data found for ${key}`);
       }
     }
   }

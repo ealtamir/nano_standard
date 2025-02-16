@@ -71,7 +71,7 @@ export default function NanoPricesChart(
       return;
     }
     const isMobile = window.innerWidth < 768;
-    const chartData = cachedData[viewType].data.filter(
+    const chartData: NanoPriceData[] = cachedData[viewType].data.filter(
       (d) => d.currency.toUpperCase() === selectedCurrency?.toUpperCase(),
     );
 
