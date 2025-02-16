@@ -2,13 +2,14 @@ import { ComponentChildren, createContext } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { IS_BROWSER } from "$fresh/runtime.ts";
 import { useSocketData } from "../SocketManager.tsx";
+import { ViewType } from "../../models.ts";
 
 interface ChartsContainerProps {
   children: ComponentChildren;
 }
 
 export const ViewTypeContext = createContext<{
-  viewType: "5m" | "1h" | "1d";
+  viewType: ViewType;
 }>({ viewType: "5m" });
 
 export default function ChartsContainer({ children }: ChartsContainerProps) {
@@ -16,7 +17,7 @@ export default function ChartsContainer({ children }: ChartsContainerProps) {
   const { connected } = useSocketData() as unknown as {
     connected: boolean;
   };
-  const [viewType, setViewType] = useState<"5m" | "1h" | "1d">("5m");
+  const [viewType, setViewType] = useState<ViewType>("5m");
   const [isSticky, setIsSticky] = useState(false);
 
   useEffect(() => {
@@ -62,10 +63,10 @@ export default function ChartsContainer({ children }: ChartsContainerProps) {
               : ""
           }`}
         >
-          {["5m", "1h", "1d"].map((type) => (
+          {["5m", "1h", "1d", "1w"].map((type) => (
             <button
               key={type}
-              onClick={() => setViewType(type as "5m" | "1h" | "1d")}
+              onClick={() => setViewType(type as ViewType)}
               className={`px-5 py-2.5 rounded-md font-medium transition-colors
                 ${
                 viewType === type

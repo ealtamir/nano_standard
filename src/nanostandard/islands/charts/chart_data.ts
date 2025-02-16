@@ -1,11 +1,19 @@
-export function viewType2MedianRange(viewType: "5m" | "1h" | "1d"): string {
+import { ViewType } from "../../models.ts";
+
+export function viewType2MedianRange(viewType: ViewType): string {
   if (viewType === "5m") {
     return "2h";
   }
   if (viewType === "1h") {
     return "24h";
   }
-  return "7d";
+  if (viewType === "1d") {
+    return "7d";
+  }
+  if (viewType === "1w") {
+    return "30d";
+  }
+  throw new Error(`Invalid view type: ${viewType}`);
 }
 
 export const defaultChartConfig = {

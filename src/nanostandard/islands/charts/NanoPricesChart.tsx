@@ -40,6 +40,7 @@ export default function NanoPricesChart(
       "5m": { data: [], updated: null },
       "1h": { data: [], updated: null },
       "1d": { data: [], updated: null },
+      "1w": { data: [], updated: null },
     },
   );
 

@@ -2,9 +2,8 @@ import { SubscriptionManager } from "../subscription_manager.ts";
 import { redis } from "../redis_client.ts";
 import { config } from "../config_loader.ts";
 import { Packr } from "npm:msgpackr";
-import { TimeSeriesData } from "../node_interface/handlers/propagator.ts";
+import { ViewType } from "./models.ts";
 
-type ViewType = "5m" | "1h" | "1d";
 type UpdateMessage = {
   type: "update" | "prices";
   viewType: string;
@@ -53,6 +52,7 @@ export class DataListener extends SubscriptionManager {
         this.fetchAndCacheData("5m"),
         this.fetchAndCacheData("1h"),
         this.fetchAndCacheData("1d"),
+        this.fetchAndCacheData("1w"),
         this.fetchAndCachePrices(),
       ]);
 
@@ -63,7 +63,7 @@ export class DataListener extends SubscriptionManager {
     }
   }
 
-  private async fetchAndCacheData(interval: "5m" | "1h" | "1d"): Promise<void> {
+  private async fetchAndCacheData(interval: ViewType): Promise<void> {
     const viewTypes = [
       config.propagator.nano_volume_key,
       config.propagator.nano_prices_key,

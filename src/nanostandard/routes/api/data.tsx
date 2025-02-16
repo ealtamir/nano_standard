@@ -10,7 +10,7 @@ export type SocketMessage = {
 };
 
 const TIMEOUT_DURATION = 60000; // 60 seconds
-const INTERVALS = ["5m", "1h", "1d"] as const;
+const INTERVALS = ["5m", "1h", "1d", "1w"] as const;
 const TOPICS = [
   config.propagator.nano_volume_key,
   config.propagator.nano_prices_key,
