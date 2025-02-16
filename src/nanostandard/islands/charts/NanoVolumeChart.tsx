@@ -75,7 +75,7 @@ export default function NanoVolumeChart() {
       console.log("No data found for NanoVolumeChart viewType: ", viewType);
     } else {
       const isMobile = window.innerWidth < 768;
-      const chartData = cachedData[viewType].data;
+      const chartData: NanoVolumeData[] = cachedData[viewType].data;
 
       const chartConfig = defaultChartConfig;
 
@@ -125,7 +125,7 @@ export default function NanoVolumeChart() {
       const traces = [
         {
           x: chartData.map((d) => new Date(d.time_bucket)),
-          y: chartData.map((d) => chartRound(d.amount_nano)),
+          y: chartData.map((d) => chartRound(d.total_nano_transmitted)),
           name: "Tansactions Volume [NANO]",
           type: "scatter",
           mode: "lines+markers",

@@ -112,9 +112,8 @@ export interface TopicMessage<T> {
 
 export interface NanoVolumeData {
   time_bucket: string;
-  amount_nano: number;
+  total_nano_transmitted: number;
   rolling_median: number;
-  gini_coefficient: number;
 }
 
 export interface NanoPriceData {
