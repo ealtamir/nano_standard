@@ -121,7 +121,7 @@ export interface NanoPriceData {
   currency: string;
   price: number;
   value_transmitted_in_currency: number;
-  rolling_median: number;
+  rolling_median_value: number;
 }
 
 export interface NanoConfirmationData {

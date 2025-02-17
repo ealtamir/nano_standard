@@ -156,7 +156,7 @@ export default function NanoPricesChart(
       },
       {
         x: chartData.map((d) => new Date(d.time_bucket)),
-        y: chartData.map((d) => chartRound(d.rolling_median)),
+        y: chartData.map((d) => chartRound(d.rolling_median_value)),
         name: `Rolling Median [${viewType2MedianRange(viewType)}]`,
         type: "scatter",
         mode: "lines+markers",

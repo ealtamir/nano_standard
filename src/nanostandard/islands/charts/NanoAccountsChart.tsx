@@ -72,7 +72,7 @@ export default function NanoUniqueAccountsChart() {
   useEffect(() => {
     if (cachedData[viewType].data.length > 0) {
       const isMobile = window.innerWidth < 768;
-      const chartData = cachedData[viewType].data;
+      const chartData: NanoUniqueAccountsData[] = cachedData[viewType].data;
 
       const layout = {
         title: {
