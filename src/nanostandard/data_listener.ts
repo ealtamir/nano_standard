@@ -42,19 +42,20 @@ export class DataListener extends SubscriptionManager {
       await this.subscriberClient.connect();
 
       // Subscribe to Redis channel for updates
-      await this.subscriberClient.subscribe(
-        config.propagator.updates_channel_name,
-        this.handleRedisMessage.bind(this),
-      );
 
       // Initialize data from Redis using the command client
       await Promise.all([
+        this.fetchAndCachePrices(),
         this.fetchAndCacheData("5m"),
         this.fetchAndCacheData("1h"),
         this.fetchAndCacheData("1d"),
         this.fetchAndCacheData("1w"),
-        this.fetchAndCachePrices(),
       ]);
+
+      await this.subscriberClient.subscribe(
+        config.propagator.updates_channel_name,
+        this.handleRedisMessage.bind(this),
+      );
 
       console.debug("DataListener initialized successfully");
     } catch (error) {
