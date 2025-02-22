@@ -91,7 +91,7 @@ export default function NanoUniqueAccountsChart() {
           : { t: 50, r: 80, b: 50, l: 80 },
         xaxis: {
           type: "date",
-          tickformat: "%b %d, %H:%M",
+          tickformat: getDateFormat(viewType),
           nticks: isMobile ? 6 : Math.min(chartData.length, 24),
           tickangle: isMobile ? -45 : -30,
           gridcolor: "#e2e8f0",
@@ -199,4 +199,8 @@ export default function NanoUniqueAccountsChart() {
       <div id="nano-unique-accounts-chart" class="w-full" />
     </div>
   );
+}
+
+function getDateFormat(viewType: string) {
+  throw new Error("Function not implemented.");
 }

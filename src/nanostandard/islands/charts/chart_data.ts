@@ -16,6 +16,21 @@ export function viewType2MedianRange(viewType: ViewType): string {
   throw new Error(`Invalid view type: ${viewType}`);
 }
 
+export const getDateFormat = (viewType: ViewType): string => {
+  switch (viewType) {
+    case "5m":
+      return "HH:mm:ss"; // e.g., 14:30:45
+    case "1h":
+      return "HH:mm, MMM D"; // e.g., 14:30
+    case "1d":
+      return "MMM D, YY"; // e.g., Mar 15, 24
+    case "1w":
+      return "MMM D, YY"; // e.g., Mar 15, 24
+    default:
+      return "HH:mm:ss";
+  }
+};
+
 export const defaultChartConfig = {
   responsive: true,
   //   displayModeBar: false,
@@ -29,6 +44,22 @@ export const defaultChartConfig = {
   toImageButtonOptions: {
     format: "png",
     filename: "nano_chart",
+  },
+  locale: "en",
+  separators: ".,",
+  displayModeBar: true,
+  config: {
+    locale: "en",
+    separators: ".,",
+    displayModeBar: true,
+  },
+  layout: {
+    hoverlabel: {
+      namelength: -1,
+    },
+    yaxis: {
+      tickformat: ".1s",
+    },
   },
 };
 
@@ -52,6 +83,6 @@ export function chartRound(val: number | string): number {
   if (num > 10) {
     return Math.round(num);
   } else {
-    return Number(num.toFixed(2));
+    return Number(num.toFixed(3));
   }
 }

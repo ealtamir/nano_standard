@@ -9,7 +9,7 @@ import { ChartProps, ChartsData } from "../../models.ts";
 import { useSocketData } from "../SocketManager.tsx";
 import { useContext, useEffect, useState } from "preact/hooks";
 import { config } from "../../../config_loader.ts";
-import { defaultChartConfig } from "./chart_data.ts";
+import { defaultChartConfig, getDateFormat } from "./chart_data.ts";
 import { ViewTypeContext } from "./ChartsContainer.tsx";
 
 interface CachedChartData {
@@ -127,7 +127,7 @@ export default function NanoDistributionChart() {
           : { t: 50, r: 200, b: 50, l: 80 },
         xaxis: {
           type: "date",
-          tickformat: "%b %d, %H:%M",
+          tickformat: getDateFormat(viewType),
           nticks: isMobile ? 6 : Math.min(chartData.length, 30),
           tickangle: isMobile ? -45 : -30,
           gridcolor: "#e2e8f0",

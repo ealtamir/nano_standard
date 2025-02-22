@@ -14,6 +14,7 @@ import {
   chartRound,
   defaultChartConfig,
   defaultLegendConfig,
+  getDateFormat,
   viewType2MedianRange,
 } from "./chart_data.ts";
 import { ViewTypeContext } from "./ChartsContainer.tsx";
@@ -91,7 +92,7 @@ export default function NanoConfirmationsChart() {
           : { t: 70, r: 80, b: 100, l: 80 },
         xaxis: {
           type: "date",
-          tickformat: "%b %d, %H:%M",
+          tickformat: getDateFormat(viewType),
           nticks: isMobile ? 6 : Math.min(chartData.length, 24),
           tickangle: isMobile ? -45 : -30,
           gridcolor: "#e2e8f0",
