@@ -13,6 +13,7 @@ import { config } from "../../../config_loader.ts";
 import {
   defaultChartConfig,
   defaultLegendConfig,
+  getDateFormat,
   viewType2MedianRange,
 } from "./chart_data.ts";
 import { ViewTypeContext } from "./ChartsContainer.tsx";
@@ -199,8 +200,4 @@ export default function NanoUniqueAccountsChart() {
       <div id="nano-unique-accounts-chart" class="w-full" />
     </div>
   );
-}
-
-function getDateFormat(viewType: string) {
-  throw new Error("Function not implemented.");
 }
