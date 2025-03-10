@@ -1,11 +1,11 @@
 export default function NanoInfo() {
   return (
-    <div className="flex flex-col items-center justify-center py-6 px-4 w-full mx-auto">
+    <div className="container mx-auto max-w-[2000px] flex flex-col items-center justify-center py-6 px-4 w-full mx-auto">
       <div className="flex items-center mb-6">
         <img
-          src="/nano-logo-blue-dark-blue.png"
+          src="/standard_logo_horizontal.svg"
           alt="Nano Logo"
-          style={{ height: "40px" }}
+          style={{ height: "130px" }}
         />
       </div>
 

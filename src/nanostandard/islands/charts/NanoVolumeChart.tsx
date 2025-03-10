@@ -61,19 +61,10 @@ export default function NanoVolumeChart() {
     });
   }, [socketContext]);
 
-  if (!connected) {
-    return (
-      <div class="flex items-center justify-center p-4 text-gray-600">
-        <div class="mr-2">⌛</div>
-        Loading chart...
-      </div>
-    );
-  }
-
   // Use Plotly only when it's ready
   useEffect(() => {
     if (cachedData[viewType].data.length === 0) {
-      console.log("No data found for NanoVolumeChart viewType: ", viewType);
+      return;
     } else {
       const isMobile = window.innerWidth < 768;
       const chartData: NanoVolumeData[] = cachedData[viewType].data;

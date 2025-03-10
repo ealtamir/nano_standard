@@ -84,7 +84,7 @@ export class DataListener extends SubscriptionManager {
         console.debug(`Notifying subscribers for ${key}`);
         this.notifySubscribers(key, cachedData);
       } else {
-        console.debug(`No data found for ${key}`);
+        // do nothing
       }
     }
   }

@@ -17,7 +17,7 @@ export default function Footer() {
 
         {/* Middle column */}
         <div className="flex items-center gap-1 text-center">
-          <span>Data kindly provided by</span>
+          <span>Price data provided by</span>
           <a
             href="https://coingecko.com"
             target="_blank"
