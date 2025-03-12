@@ -1,5 +1,5 @@
-import { PriceTracker } from "../islands/PriceTracker.tsx";
-import { SocketManager } from "../islands/SocketManager.tsx";
+import { PriceTracker } from "./PriceTracker.tsx";
+import { SocketManager } from "./SocketManager.tsx";
 import { useEffect, useState } from "preact/hooks";
 import InfoBar from "./InfoBar.tsx";
 import NanoInfo from "../components/NanoInfo.tsx";
@@ -15,7 +15,7 @@ interface HomeProps {
   wsProtocol: "ws" | "wss";
 }
 
-export default function Home({ wsProtocol }: HomeProps) {
+export default function Transactions({ wsProtocol }: HomeProps) {
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
   return (
@@ -37,7 +37,7 @@ export default function Home({ wsProtocol }: HomeProps) {
           <NanoDistributionChart />
         </ChartsContainer>
       </SocketManager>
-      <Footer />
+      <Footer showPriceData />
     </>
   );
 }

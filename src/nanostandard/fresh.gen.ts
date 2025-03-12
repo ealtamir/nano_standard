@@ -7,10 +7,11 @@ import * as $_app from "./routes/_app.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
 import * as $api_data from "./routes/api/data.tsx";
 import * as $index from "./routes/index.tsx";
-import * as $Home from "./islands/Home.tsx";
+import * as $transactions from "./routes/transactions.tsx";
 import * as $InfoBar from "./islands/InfoBar.tsx";
 import * as $PriceTracker from "./islands/PriceTracker.tsx";
 import * as $SocketManager from "./islands/SocketManager.tsx";
+import * as $Transactions from "./islands/Transactions.tsx";
 import * as $charts_ChartsContainer from "./islands/charts/ChartsContainer.tsx";
 import * as $charts_NanoAccountsChart from "./islands/charts/NanoAccountsChart.tsx";
 import * as $charts_NanoConfirmationsChart from "./islands/charts/NanoConfirmationsChart.tsx";
@@ -27,12 +28,13 @@ const manifest = {
     "./routes/_middleware.ts": $_middleware,
     "./routes/api/data.tsx": $api_data,
     "./routes/index.tsx": $index,
+    "./routes/transactions.tsx": $transactions,
   },
   islands: {
-    "./islands/Home.tsx": $Home,
     "./islands/InfoBar.tsx": $InfoBar,
     "./islands/PriceTracker.tsx": $PriceTracker,
     "./islands/SocketManager.tsx": $SocketManager,
+    "./islands/Transactions.tsx": $Transactions,
     "./islands/charts/ChartsContainer.tsx": $charts_ChartsContainer,
     "./islands/charts/NanoAccountsChart.tsx": $charts_NanoAccountsChart,
     "./islands/charts/NanoConfirmationsChart.tsx":

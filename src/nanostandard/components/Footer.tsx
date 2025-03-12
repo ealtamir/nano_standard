@@ -1,10 +1,12 @@
-export default function Footer() {
+export default function Footer(
+  { showPriceData = false }: { showPriceData?: boolean },
+) {
   return (
     <footer className="py-6 px-4 border-t border-gray-200 mt-12">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center text-sm text-gray-600 space-y-4 md:space-y-0">
         {/* Left column */}
         <div className="flex items-center gap-1 text-center md:text-left">
-          <span>© {new Date().getFullYear()} NanoStandard. Created by</span>
+          <span>Standard @ {new Date().getFullYear()}. Created by</span>
           <a
             href="https://twitter.com/enzo_alt"
             target="_blank"
@@ -15,22 +17,24 @@ export default function Footer() {
           </a>
         </div>
 
-        {/* Middle column */}
-        <div className="flex items-center gap-1 text-center">
-          <span>Price data provided by</span>
-          <a
-            href="https://coingecko.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-gray-900 transition-colors"
-          >
-            <img
-              src="/coingecko_logo.png"
-              alt="Coingecko Logo"
-              className="w-[120px] h-auto"
-            />
-          </a>
-        </div>
+        {/* Middle column - conditionally rendered */}
+        {showPriceData && (
+          <div className="flex items-center gap-1 text-center">
+            <span>Price data provided by</span>
+            <a
+              href="https://coingecko.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-900 transition-colors"
+            >
+              <img
+                src="/coingecko_logo.png"
+                alt="Coingecko Logo"
+                className="w-[120px] h-auto"
+              />
+            </a>
+          </div>
+        )}
 
         {/* Right column */}
         <div className="flex space-x-6">
