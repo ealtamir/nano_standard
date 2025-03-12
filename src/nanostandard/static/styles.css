@@ -1,6 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+:root {
+  /* Converting hex to RGB values for Tailwind opacity support */
+  --primary: 32 156 233;
+  /* #209CE9 - Light blue */
+  --secondary: 32 32 76;
+  /* #20204c - Navy blue */
+  --surface: 244 250 255;
+  /* #f4faff - White */
+  --accent: 239 100 97;
+  /* #ef6461 - Coral */
+  --neutral: 101 101 94;
+  /* #65655e - Gray */
+}
+
 body {
   margin: 0;
   font-family:

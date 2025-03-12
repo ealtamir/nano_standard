@@ -27,7 +27,7 @@ export function Header({ navigation, className }: HeaderProps) {
           <ul className="flex space-x-10 text-gray-600 items-center">
             {navigation.props.children}
             <li class="relative group">
-              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors flex items-center gap-1 shadow-sm">
+              <button class="bg-accent hover:bg-accent/90 text-white font-bold px-4 py-2 rounded-md transition-colors flex items-center gap-1 shadow-sm">
                 Dashboards
                 <svg
                   class="w-4 h-4"

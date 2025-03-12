@@ -133,7 +133,7 @@ export default function Home() {
               <li>
                 <a
                   href="#features"
-                  class="hover:text-blue-500 transition-colors"
+                  class="hover:text-blue-500 transition-colors font-bold"
                 >
                   Features
                 </a>
@@ -141,7 +141,7 @@ export default function Home() {
               <li>
                 <a
                   href="#community"
-                  class="hover:text-blue-500 transition-colors"
+                  class="hover:text-blue-500 transition-colors font-bold"
                 >
                   Community
                 </a>
@@ -176,7 +176,7 @@ export default function Home() {
                   </p>
                   <a
                     href="#signup"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-8 rounded-lg transition-colors flex items-center space-x-2 mx-auto w-fit text-lg"
+                    class="bg-accent hover:bg-accent/90 text-white font-bold py-4 px-8 rounded-lg transition-colors flex items-center space-x-2 mx-auto w-fit text-lg"
                   >
                     <span>Get Started</span>
                     <Icons.ArrowRight />
