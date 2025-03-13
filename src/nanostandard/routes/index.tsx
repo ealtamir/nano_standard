@@ -2,7 +2,7 @@ import { Head } from "$fresh/runtime.ts";
 import { asset } from "$fresh/runtime.ts";
 import Footer from "../components/Footer.tsx";
 import { Header } from "../components/Header.tsx";
-import CommunitySignup from "../components/CommunitySignup.tsx";
+import CommunitySignup from "../islands/CommunitySignup.tsx";
 
 // Mock framer-motion functionality since we don't have it installed
 // These could be replaced with actual Framer Motion imports later
@@ -108,7 +108,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Standard - Nano Network Intelligence</title>
+        <title>STANDARD - Nano Network Intelligence</title>
         <meta
           name="description"
           content="Explore clear, actionable insights that help you navigate the Nano network effortlessly."
@@ -171,11 +171,13 @@ export default function Home() {
                   </h1>
                   <p class="text-xl text-gray-950 mb-12 mx-auto leading-relaxed">
                     Explore clear, actionable insights that help you navigate
-                    the Nano network effortlessly. Standard simplifies complex
-                    data into intuitive intelligence anyone can use.
+                    the Nano network effortlessly.{" "}
+                    <span class="font-high-tide">STANDARD</span>{" "}
+                    simplifies complex data into intuitive intelligence anyone
+                    can use.
                   </p>
                   <a
-                    href="#signup"
+                    href="#dashboards"
                     class="bg-accent hover:bg-accent/90 text-white font-bold py-4 px-8 rounded-lg transition-colors flex items-center space-x-2 mx-auto w-fit text-lg"
                   >
                     <span>Get Started</span>
@@ -192,11 +194,12 @@ export default function Home() {
           <div class="container mx-auto px-4">
             <div class="text-center mb-24">
               <h2 class="text-3xl md:text-5xl font-bold text-gray-900 font-montserrat mb-6">
-                What we offer
+                What we're building
               </h2>
               <p class="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-                Welcome to Standard - your comprehensive intelligence toolkit
-                for understanding what's happening on the Nano network.
+                Welcome to <span class="font-high-tide">STANDARD</span>{" "}
+                - your comprehensive intelligence toolkit for understanding
+                what's happening on the Nano network.
               </p>
             </div>
 
@@ -379,8 +382,11 @@ export default function Home() {
                   </svg>
                 </div>
                 <div class="p-6">
-                  <h3 class="text-2xl font-bold text-gray-900 mb-3 font-montserrat">
+                  <h3 class="text-2xl font-bold text-gray-900 mb-3 font-montserrat flex items-center">
                     Accounts
+                    <span class="ml-2 text-xs bg-yellow-500 text-white px-2 py-1 rounded-full font-medium">
+                      Coming Soon
+                    </span>
                   </h3>
                   <p class="text-gray-700 mb-6">
                     Analyze account behaviors, track aggregate balances, and
@@ -440,6 +446,9 @@ export default function Home() {
                 <div class="p-6">
                   <h3 class="text-2xl font-bold text-gray-900 mb-3 font-montserrat">
                     Network Graph
+                    <span class="ml-2 text-xs bg-yellow-500 text-white px-2 py-1 rounded-full font-medium">
+                      Coming Soon
+                    </span>
                   </h3>
                   <p class="text-gray-700 mb-6">
                     Visualize connections between accounts, understand fund

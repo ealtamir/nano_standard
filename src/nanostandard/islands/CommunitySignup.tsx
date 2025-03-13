@@ -1,5 +1,4 @@
 import { useSignal } from "@preact/signals";
-import { ComponentChildren } from "preact";
 
 interface CommunitySignupProps {
   title?: string;
@@ -23,22 +22,76 @@ export default function CommunitySignup({
   const isSubmitting = useSignal(false);
   const submitted = useSignal(false);
   const error = useSignal("");
+  const acceptedPolicy = useSignal(false);
+  const policyError = useSignal("");
+  const apiError = useSignal("");
 
-  const handleSubmit = (e: Event) => {
+  const handleSubmit = async (e: Event) => {
+    console.log("Form submission started");
     e.preventDefault();
+    console.log("Default prevented");
+
+    // Reset error messages
+    error.value = "";
+    policyError.value = "";
+    apiError.value = "";
+
+    // Validate email
     if (!email.value || !email.value.includes("@")) {
       error.value = "Please enter a valid email address";
+      console.log("Email validation failed");
+      return;
+    }
+
+    // Validate privacy policy acceptance
+    if (!acceptedPolicy.value) {
+      policyError.value = "You must accept the privacy policy to continue";
+      console.log("Policy validation failed");
       return;
     }
 
     isSubmitting.value = true;
+    console.log("Submitting form...");
 
-    // Simulate submission - replace with actual API call
-    setTimeout(() => {
+    try {
+      // Send request to API endpoint
+      console.log("Sending fetch request to /api/signup");
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email.value,
+          acceptedPolicy: acceptedPolicy.value,
+        }),
+      });
+      console.log("Fetch response received:", response.status);
+
+      const data = await response.json();
+      console.log("Response data:", data);
+
+      if (!response.ok) {
+        // Handle error response
+        apiError.value = data.message ||
+          "Failed to submit. Please try again later.";
+        isSubmitting.value = false;
+        console.log("API error:", apiError.value);
+        return;
+      }
+
+      // Handle successful response
+      console.log("Submission successful");
       isSubmitting.value = false;
       submitted.value = true;
       email.value = "";
-    }, 1000);
+      acceptedPolicy.value = false;
+    } catch (err) {
+      console.error("Error submitting form:", err);
+      apiError.value =
+        "Network error. Please check your connection and try again.";
+      isSubmitting.value = false;
+    }
   };
 
   return (
@@ -99,7 +152,14 @@ export default function CommunitySignup({
 
           {!submitted.value
             ? (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form
+                onSubmit={(e: Event) => {
+                  e.preventDefault();
+                  handleSubmit(e);
+                  return false; // Extra safety to prevent default behavior
+                }}
+                className="space-y-6"
+              >
                 <div>
                   <label
                     htmlFor="email"
@@ -123,6 +183,48 @@ export default function CommunitySignup({
                     <p className="mt-2 text-sm text-red-600">{error.value}</p>
                   )}
                 </div>
+
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="privacy-policy"
+                      type="checkbox"
+                      checked={acceptedPolicy.value}
+                      onChange={(e) => {
+                        acceptedPolicy.value =
+                          (e.target as HTMLInputElement).checked;
+                        policyError.value = "";
+                      }}
+                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300"
+                    />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <label
+                      htmlFor="privacy-policy"
+                      className="font-medium text-gray-700"
+                    >
+                      I accept the{" "}
+                      <a
+                        href="/privacy_policy"
+                        className="text-blue-600 hover:underline"
+                      >
+                        Privacy Policy
+                      </a>
+                    </label>
+                    {policyError.value && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {policyError.value}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {apiError.value && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                    {apiError.value}
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   disabled={isSubmitting.value}

@@ -7,6 +7,7 @@ import * as $_app from "./routes/_app.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
 import * as $accounts from "./routes/accounts.tsx";
 import * as $api_data from "./routes/api/data.tsx";
+import * as $api_signup from "./routes/api/signup.tsx";
 import * as $cookie_policy from "./routes/cookie_policy.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $network from "./routes/network.tsx";
@@ -14,6 +15,7 @@ import * as $privacy_policy from "./routes/privacy_policy.tsx";
 import * as $terms_of_service from "./routes/terms_of_service.tsx";
 import * as $transactions from "./routes/transactions.tsx";
 import * as $Accounts from "./islands/Accounts.tsx";
+import * as $CommunitySignup from "./islands/CommunitySignup.tsx";
 import * as $InfoBar from "./islands/InfoBar.tsx";
 import * as $PriceTracker from "./islands/PriceTracker.tsx";
 import * as $SocketManager from "./islands/SocketManager.tsx";
@@ -34,6 +36,7 @@ const manifest = {
     "./routes/_middleware.ts": $_middleware,
     "./routes/accounts.tsx": $accounts,
     "./routes/api/data.tsx": $api_data,
+    "./routes/api/signup.tsx": $api_signup,
     "./routes/cookie_policy.tsx": $cookie_policy,
     "./routes/index.tsx": $index,
     "./routes/network.tsx": $network,
@@ -43,6 +46,7 @@ const manifest = {
   },
   islands: {
     "./islands/Accounts.tsx": $Accounts,
+    "./islands/CommunitySignup.tsx": $CommunitySignup,
     "./islands/InfoBar.tsx": $InfoBar,
     "./islands/PriceTracker.tsx": $PriceTracker,
     "./islands/SocketManager.tsx": $SocketManager,

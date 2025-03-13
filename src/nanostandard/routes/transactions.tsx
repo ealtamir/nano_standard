@@ -1,5 +1,5 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import CommunitySignup from "../components/CommunitySignup.tsx";
+import CommunitySignup from "../islands/CommunitySignup.tsx";
 import Footer from "../components/Footer.tsx";
 import { Header } from "../components/Header.tsx";
 import Transactions from "../islands/Transactions.tsx";

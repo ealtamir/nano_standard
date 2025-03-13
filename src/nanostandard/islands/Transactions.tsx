@@ -3,16 +3,12 @@ import { SocketManager } from "./SocketManager.tsx";
 import { useEffect, useState } from "preact/hooks";
 import InfoBar from "./InfoBar.tsx";
 import NanoInfo from "../components/NanoInfo.tsx";
-import Footer from "../components/Footer.tsx";
 import ChartsContainer from "./charts/ChartsContainer.tsx";
 import NanoConfirmationsChart from "./charts/NanoConfirmationsChart.tsx";
 import NanoVolumeChart from "./charts/NanoVolumeChart.tsx";
 import NanoPricesChart from "./charts/NanoPricesChart.tsx";
 import NanoUniqueAccountsChart from "./charts/NanoAccountsChart.tsx";
 import NanoDistributionChart from "./charts/NanoDistributionChart.tsx";
-import { Header } from "../components/Header.tsx";
-import CommunitySignup from "../components/CommunitySignup.tsx";
-import Breadcrumb from "../components/Breadcrumb.tsx";
 
 interface HomeProps {
   wsProtocol: "ws" | "wss";

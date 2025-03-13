@@ -43,3 +43,4 @@ flyway-*
 .env
 pid
 redis
+kv.*

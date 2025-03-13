@@ -1,8 +1,8 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Header } from "../components/Header.tsx";
 import Footer from "../components/Footer.tsx";
-import CommunitySignup from "../components/CommunitySignup.tsx";
 import Breadcrumb from "../components/Breadcrumb.tsx";
+import CommunitySignup from "../islands/CommunitySignup.tsx";
 
 interface PageData {
   wsProtocol: "ws" | "wss";
