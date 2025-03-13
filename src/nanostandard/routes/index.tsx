@@ -192,11 +192,11 @@ export default function Home() {
           <div class="container mx-auto px-4">
             <div class="text-center mb-24">
               <h2 class="text-3xl md:text-5xl font-bold text-gray-900 font-montserrat mb-6">
-                What You'll Get
+                What we offer
               </h2>
               <p class="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-                Welcome to Standard - your comprehensive toolkit for making
-                informed decisions in the Nano network.
+                Welcome to Standard - your comprehensive intelligence toolkit
+                for understanding what's happening on the Nano network.
               </p>
             </div>
 
@@ -286,7 +286,8 @@ export default function Home() {
           <div class="container mx-auto px-4">
             <div class="text-center mb-20">
               <h2 class="text-3xl md:text-5xl font-bold text-gray-900 font-montserrat mb-6">
-                Powerful Analytics Dashboards
+                Check out our <span class="text-accent">open</span>{" "}
+                analytics dashboards
               </h2>
               <p class="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
                 Gain deeper insights into the Nano network with our specialized
@@ -325,8 +326,8 @@ export default function Home() {
                     Transactions
                   </h3>
                   <p class="text-gray-700 mb-6">
-                    Track transaction flows, monitor volume trends, and identify
-                    patterns in network activity.
+                    Track transaction emounts, monitor volume trends, and
+                    identify patterns in network activity.
                   </p>
                   <a
                     href="/transactions"
@@ -382,8 +383,8 @@ export default function Home() {
                     Accounts
                   </h3>
                   <p class="text-gray-700 mb-6">
-                    Analyze account behaviors, track balances, and identify key
-                    players in the Nano ecosystem.
+                    Analyze account behaviors, track aggregate balances, and
+                    identify key players in the Nano ecosystem.
                   </p>
                   <a
                     href="/accounts"

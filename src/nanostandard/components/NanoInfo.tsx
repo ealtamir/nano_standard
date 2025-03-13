@@ -1,20 +1,20 @@
-export default function NanoInfo() {
-  return (
-    <div className="container mx-auto max-w-[2000px] flex flex-col items-center justify-center py-6 px-4 w-full mx-auto">
-      <div className="flex items-center mb-6">
-        <img
-          src="/standard_logo_horizontal.svg"
-          alt="Nano Logo"
-          style={{ height: "130px" }}
-        />
-      </div>
+import Breadcrumb from "./Breadcrumb.tsx";
 
-      <p className="text-base mb-6 max-w-2xl">
+export default function NanoInfo() {
+  // Define breadcrumb items for this page
+
+  return (
+    <div className="container mx-auto max-w-[2000px] flex flex-col items-center justify-center py-6 px-4 w-full mx-auto mt-10">
+      {/* Add the Breadcrumb component */}
+
+      {
+        /* <p className="text-base mb-6 max-w-2xl">
         Welcome to NANO standard, a website dedicated to tracking the evolution
         and adoption of Nano as a worldwide money standard. To understand Nano's
         progress, we monitor several key metrics that provide valuable insights
         into its growth and usage:
-      </p>
+      </p> */
+      }
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
         {/* Price Metrics */}
@@ -76,7 +76,8 @@ export default function NanoInfo() {
           </ul>
         </div>
 
-        {/* Gini Coefficient */}
+        {
+          /* Comment out Gini Coefficient section
         <div className="bg-white/5 rounded-lg p-4">
           <h3 className="text-lg font-semibold mb-2">
             ⚖️ 4. Gini Coefficient of Transaction Volume
@@ -99,11 +100,13 @@ export default function NanoInfo() {
             </li>
           </ul>
         </div>
+        */
+        }
 
         {/* Unique Accounts */}
         <div className="bg-white/5 rounded-lg p-4">
           <h3 className="text-lg font-semibold mb-2">
-            👥 5. Unique Accounts Transacting
+            👥 4. Unique Accounts Transacting
           </h3>
           <ul className="list-disc pl-6 space-y-1.5 text-sm">
             <li>
@@ -125,10 +128,10 @@ export default function NanoInfo() {
           </ul>
         </div>
 
-        {/* Unique Accounts */}
+        {/* Account Balances */}
         <div className="bg-white/5 rounded-lg p-4">
           <h3 className="text-lg font-semibold mb-2">
-            🪣 6. Transacting Account Balances
+            🪣 5. Transacting Account Balances
           </h3>
           <ul className="list-disc pl-6 space-y-1.5 text-sm">
             <li>

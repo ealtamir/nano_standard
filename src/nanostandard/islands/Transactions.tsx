@@ -10,6 +10,9 @@ import NanoVolumeChart from "./charts/NanoVolumeChart.tsx";
 import NanoPricesChart from "./charts/NanoPricesChart.tsx";
 import NanoUniqueAccountsChart from "./charts/NanoAccountsChart.tsx";
 import NanoDistributionChart from "./charts/NanoDistributionChart.tsx";
+import { Header } from "../components/Header.tsx";
+import CommunitySignup from "../components/CommunitySignup.tsx";
+import Breadcrumb from "../components/Breadcrumb.tsx";
 
 interface HomeProps {
   wsProtocol: "ws" | "wss";
@@ -37,7 +40,6 @@ export default function Transactions({ wsProtocol }: HomeProps) {
           <NanoDistributionChart />
         </ChartsContainer>
       </SocketManager>
-      <Footer showPriceData />
     </>
   );
 }

@@ -45,7 +45,7 @@ export default function ChartsContainer({ children }: ChartsContainerProps) {
 
   if (!plotlyReady || !connected) {
     return (
-      <div class="flex items-center justify-center p-4 text-gray-600">
+      <div class="flex items-center justify-center p-4 text-gray-600 h-full">
         <div class="animate-spin mr-2">⌛</div>
         Loading charts...
       </div>
@@ -56,7 +56,7 @@ export default function ChartsContainer({ children }: ChartsContainerProps) {
     <ViewTypeContext.Provider value={{ viewType }}>
       <div className="charts-container">
         <div
-          className={`flex justify-center gap-2 mb-4 transition-all duration-300 chart-buttons
+          className={`flex justify-center gap-2 mb-4 pb-4 transition-all duration-300 chart-buttons
           ${
             isSticky
               ? "fixed top-4 left-6 z-50 bg-white/95 backdrop-blur-md p-3 rounded-lg shadow-lg border-2 border-gray-800/10 scale-110"

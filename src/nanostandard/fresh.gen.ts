@@ -5,9 +5,15 @@
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
+import * as $accounts from "./routes/accounts.tsx";
 import * as $api_data from "./routes/api/data.tsx";
+import * as $cookie_policy from "./routes/cookie_policy.tsx";
 import * as $index from "./routes/index.tsx";
+import * as $network from "./routes/network.tsx";
+import * as $privacy_policy from "./routes/privacy_policy.tsx";
+import * as $terms_of_service from "./routes/terms_of_service.tsx";
 import * as $transactions from "./routes/transactions.tsx";
+import * as $Accounts from "./islands/Accounts.tsx";
 import * as $InfoBar from "./islands/InfoBar.tsx";
 import * as $PriceTracker from "./islands/PriceTracker.tsx";
 import * as $SocketManager from "./islands/SocketManager.tsx";
@@ -26,11 +32,17 @@ const manifest = {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
     "./routes/_middleware.ts": $_middleware,
+    "./routes/accounts.tsx": $accounts,
     "./routes/api/data.tsx": $api_data,
+    "./routes/cookie_policy.tsx": $cookie_policy,
     "./routes/index.tsx": $index,
+    "./routes/network.tsx": $network,
+    "./routes/privacy_policy.tsx": $privacy_policy,
+    "./routes/terms_of_service.tsx": $terms_of_service,
     "./routes/transactions.tsx": $transactions,
   },
   islands: {
+    "./islands/Accounts.tsx": $Accounts,
     "./islands/InfoBar.tsx": $InfoBar,
     "./islands/PriceTracker.tsx": $PriceTracker,
     "./islands/SocketManager.tsx": $SocketManager,
