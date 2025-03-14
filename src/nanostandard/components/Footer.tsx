@@ -13,7 +13,9 @@ export default function Footer(
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center text-sm space-y-4 md:space-y-0 relative z-10">
         {/* Left column */}
         <div className="flex items-center gap-1 text-center md:text-left">
-          <span className="font-high-tide">STANDARD</span>{" "}
+          <span className="mt-1 font-high-tide inline-block align-middle">
+            STANDARD
+          </span>
           <span>@ {new Date().getFullYear()}. Created by</span>
           <a
             href="https://twitter.com/enzo_alt"

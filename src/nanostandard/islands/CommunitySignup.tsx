@@ -256,7 +256,8 @@ export default function CommunitySignup({
                   Thanks for joining!
                 </h4>
                 <p className="text-gray-700 text-lg">
-                  We'll send you updates on Standard soon.
+                  We'll send you updates on{" "}
+                  <span class="font-high-tide">STANDARD</span>{"   "}soon.
                 </p>
               </div>
             )}

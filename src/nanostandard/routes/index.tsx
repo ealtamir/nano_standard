@@ -166,15 +166,20 @@ export default function Home() {
 
                 {/* Add relative positioning to keep text on top of blur */}
                 <div class="relative">
-                  <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-montserrat leading-tight mb-8">
-                    Smarter Decisions Start With Better Insights
+                  <h1 class="text-5xl md:text-5xl lg:text-6xl font-bold font-montserrat leading-tight mb-8 flex items-center justify-center gap-4">
+                    Nano Insights<br />Made Simple
                   </h1>
                   <p class="text-xl text-gray-950 mb-12 mx-auto leading-relaxed">
-                    Explore clear, actionable insights that help you navigate
-                    the Nano network effortlessly.{" "}
-                    <span class="font-high-tide">STANDARD</span>{" "}
-                    simplifies complex data into intuitive intelligence anyone
-                    can use.
+                    <span class="font-high-tide">STANDARD</span>{"  "}
+                    translates complex{" "}
+                    <img
+                      src={asset("/nano-logo-blue-dark-blue.svg")}
+                      alt="Nano Logo"
+                      class="h-5 inline-block -mt-1 mx-1"
+                    />{" "}
+                    blockchain data into clear insights. Easily understand
+                    what's going on, spot opportunities, or simply satisfy your
+                    curiosity.
                   </p>
                   <a
                     href="#dashboards"
@@ -197,7 +202,7 @@ export default function Home() {
                 What we're building
               </h2>
               <p class="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-                Welcome to <span class="font-high-tide">STANDARD</span>{" "}
+                <span class="font-high-tide">STANDARD</span>{" "}
                 - your comprehensive intelligence toolkit for understanding
                 what's happening on the Nano network.
               </p>
