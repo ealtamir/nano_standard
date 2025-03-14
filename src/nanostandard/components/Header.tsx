@@ -26,7 +26,9 @@ export function Header({ navigation, className }: HeaderProps) {
 
       <nav class="relative">
         <ul className="flex space-x-10 text-gray-600 items-center">
-          {navigation && navigation.props.children}
+          <div class="hidden md:flex space-x-10 items-center">
+            {navigation && navigation.props.children}
+          </div>
           <li class="relative group">
             <button class="bg-accent hover:bg-accent/90 text-white font-bold px-4 py-2 rounded-md transition-colors flex items-center gap-1 shadow-sm">
               Dashboards

@@ -28,12 +28,26 @@ export const handler: Handlers = {
     try {
       // Open Deno KV database
       const kv = await Deno.openKv(
-        Deno.env.get("ENV")?.startsWith("prod") ? "./kv.db" : undefined,
+        Deno.env.get("ENV")?.toLowerCase().startsWith("prod")
+          ? "./kv.db"
+          : undefined,
       );
 
-      // Get client IP address
-      const ipAddress = req.headers.get("x-forwarded-for") ||
+      // Get client IP address - best effort approach
+      const xForwardedFor = req.headers.get("x-forwarded-for");
+      // Parse x-forwarded-for if it contains multiple IPs (comma-separated)
+      const firstForwardedIp = xForwardedFor
+        ? xForwardedFor.split(",")[0].trim()
+        : null;
+
+      const ipAddress = firstForwardedIp ||
         req.headers.get("x-real-ip") ||
+        req.headers.get("cf-connecting-ip") || // Cloudflare
+        req.headers.get("true-client-ip") || // Akamai and Cloudflare
+        req.headers.get("x-client-ip") ||
+        req.headers.get("x-cluster-client-ip") ||
+        req.headers.get("forwarded") || // RFC 7239
+        req.headers.get("x-forwarded") ||
         "unknown";
 
       // Check rate limit
