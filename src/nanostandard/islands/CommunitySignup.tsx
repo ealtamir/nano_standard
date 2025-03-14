@@ -10,7 +10,7 @@ interface CommunitySignupProps {
 }
 
 export default function CommunitySignup({
-  title = "Get Updates on Standard Analytics",
+  title = "Learn of new features and insights for you",
   description =
     "Stay informed about our upcoming crypto analytics platform. Get early updates on features, dashboards, and insights - plus priority access when we launch.",
   className = "",

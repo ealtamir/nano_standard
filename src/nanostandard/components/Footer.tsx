@@ -70,9 +70,13 @@ export default function Footer(
             href="https://nano.org"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-accent transition-colors"
+            className="hover:text-accent transition-colors flex items-center"
           >
-            About Nano
+            <img
+              src="/nano-logo-white.svg"
+              alt="Nano Logo"
+              className="w-[100px] h-auto"
+            />
           </a>
         </div>
       </div>
