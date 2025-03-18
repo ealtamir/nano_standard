@@ -334,8 +334,8 @@ export default function Home() {
                     Transactions
                   </h3>
                   <p class="text-gray-700 mb-6">
-                    Track transaction emounts, monitor volume trends, and
-                    identify patterns in network activity.
+                    Track transaction amounts, monitor volume trends, and
+                    identify patterns in network activity over time.
                   </p>
                   <a
                     href="/transactions"
@@ -394,8 +394,9 @@ export default function Home() {
                     </span>
                   </h3>
                   <p class="text-gray-700 mb-6">
-                    Analyze account behaviors, track aggregate balances, and
-                    identify key players in the Nano ecosystem.
+                    Analyze account behaviors, track aggregate balances, inspect
+                    how funds flow, and visualize interesting account
+                    statistics.
                   </p>
                   <a
                     href="/accounts"
@@ -456,8 +457,8 @@ export default function Home() {
                     </span>
                   </h3>
                   <p class="text-gray-700 mb-6">
-                    Visualize connections between accounts, understand fund
-                    flows, and discover network patterns.
+                    Visualize connections between accounts, network topology,
+                    and discover key players.
                   </p>
                   <a
                     href="/network"

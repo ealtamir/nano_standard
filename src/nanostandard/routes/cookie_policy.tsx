@@ -98,10 +98,10 @@ export default function CookiePolicy() {
             </p>
             <p className="mt-2">
               <a
-                href="mailto:nanostandard@protonmail.com"
+                href="mailto:contact@nanostandard.info"
                 className="text-accent hover:underline"
               >
-                nanostandard@protonmail.com
+                contact@nanostandard.info
               </a>
             </p>
           </div>
