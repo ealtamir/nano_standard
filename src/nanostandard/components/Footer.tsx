@@ -16,7 +16,7 @@ export default function Footer(
           <span className="mt-1 font-high-tide inline-block align-middle">
             STANDARD
           </span>
-          <span>@ {new Date().getFullYear()}. Follows us on</span>
+          <span>@ {new Date().getFullYear()}. Follow us on</span>
           <a
             href="https://x.com/nano_standard"
             target="_blank"
