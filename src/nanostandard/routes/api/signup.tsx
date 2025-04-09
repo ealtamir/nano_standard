@@ -9,6 +9,10 @@ import {
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const MAX_REQUESTS_PER_WINDOW = 10; // Maximum 3 signups per hour per IP
 
+// MailerLite configuration
+const MAILERLITE_API_URL = "https://connect.mailerlite.com/api/subscribers";
+const MAILERLITE_API_KEY = Deno.env.get("MAILERLITE_API_KEY");
+
 // Interface for the subscription data
 interface SubscriptionData {
   email: string;
@@ -26,6 +30,12 @@ interface RateLimitData {
 export const handler: Handlers = {
   async POST(req, ctx) {
     try {
+      // Validate MailerLite API key
+      if (!MAILERLITE_API_KEY) {
+        console.error("MailerLite API key is not configured");
+        throw new Error("MailerLite API key is not configured");
+      }
+
       // Open Deno KV database
       const kv = await Deno.openKv(
         Deno.env.get("ENV")?.toLowerCase().startsWith("prod")
@@ -137,6 +147,35 @@ export const handler: Handlers = {
       // Also add to the list of all subscriptions
       const listKey = ["subscription_emails_list"];
       await kv.set([...listKey, now], subscriptionData);
+
+      // Send to MailerLite
+      try {
+        console.log("Attempting to send subscriber to MailerLite:", email);
+        const mailerLiteResponse = await fetch(MAILERLITE_API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${MAILERLITE_API_KEY}`,
+          },
+          body: JSON.stringify({
+            email: email,
+            subscribed_at:
+              new Date(now).toISOString().replace("T", " ").split(".")[0],
+          }),
+        });
+
+        if (!mailerLiteResponse.ok) {
+          const errorData = await mailerLiteResponse.json();
+          console.error("MailerLite API error:", errorData);
+          throw new Error(`MailerLite API error: ${mailerLiteResponse.status}`);
+        }
+
+        console.log("Successfully sent subscriber to MailerLite:", email);
+      } catch (error) {
+        console.error("Error sending to MailerLite:", error);
+        // Continue with the response even if MailerLite fails
+        // This ensures the user still gets a success response
+      }
 
       return new Response(
         JSON.stringify({
