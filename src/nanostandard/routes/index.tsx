@@ -185,7 +185,7 @@ export default function Home() {
                     href="#dashboards"
                     class="bg-accent hover:bg-accent/90 text-white font-bold py-4 px-8 rounded-lg transition-colors flex items-center space-x-2 mx-auto w-fit text-lg"
                   >
-                    <span>Get Started</span>
+                    <span>Explore the Network</span>
                     <Icons.ArrowRight />
                   </a>
                 </div>
