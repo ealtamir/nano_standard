@@ -141,31 +141,16 @@ export default function NanoPricesChart(
     const traces = [
       {
         x: chartData.map((d) => new Date(d.time_bucket)),
-        y: chartData.map((d) => chartRound(d.total_nano_transmitted)),
-        name: `Volume [${viewType2MedianRange(viewType)}] (NANO)`,
-        type: "scatter",
-        mode: "lines+markers",
-        yaxis: "y1",
-        line: {
-          color: "#48BB78",
-          width: 2,
-        },
-        marker: {
-          size: 4,
-          symbol: "circle",
-        },
-      },
-      {
-        x: chartData.map((d) => new Date(d.time_bucket)),
         y: chartData.map((d) => chartRound(d.value_transmitted_in_currency)),
-        name: `Value Transmitted [${
-          viewType2MedianRange(viewType)
-        }] (${selectedCurrency})`,
+        customdata: chartData.map((d) => chartRound(d.total_nano_transmitted)),
+        hovertemplate:
+          `<b>Fiat Vol</b>: %{y:$,.2f}<br><b>Vol (NANO)</b>: %{customdata:,.0f}<extra></extra>`,
+        name: `Fiat Vol`,
         type: "scatter",
         mode: "lines+markers",
         yaxis: "y1",
         line: {
-          color: "#4299E1",
+          color: "#22C55E",
           width: 2,
         },
         marker: {
@@ -176,12 +161,12 @@ export default function NanoPricesChart(
       {
         x: chartData.map((d) => new Date(d.time_bucket)),
         y: chartData.map((d) => chartRound(d.rolling_median_value)),
-        name: `Rolling Median [${viewType2MedianRange(viewType)}]`,
+        name: `Median [${viewType2MedianRange(viewType)}]`,
         type: "scatter",
         mode: "lines+markers",
         yaxis: "y1",
         line: {
-          color: "#ED8936",
+          color: "#F59E0B",
           width: 2,
         },
         marker: {
@@ -192,12 +177,12 @@ export default function NanoPricesChart(
       {
         x: chartData.map((d) => new Date(d.time_bucket)),
         y: chartData.map((d) => chartRound(d.rolling_average_value)),
-        name: `Rolling Average [${viewType2MedianRange(viewType)}]`,
+        name: `Avg [${viewType2MedianRange(viewType)}]`,
         type: "scatter",
         mode: "lines+markers",
         yaxis: "y1",
         line: {
-          color: "#38B2AC",
+          color: "#8B5CF6",
           width: 2,
         },
         marker: {
@@ -213,7 +198,7 @@ export default function NanoPricesChart(
         mode: "lines+markers",
         yaxis: "y2",
         line: {
-          color: "#F6AD55",
+          color: "#F43F5E",
           width: 2,
         },
         marker: {

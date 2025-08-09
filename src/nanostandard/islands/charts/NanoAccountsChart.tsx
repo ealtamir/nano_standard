@@ -154,12 +154,28 @@ export default function NanoUniqueAccountsChart() {
         {
           x: chartData.map((d) => new Date(d.time_bucket)),
           y: chartData.map((d) => d.rolling_median_accounts),
-          name: `Rolling Median [${viewType2MedianRange(viewType)}]`,
+          name: `Median [${viewType2MedianRange(viewType)}]`,
           type: "scatter",
           mode: "lines+markers",
           yaxis: "y1",
           line: {
-            color: "#48BB78",
+            color: "#F59E0B",
+            width: 2,
+          },
+          marker: {
+            size: 4,
+            symbol: "circle",
+          },
+        },
+        {
+          x: chartData.map((d) => new Date(d.time_bucket)),
+          y: chartData.map((d) => d.rolling_average_accounts),
+          name: `Avg [${viewType2MedianRange(viewType)}]`,
+          type: "scatter",
+          mode: "lines+markers",
+          yaxis: "y1",
+          line: {
+            color: "#8B5CF6",
             width: 2,
           },
           marker: {

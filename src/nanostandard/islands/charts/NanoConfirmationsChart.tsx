@@ -149,11 +149,26 @@ export default function NanoConfirmationsChart() {
         {
           x: chartData.map((d) => new Date(d.time_bucket)),
           y: chartData.map((d) => chartRound(d.rolling_median)),
-          name: `Rolling Median [${viewType2MedianRange(viewType)}]`,
+          name: `Median [${viewType2MedianRange(viewType)}]`,
           type: "scatter",
           mode: "lines+markers",
           line: {
-            color: "#48BB78",
+            color: "#F59E0B",
+            width: 2,
+          },
+          marker: {
+            size: 4,
+            symbol: "circle",
+          },
+        },
+        {
+          x: chartData.map((d) => new Date(d.time_bucket)),
+          y: chartData.map((d) => chartRound(d.rolling_average)),
+          name: `Avg [${viewType2MedianRange(viewType)}]`,
+          type: "scatter",
+          mode: "lines+markers",
+          line: {
+            color: "#8B5CF6",
             width: 2,
           },
           marker: {
