@@ -6,7 +6,7 @@ declare global {
 }
 
 import { NanoPriceData } from "../../../node_interface/models.ts";
-import { ChartProps, ChartsData } from "../../models.ts";
+import { ChartsData } from "../../models.ts";
 import { useSocketData } from "../SocketManager.tsx";
 import { useContext, useEffect, useState } from "preact/hooks";
 import { config } from "../../../config_loader.ts";
@@ -72,7 +72,7 @@ export default function NanoPricesChart(
     if (cachedData[viewType].data.length === 0) {
       return;
     }
-    const isMobile = window.innerWidth < 768;
+    const isMobile = globalThis.innerWidth < 768;
     const chartData: NanoPriceData[] = cachedData[viewType].data.filter(
       (d) => d.currency.toUpperCase() === selectedCurrency?.toUpperCase(),
     );
@@ -103,7 +103,7 @@ export default function NanoPricesChart(
         linecolor: "#cbd5e0",
       },
       yaxis: {
-        title: `Fiat Volume / Rolling Median [${
+        title: `Volume [${
           viewType2MedianRange(viewType)
         }] (${selectedCurrency}) (Log Scale)`,
         type: "log",
@@ -141,8 +141,26 @@ export default function NanoPricesChart(
     const traces = [
       {
         x: chartData.map((d) => new Date(d.time_bucket)),
+        y: chartData.map((d) => chartRound(d.total_nano_transmitted)),
+        name: `Volume [${viewType2MedianRange(viewType)}] (NANO)`,
+        type: "scatter",
+        mode: "lines+markers",
+        yaxis: "y1",
+        line: {
+          color: "#48BB78",
+          width: 2,
+        },
+        marker: {
+          size: 4,
+          symbol: "circle",
+        },
+      },
+      {
+        x: chartData.map((d) => new Date(d.time_bucket)),
         y: chartData.map((d) => chartRound(d.value_transmitted_in_currency)),
-        name: "Value Transmitted",
+        name: `Value Transmitted [${
+          viewType2MedianRange(viewType)
+        }] (${selectedCurrency})`,
         type: "scatter",
         mode: "lines+markers",
         yaxis: "y1",
@@ -163,7 +181,23 @@ export default function NanoPricesChart(
         mode: "lines+markers",
         yaxis: "y1",
         line: {
-          color: "#48BB78",
+          color: "#ED8936",
+          width: 2,
+        },
+        marker: {
+          size: 4,
+          symbol: "circle",
+        },
+      },
+      {
+        x: chartData.map((d) => new Date(d.time_bucket)),
+        y: chartData.map((d) => chartRound(d.rolling_average_value)),
+        name: `Rolling Average [${viewType2MedianRange(viewType)}]`,
+        type: "scatter",
+        mode: "lines+markers",
+        yaxis: "y1",
+        line: {
+          color: "#38B2AC",
           width: 2,
         },
         marker: {
@@ -189,7 +223,12 @@ export default function NanoPricesChart(
       },
     ];
 
-    window.Plotly.newPlot("nano-prices-chart", traces, layout, chartConfig);
+    (globalThis as any).Plotly.newPlot(
+      "nano-prices-chart",
+      traces,
+      layout,
+      chartConfig,
+    );
   }, [cachedData, viewType, selectedCurrency]);
 
   if (cachedData[viewType].data.length === 0 || !connected) {

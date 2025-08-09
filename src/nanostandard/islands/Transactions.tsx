@@ -30,7 +30,6 @@ export default function Transactions({ wsProtocol }: HomeProps) {
 
         <ChartsContainer>
           <NanoPricesChart selectedCurrency={selectedCurrency} />
-          <NanoVolumeChart />
           <NanoConfirmationsChart />
           <NanoUniqueAccountsChart />
           <NanoDistributionChart />
