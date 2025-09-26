@@ -17,6 +17,16 @@ import * as $index from "./routes/index.tsx";
 import * as $CommunitySignup from "./islands/CommunitySignup.tsx";
 import * as $SocketManager from "./islands/SocketManager.tsx";
 import * as $dashboards_accounts_Accounts from "./islands/dashboards/accounts/Accounts.tsx";
+import * as $dashboards_accounts_charts_AccountDormancy from "./islands/dashboards/accounts/charts/AccountDormancy.tsx";
+import * as $dashboards_accounts_charts_AccountMoneyRecency from "./islands/dashboards/accounts/charts/AccountMoneyRecency.tsx";
+import * as $dashboards_accounts_charts_AnimalTierTrends from "./islands/dashboards/accounts/charts/AnimalTierTrends.tsx";
+import * as $dashboards_accounts_charts_BasicStats from "./islands/dashboards/accounts/charts/BasicStats.tsx";
+import * as $dashboards_accounts_charts_NetworkActivityRatio from "./islands/dashboards/accounts/charts/NetworkActivityRatio.tsx";
+import * as $dashboards_accounts_charts_RepChangeDistro from "./islands/dashboards/accounts/charts/RepChangeDistro.tsx";
+import * as $dashboards_accounts_charts_TierBalancesDistro from "./islands/dashboards/accounts/charts/TierBalancesDistro.tsx";
+import * as $dashboards_accounts_charts_TopTierBalancesDistro from "./islands/dashboards/accounts/charts/TopTierBalancesDistro.tsx";
+import * as $dashboards_accounts_charts_TransactionBalanceDistro from "./islands/dashboards/accounts/charts/TransactionBalanceDistro.tsx";
+import * as $dashboards_accounts_models from "./islands/dashboards/accounts/models.ts";
 import * as $dashboards_transactions_InfoBar from "./islands/dashboards/transactions/InfoBar.tsx";
 import * as $dashboards_transactions_PriceTracker from "./islands/dashboards/transactions/PriceTracker.tsx";
 import * as $dashboards_transactions_Transactions from "./islands/dashboards/transactions/Transactions.tsx";
@@ -48,6 +58,25 @@ const manifest = {
     "./islands/CommunitySignup.tsx": $CommunitySignup,
     "./islands/SocketManager.tsx": $SocketManager,
     "./islands/dashboards/accounts/Accounts.tsx": $dashboards_accounts_Accounts,
+    "./islands/dashboards/accounts/charts/AccountDormancy.tsx":
+      $dashboards_accounts_charts_AccountDormancy,
+    "./islands/dashboards/accounts/charts/AccountMoneyRecency.tsx":
+      $dashboards_accounts_charts_AccountMoneyRecency,
+    "./islands/dashboards/accounts/charts/AnimalTierTrends.tsx":
+      $dashboards_accounts_charts_AnimalTierTrends,
+    "./islands/dashboards/accounts/charts/BasicStats.tsx":
+      $dashboards_accounts_charts_BasicStats,
+    "./islands/dashboards/accounts/charts/NetworkActivityRatio.tsx":
+      $dashboards_accounts_charts_NetworkActivityRatio,
+    "./islands/dashboards/accounts/charts/RepChangeDistro.tsx":
+      $dashboards_accounts_charts_RepChangeDistro,
+    "./islands/dashboards/accounts/charts/TierBalancesDistro.tsx":
+      $dashboards_accounts_charts_TierBalancesDistro,
+    "./islands/dashboards/accounts/charts/TopTierBalancesDistro.tsx":
+      $dashboards_accounts_charts_TopTierBalancesDistro,
+    "./islands/dashboards/accounts/charts/TransactionBalanceDistro.tsx":
+      $dashboards_accounts_charts_TransactionBalanceDistro,
+    "./islands/dashboards/accounts/models.ts": $dashboards_accounts_models,
     "./islands/dashboards/transactions/InfoBar.tsx":
       $dashboards_transactions_InfoBar,
     "./islands/dashboards/transactions/PriceTracker.tsx":

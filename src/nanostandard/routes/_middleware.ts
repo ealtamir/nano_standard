@@ -1,6 +1,6 @@
 import { FreshContext } from "$fresh/server.ts";
 import { redis } from "../../redis_client.ts";
-import { DataListener } from "../data_listener.ts";
+import { DataListener } from "../DataListener.ts";
 
 export interface State {
   dataListener: DataListener;
@@ -13,7 +13,7 @@ export class DataListenerContext {
 
   public static async init() {
     if (!DataListenerContext.instance) {
-      DataListenerContext.instance = new DataListener(redis);
+      DataListenerContext.instance = await new DataListener(redis);
     }
     return DataListenerContext.instance;
   }
@@ -31,7 +31,7 @@ export async function handler(
   ctx: FreshContext<State>,
 ) {
   // Initialize on first request if not already initialized
-  if (ctx.destination === 'route' && !Deno.args.includes("build")) {
+  if (ctx.destination === "route" && !Deno.args.includes("build")) {
     ctx.state.dataListener = DataListenerContext.getInstance();
   }
 

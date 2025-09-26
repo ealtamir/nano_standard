@@ -44,25 +44,52 @@ export default function BasicStats() {
     );
   }
 
+  const formatNumber = (num: number): string => {
+    if (num >= 1_000_000) {
+      return (num / 1_000_000).toFixed(2) + "M";
+    }
+    if (num >= 1_000) {
+      return (num / 1_000).toFixed(1) + "K";
+    }
+    return Math.round(num).toString();
+  };
+
+  const Stat = (
+    { title, value }: { title: string; value: string | number },
+  ) => (
+    <div class="text-center">
+      <p class="font-bold text-4xl">{value}</p>
+      <p class="text-lg text-gray-500">{title}</p>
+    </div>
+  );
+
   return (
     <div class="bg-white rounded-lg shadow-lg p-6">
-      <h2 class="text-lg font-semibold mb-4">Basic Account Stats</h2>
-      <ul class="list-disc list-inside">
-        <li>Total Accounts: {cachedData.data.total_accounts}</li>
-        <li>Accounts with Balance: {cachedData.data.accounts_with_balance}</li>
-        <li>Accounts with Sends: {cachedData.data.accounts_with_sends}</li>
-        <li>
-          Accounts with Receives Only:{" "}
-          {cachedData.data.accounts_with_receives_only}
-        </li>
-        <li>
-          Total Nano in Accounts Under 1 Nano:{" "}
-          {cachedData.data.total_nano_under_1}
-        </li>
-      </ul>
-      <pre class="mt-4 p-2 bg-gray-100 rounded">
-        {JSON.stringify(cachedData.data, null, 2)}
-      </pre>
+      <h2 class="text-lg font-semibold mb-4 text-center">
+        Basic Account Stats
+      </h2>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <Stat
+          title="Total Accounts"
+          value={formatNumber(cachedData.data.total_accounts)}
+        />
+        <Stat
+          title="With Balance > 0"
+          value={formatNumber(cachedData.data.accounts_with_balance)}
+        />
+        <Stat
+          title="With Sends"
+          value={formatNumber(cachedData.data.accounts_with_sends)}
+        />
+        <Stat
+          title="Receives Only"
+          value={formatNumber(cachedData.data.accounts_with_receives_only)}
+        />
+        <Stat
+          title="Nano in Accounts < 1"
+          value={formatNumber(cachedData.data.total_nano_under_1 / 1e30)}
+        />
+      </div>
     </div>
   );
 }

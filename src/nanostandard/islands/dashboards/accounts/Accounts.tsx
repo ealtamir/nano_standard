@@ -22,17 +22,21 @@ export default function Accounts({ wsProtocol }: AccountsProps) {
         <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" />
       </Head>
       <SocketManager protocol={wsProtocol}>
-        <div class="p-4 mx-auto max-w-screen-xl">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <BasicStats />
-            <TierBalancesDistro />
+        <div class="w-full">
+          <BasicStats />
+          <div class="p-4 mx-auto max-w-screen-xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {
+                /* <TierBalancesDistro />
             <AccountDormancyChart />
             <AccountMoneyRecencyChart />
             <NetworkActivityRatioChart />
             <RepChangeDistroChart />
             <TopTierBalancesDistro />
             <TransactionBalanceDistroChart />
-            <AnimalTierTrendsChart />
+            <AnimalTierTrendsChart /> */
+              }
+            </div>
           </div>
         </div>
       </SocketManager>

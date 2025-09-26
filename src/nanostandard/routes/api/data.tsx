@@ -1,6 +1,6 @@
 import { Handlers } from "$fresh/server.ts";
-import { DataListener } from "../../data_listener.ts";
-import { Packr } from "npm:msgpackr";
+import { DataListener } from "../../DataListener.ts";
+import { Packr } from "msgpackr";
 import { config } from "../../../config_loader.ts";
 
 export type SocketMessage = {
@@ -21,6 +21,15 @@ const ALL_TOPICS: string[] = [
   ...TOPICS.flatMap((topic) =>
     INTERVALS.map((interval) => `${topic}:${interval}`)
   ),
+  config.propagator.account_animal_bucket_key,
+  config.propagator.account_basic_stats_key,
+  config.propagator.account_dormancy_key,
+  config.propagator.account_money_recency_key,
+  config.propagator.account_network_activity_ratio_key,
+  config.propagator.account_representative_analysis_key,
+  config.propagator.account_top_tiers_distribution_key,
+  config.propagator.account_transaction_and_balance_distribution_key,
+  config.propagator.animal_tier_trends_key,
   config.propagator.prices_latest_key,
 ];
 const packr = new Packr();
