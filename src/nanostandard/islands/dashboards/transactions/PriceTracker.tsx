@@ -1,8 +1,8 @@
-import { useSocketData } from "./SocketManager.tsx";
+import { useSocketData } from "../../SocketManager.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { useSignal } from "@preact/signals";
-import { PriceTrackerData } from "../models.ts";
-import { config } from "../../config_loader.ts";
+import { PriceTrackerData } from "../../../models.ts";
+import { config } from "../../../../config_loader.ts";
 
 // Currency metadata including flags and symbols
 const CURRENCY_META = {

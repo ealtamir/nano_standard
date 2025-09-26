@@ -49,7 +49,7 @@ export function Header({ navigation, className }: HeaderProps) {
             <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div class="py-1 border border-gray-100 rounded-lg">
                 <a
-                  href="/transactions"
+                  href="/dashboards/transactions"
                   class="block px-4 py-2 text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
                 >
                   <svg
@@ -66,7 +66,7 @@ export function Header({ navigation, className }: HeaderProps) {
                   <span>Transactions</span>
                 </a>
                 <a
-                  href="/accounts"
+                  href="/dashboards/accounts"
                   class="block px-4 py-2 text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
                 >
                   <svg
@@ -84,7 +84,7 @@ export function Header({ navigation, className }: HeaderProps) {
                   <span>Accounts</span>
                 </a>
                 <a
-                  href="/network"
+                  href="/dashboards/network"
                   class="block px-4 py-2 text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
                 >
                   <svg

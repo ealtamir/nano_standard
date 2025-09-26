@@ -1,9 +1,9 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { Header } from "../components/Header.tsx";
-import Footer from "../components/Footer.tsx";
-import CommunitySignup from "../islands/CommunitySignup.tsx";
-import Accounts from "../islands/Accounts.tsx";
-import Breadcrumb from "../components/Breadcrumb.tsx";
+import CommunitySignup from "../../islands/CommunitySignup.tsx";
+import Footer from "../../components/Footer.tsx";
+import { Header } from "../../components/Header.tsx";
+import Transactions from "../../islands/dashboards/transactions/Transactions.tsx";
+import Breadcrumb from "../../components/Breadcrumb.tsx";
 
 interface PageData {
   wsProtocol: "ws" | "wss";
@@ -17,12 +17,12 @@ export const handler: Handlers<PageData> = {
   },
 };
 
-export default function AccountsPage({ data }: PageProps<PageData>) {
+export default function IndexApp({ data }: PageProps<PageData>) {
   // Define breadcrumb items for this page
   const breadcrumbItems = [
     { label: "Home", href: "/" },
     { label: "Dashboards", href: "/#dashboards" },
-    { label: "Accounts", active: true },
+    { label: "Transactions", active: true },
   ];
 
   return (
@@ -32,26 +32,22 @@ export default function AccountsPage({ data }: PageProps<PageData>) {
       <div className="container mx-auto max-w-[2000px] flex flex-col items-start justify-center py-6 px-4 w-full mx-auto mt-10">
         <Breadcrumb items={breadcrumbItems} className="self-start" />
         <h1 className="text-5xl font-bold mb-6 text-left w-full">
-          Accounts Dashboard
+          Transactions Dashboard
         </h1>
 
-        {
-          /* <p className="mb-6 text-left max-w-2xl self-start">
+        <p className="mb-6 text-left max-w-2xl self-start">
           This dashboards tracks key metrics related to transactions on the Nano
           network over time. The focus is on understanding the growth and usage
           of Nano as a practical medium of exchange and store of value.
-        </p> */
-        }
+        </p>
       </div>
 
-      <Accounts wsProtocol={data.wsProtocol} />
+      <Transactions wsProtocol={data.wsProtocol} />
       <div className="mt-12"></div>
       <CommunitySignup
-        title="Be the First to Access the Accounts Dashboard"
-        description="Join our community to get early access to the Accounts Dashboard and other upcoming features. We'll notify you as soon as it's ready!"
-        gradientFrom="from-green-400"
-        gradientVia="via-green-500"
-        gradientTo="to-green-600"
+        gradientFrom="from-blue-400"
+        gradientVia="via-blue-500"
+        gradientTo="to-blue-600"
       />
       <Footer showPriceData />
     </div>

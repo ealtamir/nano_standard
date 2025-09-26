@@ -1,6 +1,3 @@
-import { useState } from "preact/hooks";
-import NanoInfo from "../components/NanoInfo.tsx";
-
 interface AccountsProps {
   wsProtocol: "ws" | "wss";
 }

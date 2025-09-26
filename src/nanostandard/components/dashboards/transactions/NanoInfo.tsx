@@ -1,5 +1,3 @@
-import Breadcrumb from "./Breadcrumb.tsx";
-
 export default function NanoInfo() {
   // Define breadcrumb items for this page
 

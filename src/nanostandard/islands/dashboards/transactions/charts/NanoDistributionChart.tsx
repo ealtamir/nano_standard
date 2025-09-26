@@ -5,10 +5,10 @@ declare global {
   }
 }
 
-import { ChartsData } from "../../models.ts";
-import { useSocketData } from "../SocketManager.tsx";
+import { ChartsData } from "../../../../models.ts";
+import { useSocketData } from "../../../SocketManager.tsx";
 import { useContext, useEffect, useState } from "preact/hooks";
-import { config } from "../../../config_loader.ts";
+import { config } from "../../../../../config_loader.ts";
 import { defaultChartConfig, getDateFormat } from "./chart_data.ts";
 import { ViewTypeContext } from "./ChartsContainer.tsx";
 

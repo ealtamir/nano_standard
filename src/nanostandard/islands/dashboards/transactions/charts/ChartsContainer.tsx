@@ -1,8 +1,8 @@
 import { ComponentChildren, createContext } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { IS_BROWSER } from "$fresh/runtime.ts";
-import { useSocketData } from "../SocketManager.tsx";
-import { ViewType } from "../../models.ts";
+import { useSocketData } from "../../../SocketManager.tsx";
+import { ViewType } from "../../../../models.ts";
 
 interface ChartsContainerProps {
   children: ComponentChildren;

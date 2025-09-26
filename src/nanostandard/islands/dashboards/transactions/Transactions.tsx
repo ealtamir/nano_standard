@@ -1,11 +1,10 @@
-import { PriceTracker } from "./PriceTracker.tsx";
-import { SocketManager } from "./SocketManager.tsx";
-import { useEffect, useState } from "preact/hooks";
-import InfoBar from "./InfoBar.tsx";
-import NanoInfo from "../components/NanoInfo.tsx";
+import { PriceTracker } from "../../dashboards/transactions/PriceTracker.tsx";
+import { SocketManager } from "../../SocketManager.tsx";
+import { useState } from "preact/hooks";
+import InfoBar from "../../dashboards/transactions/InfoBar.tsx";
+import NanoInfo from "../../../components/dashboards/transactions/NanoInfo.tsx";
 import ChartsContainer from "./charts/ChartsContainer.tsx";
 import NanoConfirmationsChart from "./charts/NanoConfirmationsChart.tsx";
-import NanoVolumeChart from "./charts/NanoVolumeChart.tsx";
 import NanoPricesChart from "./charts/NanoPricesChart.tsx";
 import NanoUniqueAccountsChart from "./charts/NanoAccountsChart.tsx";
 import NanoDistributionChart from "./charts/NanoDistributionChart.tsx";

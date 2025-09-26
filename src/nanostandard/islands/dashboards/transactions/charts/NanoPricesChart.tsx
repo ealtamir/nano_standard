@@ -5,11 +5,11 @@ declare global {
   }
 }
 
-import { NanoPriceData } from "../../models.ts";
-import { ChartsData } from "../../models.ts";
-import { useSocketData } from "../SocketManager.tsx";
+import { NanoPriceData } from "../../../../models.ts";
+import { ChartsData } from "../../../../models.ts";
+import { useSocketData } from "../../../SocketManager.tsx";
 import { useContext, useEffect, useState } from "preact/hooks";
-import { config } from "../../../config_loader.ts";
+import { config } from "../../../../../config_loader.ts";
 import {
   chartRound,
   defaultChartConfig,

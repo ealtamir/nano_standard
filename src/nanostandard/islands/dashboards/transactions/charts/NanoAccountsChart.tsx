@@ -5,11 +5,11 @@ declare global {
   }
 }
 
-import { NanoUniqueAccountsData } from "../../models.ts";
-import { ChartsData } from "../../models.ts";
-import { useSocketData } from "../SocketManager.tsx";
+import { NanoUniqueAccountsData } from "../../../../models.ts";
+import { ChartsData } from "../../../../models.ts";
+import { useSocketData } from "../../../SocketManager.tsx";
 import { useContext, useEffect, useState } from "preact/hooks";
-import { config } from "../../../config_loader.ts";
+import { config } from "../../../../../config_loader.ts";
 import {
   defaultChartConfig,
   defaultLegendConfig,

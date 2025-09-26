@@ -1,7 +1,6 @@
 {
   "lock": false,
   "tasks": {
-    "dev": "deno run --watch ./src/node_interface/main.ts",
     "check": "deno fmt --check && deno lint && deno check ./src/nanostandard/**/*.ts && deno check src/nanostandard/**/*.tsx",
     "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable -A -",
     "manifest": "deno task cli manifest $(pwd)",

@@ -1,9 +1,7 @@
-import { useSocketData } from "./SocketManager.tsx";
+import { useSocketData } from "../../SocketManager.tsx";
 import { useSignal } from "@preact/signals";
 import { useEffect } from "preact/hooks";
-import { PriceTrackerData } from "../models.ts";
 import { JSX } from "preact/jsx-runtime";
-import { config } from "../../config_file.ts";
 
 interface InfoItem {
   icon: string;

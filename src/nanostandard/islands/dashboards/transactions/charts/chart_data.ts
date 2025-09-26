@@ -1,4 +1,4 @@
-import { ViewType } from "../../models.ts";
+import { ViewType } from "../../../../models.ts";
 
 export function viewType2MedianRange(viewType: ViewType): string {
   if (viewType === "5m") {

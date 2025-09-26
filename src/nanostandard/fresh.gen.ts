@@ -2,66 +2,72 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
+import * as $CookiePolicy from "./routes/CookiePolicy.tsx";
+import * as $PrivacyPolicy from "./routes/PrivacyPolicy.tsx";
+import * as $TermsOfService from "./routes/TermsOfService.tsx";
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
-import * as $accounts from "./routes/accounts.tsx";
 import * as $api_data from "./routes/api/data.tsx";
 import * as $api_signup from "./routes/api/signup.tsx";
-import * as $cookie_policy from "./routes/cookie_policy.tsx";
+import * as $dashboards_accounts from "./routes/dashboards/accounts.tsx";
+import * as $dashboards_network from "./routes/dashboards/network.tsx";
+import * as $dashboards_transactions from "./routes/dashboards/transactions.tsx";
 import * as $index from "./routes/index.tsx";
-import * as $network from "./routes/network.tsx";
-import * as $privacy_policy from "./routes/privacy_policy.tsx";
-import * as $terms_of_service from "./routes/terms_of_service.tsx";
-import * as $transactions from "./routes/transactions.tsx";
-import * as $Accounts from "./islands/Accounts.tsx";
 import * as $CommunitySignup from "./islands/CommunitySignup.tsx";
-import * as $InfoBar from "./islands/InfoBar.tsx";
-import * as $PriceTracker from "./islands/PriceTracker.tsx";
 import * as $SocketManager from "./islands/SocketManager.tsx";
-import * as $Transactions from "./islands/Transactions.tsx";
-import * as $charts_ChartsContainer from "./islands/charts/ChartsContainer.tsx";
-import * as $charts_NanoAccountsChart from "./islands/charts/NanoAccountsChart.tsx";
-import * as $charts_NanoConfirmationsChart from "./islands/charts/NanoConfirmationsChart.tsx";
-import * as $charts_NanoDistributionChart from "./islands/charts/NanoDistributionChart.tsx";
-import * as $charts_NanoPricesChart from "./islands/charts/NanoPricesChart.tsx";
-import * as $charts_NanoVolumeChart from "./islands/charts/NanoVolumeChart.tsx";
-import * as $charts_chart_data from "./islands/charts/chart_data.ts";
-import * as $dashboards_accounts_AccountsMain from "./islands/dashboards/accounts/AccountsMain.tsx";
+import * as $dashboards_accounts_Accounts from "./islands/dashboards/accounts/Accounts.tsx";
+import * as $dashboards_transactions_InfoBar from "./islands/dashboards/transactions/InfoBar.tsx";
+import * as $dashboards_transactions_PriceTracker from "./islands/dashboards/transactions/PriceTracker.tsx";
+import * as $dashboards_transactions_Transactions from "./islands/dashboards/transactions/Transactions.tsx";
+import * as $dashboards_transactions_charts_ChartsContainer from "./islands/dashboards/transactions/charts/ChartsContainer.tsx";
+import * as $dashboards_transactions_charts_NanoAccountsChart from "./islands/dashboards/transactions/charts/NanoAccountsChart.tsx";
+import * as $dashboards_transactions_charts_NanoConfirmationsChart from "./islands/dashboards/transactions/charts/NanoConfirmationsChart.tsx";
+import * as $dashboards_transactions_charts_NanoDistributionChart from "./islands/dashboards/transactions/charts/NanoDistributionChart.tsx";
+import * as $dashboards_transactions_charts_NanoPricesChart from "./islands/dashboards/transactions/charts/NanoPricesChart.tsx";
+import * as $dashboards_transactions_charts_NanoVolumeChart from "./islands/dashboards/transactions/charts/NanoVolumeChart.tsx";
+import * as $dashboards_transactions_charts_chart_data from "./islands/dashboards/transactions/charts/chart_data.ts";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
+    "./routes/CookiePolicy.tsx": $CookiePolicy,
+    "./routes/PrivacyPolicy.tsx": $PrivacyPolicy,
+    "./routes/TermsOfService.tsx": $TermsOfService,
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
     "./routes/_middleware.ts": $_middleware,
-    "./routes/accounts.tsx": $accounts,
     "./routes/api/data.tsx": $api_data,
     "./routes/api/signup.tsx": $api_signup,
-    "./routes/cookie_policy.tsx": $cookie_policy,
+    "./routes/dashboards/accounts.tsx": $dashboards_accounts,
+    "./routes/dashboards/network.tsx": $dashboards_network,
+    "./routes/dashboards/transactions.tsx": $dashboards_transactions,
     "./routes/index.tsx": $index,
-    "./routes/network.tsx": $network,
-    "./routes/privacy_policy.tsx": $privacy_policy,
-    "./routes/terms_of_service.tsx": $terms_of_service,
-    "./routes/transactions.tsx": $transactions,
   },
   islands: {
-    "./islands/Accounts.tsx": $Accounts,
     "./islands/CommunitySignup.tsx": $CommunitySignup,
-    "./islands/InfoBar.tsx": $InfoBar,
-    "./islands/PriceTracker.tsx": $PriceTracker,
     "./islands/SocketManager.tsx": $SocketManager,
-    "./islands/Transactions.tsx": $Transactions,
-    "./islands/charts/ChartsContainer.tsx": $charts_ChartsContainer,
-    "./islands/charts/NanoAccountsChart.tsx": $charts_NanoAccountsChart,
-    "./islands/charts/NanoConfirmationsChart.tsx":
-      $charts_NanoConfirmationsChart,
-    "./islands/charts/NanoDistributionChart.tsx": $charts_NanoDistributionChart,
-    "./islands/charts/NanoPricesChart.tsx": $charts_NanoPricesChart,
-    "./islands/charts/NanoVolumeChart.tsx": $charts_NanoVolumeChart,
-    "./islands/charts/chart_data.ts": $charts_chart_data,
-    "./islands/dashboards/accounts/AccountsMain.tsx":
-      $dashboards_accounts_AccountsMain,
+    "./islands/dashboards/accounts/Accounts.tsx": $dashboards_accounts_Accounts,
+    "./islands/dashboards/transactions/InfoBar.tsx":
+      $dashboards_transactions_InfoBar,
+    "./islands/dashboards/transactions/PriceTracker.tsx":
+      $dashboards_transactions_PriceTracker,
+    "./islands/dashboards/transactions/Transactions.tsx":
+      $dashboards_transactions_Transactions,
+    "./islands/dashboards/transactions/charts/ChartsContainer.tsx":
+      $dashboards_transactions_charts_ChartsContainer,
+    "./islands/dashboards/transactions/charts/NanoAccountsChart.tsx":
+      $dashboards_transactions_charts_NanoAccountsChart,
+    "./islands/dashboards/transactions/charts/NanoConfirmationsChart.tsx":
+      $dashboards_transactions_charts_NanoConfirmationsChart,
+    "./islands/dashboards/transactions/charts/NanoDistributionChart.tsx":
+      $dashboards_transactions_charts_NanoDistributionChart,
+    "./islands/dashboards/transactions/charts/NanoPricesChart.tsx":
+      $dashboards_transactions_charts_NanoPricesChart,
+    "./islands/dashboards/transactions/charts/NanoVolumeChart.tsx":
+      $dashboards_transactions_charts_NanoVolumeChart,
+    "./islands/dashboards/transactions/charts/chart_data.ts":
+      $dashboards_transactions_charts_chart_data,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;
