@@ -19,6 +19,15 @@ interface Propagator {
   nano_confirmations_key: string;
   nano_unique_accounts_key: string;
   nano_bucket_distribution_key: string;
+  account_animal_bucket_key: string;
+  account_basic_stats_key: string;
+  account_dormancy_key: string;
+  account_money_recency_key: string;
+  account_network_activity_ratio_key: string;
+  account_representative_analysis_key: string;
+  account_top_tiers_distribution_key: string;
+  account_transaction_and_balance_distribution_key: string;
+  animal_tier_trends_key: string;
 }
 
 export interface Config {
@@ -70,5 +79,15 @@ export const config: Config = {
     nano_confirmations_key: "nano:confirmations",
     nano_unique_accounts_key: "nano:unique_accounts",
     nano_bucket_distribution_key: "nano:bucket_distribution",
+    account_animal_bucket_key: "nano:account_animal_bucket",
+    account_basic_stats_key: "nano:account_basic_stats",
+    account_dormancy_key: "nano:account_dormancy",
+    account_money_recency_key: "nano:account_money_recency",
+    account_network_activity_ratio_key: "nano:account_network_activity_ratio",
+    account_representative_analysis_key: "nano:account_representative_analysis",
+    account_top_tiers_distribution_key: "nano:account_top_tiers_distribution",
+    account_transaction_and_balance_distribution_key:
+      "nano:account_transaction_and_balance_distribution",
+    animal_tier_trends_key: "nano:animal_tier_trends",
   },
 };

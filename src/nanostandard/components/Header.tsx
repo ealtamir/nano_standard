@@ -10,7 +10,7 @@ interface HeaderProps {
 export function Header({ navigation, className }: HeaderProps) {
   return (
     <header
-      class={`w-full items-center max-w-[2000px] p-6 flex justify-between items-center mb-10 mx-auto ${className}`}
+      class={`w-full max-w-[2000px] p-6 flex justify-between items-center mb-10 mx-auto ${className}`}
     >
       <div class="flex items-center space-x-2">
         <div class="flex items-center space-x-2">
@@ -27,7 +27,7 @@ export function Header({ navigation, className }: HeaderProps) {
       <nav class="relative">
         <ul className="flex space-x-10 text-gray-600 items-center">
           <div class="hidden md:flex space-x-10 items-center">
-            {navigation && navigation.props.children}
+            {navigation}
           </div>
           <li class="relative group">
             <button class="bg-accent hover:bg-accent/90 text-white font-bold px-4 py-2 rounded-md transition-colors flex items-center gap-1 shadow-sm">
@@ -50,7 +50,7 @@ export function Header({ navigation, className }: HeaderProps) {
               <div class="py-1 border border-gray-100 rounded-lg">
                 <a
                   href="/dashboards/transactions"
-                  class="block px-4 py-2 text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                  class="px-4 py-2 text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
                 >
                   <svg
                     class="w-4 h-4"
@@ -67,7 +67,7 @@ export function Header({ navigation, className }: HeaderProps) {
                 </a>
                 <a
                   href="/dashboards/accounts"
-                  class="block px-4 py-2 text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                  class="px-4 py-2 text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
                 >
                   <svg
                     class="w-4 h-4"
@@ -85,7 +85,7 @@ export function Header({ navigation, className }: HeaderProps) {
                 </a>
                 <a
                   href="/dashboards/network"
-                  class="block px-4 py-2 text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                  class="px-4 py-2 text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
                 >
                   <svg
                     class="w-4 h-4"

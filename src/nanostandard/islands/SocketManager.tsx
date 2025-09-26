@@ -2,7 +2,7 @@ import { createContext } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
 import type { ComponentChildren } from "preact";
 import type { SocketMessage } from "../routes/api/data.tsx";
-import { Packr } from "npm:msgpackr";
+import { Packr } from "msgpackr";
 
 interface SocketManagerProps {
   children: ComponentChildren;

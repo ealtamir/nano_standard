@@ -1,7 +1,7 @@
 import { SubscriptionManager } from "../subscription_manager.ts";
 import { redis } from "../redis_client.ts";
 import { config } from "../config_loader.ts";
-import { Packr } from "npm:msgpackr";
+import { Packr } from "msgpackr";
 import { ViewType } from "./models.ts";
 
 type UpdateMessage = {
@@ -50,6 +50,17 @@ export class DataListener extends SubscriptionManager {
         this.fetchAndCacheData("1h"),
         this.fetchAndCacheData("1d"),
         this.fetchAndCacheData("1w"),
+        this.fetchAndCacheKeys([
+          config.propagator.account_animal_bucket_key,
+          config.propagator.account_basic_stats_key,
+          config.propagator.account_dormancy_key,
+          config.propagator.account_money_recency_key,
+          config.propagator.account_network_activity_ratio_key,
+          config.propagator.account_representative_analysis_key,
+          config.propagator.account_top_tiers_distribution_key,
+          config.propagator.account_transaction_and_balance_distribution_key,
+          config.propagator.animal_tier_trends_key,
+        ]),
       ]);
 
       await this.subscriberClient.subscribe(
@@ -100,6 +111,24 @@ export class DataListener extends SubscriptionManager {
       };
       this.cachedData.set(config.propagator.prices_latest_key, cachedData);
       this.notifySubscribers(config.propagator.prices_latest_key, cachedData);
+    }
+  }
+
+  private async fetchAndCacheKeys(keys: string[]): Promise<void> {
+    for (const key of keys) {
+      await this.fetchAndCacheKey(key);
+    }
+  }
+
+  private async fetchAndCacheKey(key: string): Promise<void> {
+    const data = await this.commandClient.get(key);
+    if (data) {
+      const cachedData = {
+        timestamp: Date.now(),
+        data: JSON.parse(data),
+      };
+      this.cachedData.set(key, cachedData);
+      this.notifySubscribers(key, cachedData);
     }
   }
 
