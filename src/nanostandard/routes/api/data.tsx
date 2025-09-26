@@ -1,6 +1,5 @@
 import { Handlers } from "$fresh/server.ts";
 import { DataListener } from "../../data_listener.ts";
-import { TimeSeriesData } from "../../../node_interface/handlers/propagator.ts";
 import { Packr } from "npm:msgpackr";
 import { config } from "../../../config_loader.ts";
 

@@ -46,3 +46,36 @@ export interface NanoBucketDistribution {
   time_bucket: string;
   [key: string]: string | number; // Allow numeric string keys with number values, plus the time_bucket string
 }
+
+export interface NanoVolumeData {
+  time_bucket: string;
+  total_nano_transmitted: number;
+  rolling_median: number;
+  rolling_average: number;
+}
+
+export interface NanoPriceData {
+  time_bucket: string;
+  currency: string;
+  price: number;
+  total_nano_transmitted: number;
+  value_transmitted_in_currency: number;
+  rolling_median_value: number;
+  rolling_average_value: number;
+}
+
+export interface NanoConfirmationData {
+  time_bucket: string;
+  current_confirmations: number;
+  rolling_median: number;
+  rolling_average: number;
+  cumulative_sum_confirmations: number;
+}
+
+export interface NanoUniqueAccountsData {
+  time_bucket: string;
+  new_accounts: number;
+  rolling_median_accounts: number;
+  rolling_average_accounts: number;
+  cumulative_new_accounts: number;
+}

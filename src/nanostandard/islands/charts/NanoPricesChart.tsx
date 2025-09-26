@@ -5,7 +5,7 @@ declare global {
   }
 }
 
-import { NanoPriceData } from "../../../node_interface/models.ts";
+import { NanoPriceData } from "../../models.ts";
 import { ChartsData } from "../../models.ts";
 import { useSocketData } from "../SocketManager.tsx";
 import { useContext, useEffect, useState } from "preact/hooks";

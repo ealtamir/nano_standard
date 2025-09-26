@@ -10,17 +10,8 @@
     "preview": "deno run -A ./src/nanostandard/main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
-  "lint": {
-    "rules": {
-      "tags": [
-        "fresh",
-        "recommended"
-      ]
-    }
-  },
-  "exclude": [
-    "**/_fresh/*"
-  ],
+  "lint": { "rules": { "tags": ["fresh", "recommended"] } },
+  "exclude": ["**/_fresh/*"],
   "imports": {
     "@deno-library/compress": "jsr:@deno-library/compress@^0.5.5",
     "@std/assert": "jsr:@std/assert",
@@ -44,8 +35,5 @@
     "avsc": "npm:avsc@5.7.3",
     "avro-ts": "npm:@ovotech/avro-ts@6.2.0"
   },
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "preact"
-  }
+  "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" }
 }
