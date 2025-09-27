@@ -64,6 +64,8 @@ async function main() {
     [config.propagator.account_transaction_and_balance_distribution_key]:
       "account_transaction_and_balance_distribution.csv",
     [config.propagator.animal_tier_trends_key]: "animal_tier_trends.csv",
+    [config.propagator.account_representative_analysis_key]:
+      "account_representative_analysis.csv",
   };
 
   for (const [redisKey, fileName] of Object.entries(csvMap)) {

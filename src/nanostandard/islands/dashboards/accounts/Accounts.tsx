@@ -24,20 +24,14 @@ export default function Accounts({ wsProtocol }: AccountsProps) {
       <SocketManager protocol={wsProtocol}>
         <div class="w-full">
           <BasicStats />
-          <div class="p-4 mx-auto max-w-screen-xl">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {
-                /* <TierBalancesDistro />
-            <AccountDormancyChart />
-            <AccountMoneyRecencyChart />
-            <NetworkActivityRatioChart />
-            <RepChangeDistroChart />
-            <TopTierBalancesDistro />
-            <TransactionBalanceDistroChart />
-            <AnimalTierTrendsChart /> */
-              }
-            </div>
-          </div>
+          <TierBalancesDistro />
+          <TransactionBalanceDistroChart />
+          <AccountDormancyChart />
+          <NetworkActivityRatioChart />
+          <RepChangeDistroChart />
+          <AnimalTierTrendsChart />
+          <AccountMoneyRecencyChart />
+          <TopTierBalancesDistro />
         </div>
       </SocketManager>
     </>

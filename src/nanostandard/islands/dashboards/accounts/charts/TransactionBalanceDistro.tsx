@@ -100,7 +100,7 @@ export default function TransactionBalanceDistroChart() {
         x: transactionOrder,
         y: balanceOrder,
         type: "heatmap",
-        colorscale: "Plasma",
+        colorscale: "YlGnBu",
         hoverongaps: false,
         hovertemplate:
           "<b>Balance:</b> %{y}<br><b>Transactions:</b> %{x}<br><b>Account Count:</b> %{customdata:,}<br><b>Log10 Count:</b> %{z:.2f}<extra></extra>",
@@ -150,7 +150,7 @@ export default function TransactionBalanceDistroChart() {
 
   return (
     <div class="bg-white rounded-lg shadow-lg p-6">
-      <div id="transaction-balance-distro-chart" class="w-full h-[600px]" />
+      <div id="transaction-balance-distro-chart" class="w-[1000px] h-[600px]" />
     </div>
   );
 }

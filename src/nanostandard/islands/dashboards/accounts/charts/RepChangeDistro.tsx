@@ -1,4 +1,4 @@
-// Declare Plotly on window object for TypeScript
+// Declare Plotly on globalThis object for TypeScript
 declare global {
   interface Window {
     Plotly: any;
@@ -45,9 +45,208 @@ export default function RepChangeDistroChart() {
   }, [socketContext]);
 
   useEffect(() => {
-    if (cachedData.data) {
-      // TODO: Implement Plotly chart rendering logic here
-      // window.Plotly.newPlot(...)
+    if (cachedData.data && globalThis.Plotly) {
+      const isMobile = globalThis.innerWidth < 768;
+
+      // Define the order for time and representative count buckets
+      const timeOrder = [
+        "never_changed",
+        "< 1 month",
+        "1 month",
+        "2 months",
+        "3 months",
+        "4 months",
+        "5 months",
+        "6 months",
+        "7 months",
+        "8 months",
+        "9 months",
+        "10 months",
+        "11 months",
+        "12+ months",
+      ];
+
+      const repCountOrder = [
+        "never_changed",
+        "1",
+        "<= 5",
+        "<= 10",
+        "<= 100",
+        "> 100",
+      ];
+
+      // Helper function to format numbers with K and M suffixes
+      const formatBalance = (value: number): string => {
+        if (isNaN(value) || value === 0) {
+          return "0";
+        }
+
+        if (value >= 1_000_000) {
+          return `${(value / 1_000_000).toFixed(1)}M`;
+        } else if (value >= 1_000) {
+          return `${(value / 1_000).toFixed(1)}K`;
+        } else {
+          return value.toFixed(0);
+        }
+      };
+
+      // Create pivot tables for percentage, balance, and count
+      const pivotPercentage: number[][] = [];
+      const pivotBalance: number[][] = [];
+      const pivotCount: number[][] = [];
+      const textData: string[][] = [];
+
+      // Initialize pivot tables with zeros
+      for (let i = 0; i < repCountOrder.length; i++) {
+        pivotPercentage[i] = [];
+        pivotBalance[i] = [];
+        pivotCount[i] = [];
+        textData[i] = [];
+        for (let j = 0; j < timeOrder.length; j++) {
+          pivotPercentage[i][j] = 0;
+          pivotBalance[i][j] = 0;
+          pivotCount[i][j] = 0;
+          textData[i][j] = "";
+        }
+      }
+
+      // Fill pivot tables with data
+      cachedData.data.forEach((item) => {
+        const timeIndex = timeOrder.indexOf(item.time_since_last_rep_change);
+        const repIndex = repCountOrder.indexOf(
+          item.representatives_count_bucket,
+        );
+
+        if (timeIndex !== -1 && repIndex !== -1) {
+          pivotPercentage[repIndex][timeIndex] = item.percentage_of_supply;
+          pivotBalance[repIndex][timeIndex] = item.total_balance;
+          pivotCount[repIndex][timeIndex] = item.accounts_count;
+        }
+      });
+
+      // Create text data for each cell
+      for (let i = 0; i < repCountOrder.length; i++) {
+        for (let j = 0; j < timeOrder.length; j++) {
+          const percentageVal = pivotPercentage[i][j];
+          const balanceVal = pivotBalance[i][j];
+          const countVal = pivotCount[i][j];
+
+          if (percentageVal > 0 || balanceVal > 0 || countVal > 0) {
+            // Format percentage with 3 decimal places only if less than 1, otherwise 1 decimal place
+            const percentageStr = percentageVal < 1
+              ? `${percentageVal.toFixed(3)}%`
+              : `${percentageVal.toFixed(1)}%`;
+
+            textData[i][j] = `${percentageStr}<br>${
+              formatBalance(balanceVal)
+            }<br>${countVal}`;
+          }
+        }
+      }
+
+      // Calculate summary statistics
+      const totalPercentage = cachedData.data.reduce(
+        (sum, item) => sum + item.percentage_of_supply,
+        0,
+      );
+      const totalAccounts = cachedData.data.reduce(
+        (sum, item) => sum + item.accounts_count,
+        0,
+      );
+      const totalBalance = cachedData.data.reduce(
+        (sum, item) => sum + item.total_balance,
+        0,
+      );
+
+      // Create custom data for hover template
+      const customData = [];
+      for (let i = 0; i < repCountOrder.length; i++) {
+        const row = [];
+        for (let j = 0; j < timeOrder.length; j++) {
+          row.push([
+            pivotPercentage[i][j],
+            pivotBalance[i][j],
+            pivotCount[i][j],
+          ]);
+        }
+        customData.push(row);
+      }
+
+      const layout = {
+        title: {
+          text:
+            `Representative Changes Heatmap<br><sub>Color intensity based on percentage of supply, text shows percentage, balance, and accounts</sub><br><sub>Total: ${
+              totalPercentage.toFixed(2)
+            }% of supply, ${totalAccounts.toLocaleString()} accounts, ${
+              formatBalance(totalBalance)
+            } balance</sub>`,
+          font: {
+            size: 16,
+            color: "#2d3748",
+          },
+        },
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        height: 800,
+        width: 1200,
+        margin: isMobile
+          ? { t: 120, r: 45, b: 70, l: 45 }
+          : { t: 120, r: 80, b: 50, l: 80 },
+        xaxis: {
+          title: "Time Since Last Representative Change",
+          tickangle: 45,
+          tickfont: { size: 16 },
+          gridcolor: "#e2e8f0",
+          linecolor: "#cbd5e0",
+        },
+        yaxis: {
+          title: "Number of Representative Changes",
+          tickfont: { size: 16 },
+          gridcolor: "#e2e8f0",
+          linecolor: "#cbd5e0",
+        },
+        font: { size: 20 },
+      };
+
+      const trace = {
+        z: pivotPercentage,
+        x: timeOrder,
+        y: repCountOrder,
+        text: textData,
+        texttemplate: "%{text}",
+        textfont: { size: 16 },
+        type: "heatmap",
+        colorscale: "YlGnBu",
+        showscale: true,
+        colorbar: {
+          title: "Percentage of Supply (%)",
+          titleside: "right",
+        },
+        hovertemplate: "<b>Rep Changes: %{y}</b><br>" +
+          "<b>Time Since Last Change: %{x}</b><br>" +
+          "Percentage: %{customdata[0]:.3f}%<br>" +
+          "Balance: %{customdata[1]:.0f}<br>" +
+          "Accounts: %{customdata[2]:.0f}<extra></extra>",
+        customdata: customData,
+      };
+
+      const config = {
+        responsive: true,
+        scrollZoom: false,
+        displaylogo: false,
+        dragmode: "pan",
+        toImageButtonOptions: {
+          format: "png",
+          filename: "rep_change_distro_chart",
+        },
+      };
+
+      globalThis.Plotly.newPlot(
+        "rep-change-distro-chart",
+        [trace],
+        layout,
+        config,
+      );
     }
   }, [cachedData]);
 
@@ -62,10 +261,7 @@ export default function RepChangeDistroChart() {
 
   return (
     <div class="bg-white rounded-lg shadow-lg p-6">
-      <div id="rep-change-distro-chart" class="w-full" />
-      <pre class="mt-4 p-2 bg-gray-100 rounded">
-        {JSON.stringify(cachedData.data, null, 2)}
-      </pre>
+      <div id="rep-change-distro-chart" class="w-full p-4" />
     </div>
   );
 }
