@@ -55,6 +55,19 @@ export default function NetworkActivityRatioChart() {
     }
   }, [cachedData]);
 
+  // Add resize handler for responsive updates
+  useEffect(() => {
+    const handleResize = () => {
+      if (cachedData.data && globalThis.Plotly) {
+        // Recreate chart with new dimensions
+        createNetworkActivityRatioChart(cachedData.data);
+      }
+    };
+
+    globalThis.addEventListener("resize", handleResize);
+    return () => globalThis.removeEventListener("resize", handleResize);
+  }, [cachedData]);
+
   // Function to generate cell colors (matching Python implementation)
   const generateCellColors = (
     pivotData: { [key: string]: { [key: string]: number } },
@@ -175,6 +188,20 @@ export default function NetworkActivityRatioChart() {
     // Create color matrix using the improved algorithm
     const colorMatrix = generateCellColors(pivotData, tiers, ratioBuckets);
 
+    // Get container dimensions for responsive sizing
+    const container = document.getElementById("network-activity-ratio-chart");
+    const containerWidth = container?.clientWidth || 1200;
+    const containerHeight = 600; // Fixed height to prevent overflow
+
+    // Calculate responsive font sizes
+    const baseFontSize = Math.max(10, Math.min(14, containerWidth / 80));
+
+    // Calculate responsive margins
+    const leftMargin = Math.max(100, containerWidth * 0.12);
+    const rightMargin = Math.max(50, containerWidth * 0.08);
+    const topMargin = Math.max(80, containerHeight * 0.15);
+    const bottomMargin = Math.max(40, containerHeight * 0.08);
+
     // Create shapes and annotations
     const shapes: Array<{
       type: string;
@@ -214,13 +241,15 @@ export default function NetworkActivityRatioChart() {
         annotations.push({
           x: cIdx,
           y: rIdx,
-          text: `<b>${
-            percentage.toFixed(2)
-          }%</b><br><span style='font-size:10px'>${
-            formatNumber(accountCount)
-          }</span>`,
+          text: `<b>${percentage.toFixed(2)}%</b><br><span style='font-size:${
+            Math.max(8, baseFontSize * 0.7)
+          }px'>${formatNumber(accountCount)}</span>`,
           showarrow: false,
-          font: { color: "white", size: 12, family: "Arial" },
+          font: {
+            color: "white",
+            size: Math.max(10, baseFontSize),
+            family: "Arial",
+          },
         });
       });
     });
@@ -266,6 +295,21 @@ export default function NetworkActivityRatioChart() {
         side: "bottom",
         tickangle: 45,
         range: [-0.6, ratioBuckets.length - 0.4],
+        titlefont: {
+          size: baseFontSize,
+          color: "#333333",
+          family: "Arial",
+        },
+        tickfont: {
+          size: Math.max(9, baseFontSize * 0.9),
+          color: "#333333",
+          family: "Arial",
+        },
+        showgrid: true,
+        gridcolor: "rgba(128, 128, 128, 0.2)",
+        zeroline: false,
+        linecolor: "#333333",
+        linewidth: 1,
       },
       yaxis: {
         title: "Account Tier",
@@ -274,12 +318,32 @@ export default function NetworkActivityRatioChart() {
         ticktext: yLabels,
         autorange: "reversed",
         range: [tiers.length - 0.4, -0.6],
+        titlefont: {
+          size: baseFontSize,
+          color: "#333333",
+          family: "Arial",
+        },
+        tickfont: {
+          size: Math.max(9, baseFontSize * 0.9),
+          color: "#333333",
+          family: "Arial",
+        },
+        showgrid: true,
+        gridcolor: "rgba(128, 128, 128, 0.2)",
+        zeroline: false,
+        linecolor: "#333333",
+        linewidth: 1,
       },
-      width: 1200,
-      height: 800,
-      plot_bgcolor: "rgba(0,0,0,0)",
-      paper_bgcolor: "rgba(0,0,0,0)",
-      margin: { l: 150, r: 100, t: 120, b: 60 },
+      // Remove fixed width - let Plotly handle responsiveness
+      height: containerHeight,
+      plot_bgcolor: "rgba(248, 249, 250, 0.8)",
+      paper_bgcolor: "white",
+      margin: {
+        l: leftMargin,
+        r: rightMargin,
+        t: topMargin,
+        b: bottomMargin,
+      },
       shapes: shapes,
       annotations: [
         ...annotations,
@@ -291,10 +355,16 @@ export default function NetworkActivityRatioChart() {
           text: "<b>Color Key:</b><br>" +
             "<b>Hue (Orange → Blue-Green)</b>: Activity Ratio<br>" +
             "<b>Saturation (Faded → Bright)</b>: % of Accounts in Tier<br>" +
-            "<span style='font-size:9px'>Each cell shows percentage (bold) and account count</span>",
+            `<span style='font-size:${
+              Math.max(7, baseFontSize * 0.7)
+            }px'>Each cell shows percentage (bold) and account count</span>`,
           showarrow: false,
           align: "left",
-          font: { size: 10 },
+          font: {
+            size: Math.max(8, baseFontSize * 0.8),
+            color: "#333333",
+            family: "Arial",
+          },
         },
       ],
     };
@@ -305,6 +375,8 @@ export default function NetworkActivityRatioChart() {
       layout,
       {
         responsive: true,
+        displayModeBar: true,
+        modeBarButtonsToRemove: ["pan2d", "lasso2d", "select2d"],
       },
     );
   };
@@ -360,8 +432,20 @@ export default function NetworkActivityRatioChart() {
   }
 
   return (
-    <div class="bg-white rounded-lg shadow-lg p-6">
-      <div id="network-activity-ratio-chart" class="w-full" />
+    <div class="bg-white rounded-lg shadow-lg p-4 md:p-6">
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">
+          Network Activity Ratio
+        </h3>
+        <p class="text-sm text-gray-600">
+          Distribution of account activity ratios across tiers
+        </p>
+      </div>
+      <div
+        id="network-activity-ratio-chart"
+        class="w-full"
+        style="height: 600px;"
+      />
     </div>
   );
 }

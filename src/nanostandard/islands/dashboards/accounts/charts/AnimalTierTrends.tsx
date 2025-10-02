@@ -290,7 +290,6 @@ export default function AnimalTierTrendsChart() {
           borderwidth: 1,
         },
         hovermode: "x unified",
-        width: 1200,
         height: 800,
       };
 

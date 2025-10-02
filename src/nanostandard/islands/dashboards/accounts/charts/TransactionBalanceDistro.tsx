@@ -127,7 +127,7 @@ export default function TransactionBalanceDistroChart() {
         },
         font: { size: 12 },
         margin: { l: 100, r: 50, t: 80, b: 80 },
-        autosize: true,
+        height: 800,
       };
 
       window.Plotly.newPlot(
@@ -150,7 +150,7 @@ export default function TransactionBalanceDistroChart() {
 
   return (
     <div class="bg-white rounded-lg shadow-lg p-6">
-      <div id="transaction-balance-distro-chart" class="w-[1000px] h-[600px]" />
+      <div id="transaction-balance-distro-chart" class="w-full" />
     </div>
   );
 }

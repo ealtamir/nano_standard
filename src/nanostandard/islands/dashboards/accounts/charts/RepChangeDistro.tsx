@@ -25,7 +25,6 @@ export default function RepChangeDistroChart() {
     data: null,
     updated: null,
   });
-
   useEffect(() => {
     if (!socketContext) return;
     Object.keys(socketContext).some((key: string) => {
@@ -46,8 +45,6 @@ export default function RepChangeDistroChart() {
 
   useEffect(() => {
     if (cachedData.data && globalThis.Plotly) {
-      const isMobile = globalThis.innerWidth < 768;
-
       // Define the order for time and representative count buckets
       const timeOrder = [
         "never_changed",
@@ -187,25 +184,27 @@ export default function RepChangeDistroChart() {
         },
         paper_bgcolor: "rgba(0,0,0,0)",
         plot_bgcolor: "rgba(0,0,0,0)",
-        height: 800,
-        width: 1200,
-        margin: isMobile
-          ? { t: 120, r: 45, b: 70, l: 45 }
-          : { t: 120, r: 80, b: 50, l: 80 },
+        height: 600,
+        margin: {
+          t: 120,
+          r: 100,
+          b: 80,
+          l: 100,
+        },
         xaxis: {
           title: "Time Since Last Representative Change",
           tickangle: 45,
-          tickfont: { size: 16 },
+          tickfont: { size: 12 },
           gridcolor: "#e2e8f0",
           linecolor: "#cbd5e0",
         },
         yaxis: {
           title: "Number of Representative Changes",
-          tickfont: { size: 16 },
+          tickfont: { size: 12 },
           gridcolor: "#e2e8f0",
           linecolor: "#cbd5e0",
         },
-        font: { size: 20 },
+        font: { size: 14 },
       };
 
       const trace = {
@@ -214,13 +213,15 @@ export default function RepChangeDistroChart() {
         y: repCountOrder,
         text: textData,
         texttemplate: "%{text}",
-        textfont: { size: 16 },
+        textfont: { size: 12 },
         type: "heatmap",
         colorscale: "YlGnBu",
         showscale: true,
         colorbar: {
           title: "Percentage of Supply (%)",
           titleside: "right",
+          titlefont: { size: 14 },
+          tickfont: { size: 12 },
         },
         hovertemplate: "<b>Rep Changes: %{y}</b><br>" +
           "<b>Time Since Last Change: %{x}</b><br>" +
@@ -260,8 +261,20 @@ export default function RepChangeDistroChart() {
   }
 
   return (
-    <div class="bg-white rounded-lg shadow-lg p-6">
-      <div id="rep-change-distro-chart" class="w-full p-4" />
+    <div class="bg-white rounded-lg shadow-lg p-4 md:p-6">
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">
+          Representative Changes Distribution
+        </h3>
+        <p class="text-sm text-gray-600">
+          Heatmap showing distribution of representative changes over time
+        </p>
+      </div>
+      <div
+        id="rep-change-distro-chart"
+        class="w-full"
+        style="min-height: 600px;"
+      />
     </div>
   );
 }
