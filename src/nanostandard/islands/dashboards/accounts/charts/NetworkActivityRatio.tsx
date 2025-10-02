@@ -10,7 +10,10 @@ declare global {
   };
 }
 
-import { AccountNetworkActivityRatio } from "../models.ts";
+import {
+  AccountNetworkActivityRatio,
+  AccountNetworkActivityRatioSchema,
+} from "../models.ts";
 import { useSocketData } from "../../../SocketManager.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { config } from "../../../../../config_loader.ts";
@@ -42,7 +45,9 @@ export default function NetworkActivityRatioChart() {
           return;
         }
         setCachedData({
-          data: socketContext[key].data,
+          data: socketContext[key].data.map((data) =>
+            AccountNetworkActivityRatioSchema.parse(data)
+          ),
           updated: newDataTimestamp,
         });
       }

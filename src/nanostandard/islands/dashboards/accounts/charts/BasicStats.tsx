@@ -1,4 +1,4 @@
-import { AccountBasicStats } from "../models.ts";
+import { AccountBasicStats, AccountBasicStatsSchema } from "../models.ts";
 import { useSocketData } from "../../../SocketManager.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { config } from "../../../../../config_loader.ts";
@@ -28,7 +28,7 @@ export default function BasicStats() {
           return;
         }
         setCachedData({
-          data: socketContext[key].data[0], // Assuming single object in array
+          data: AccountBasicStatsSchema.parse(socketContext[key].data[0]), // Parse with Zod schema
           updated: newDataTimestamp,
         });
       }

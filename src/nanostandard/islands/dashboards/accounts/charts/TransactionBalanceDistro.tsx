@@ -5,7 +5,10 @@ declare global {
   }
 }
 
-import { AccountTransactionAndBalanceDistribution } from "../models.ts";
+import {
+  AccountTransactionAndBalanceDistribution,
+  AccountTransactionAndBalanceDistributionSchema,
+} from "../models.ts";
 import { useSocketData } from "../../../SocketManager.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { config } from "../../../../../config_loader.ts";
@@ -42,7 +45,9 @@ export default function TransactionBalanceDistroChart() {
           return;
         }
         setCachedData({
-          data: socketContext[key].data,
+          data: socketContext[key].data.map((data) =>
+            AccountTransactionAndBalanceDistributionSchema.parse(data)
+          ),
           updated: newDataTimestamp,
         });
       }

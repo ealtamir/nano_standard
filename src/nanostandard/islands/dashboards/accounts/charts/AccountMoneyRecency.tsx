@@ -5,7 +5,7 @@ declare global {
   }
 }
 
-import { AccountMoneyRecency } from "../models.ts";
+import { AccountMoneyRecency, AccountMoneyRecencySchema } from "../models.ts";
 import { useSocketData } from "../../../SocketManager.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { config } from "../../../../../config_loader.ts";
@@ -35,7 +35,9 @@ export default function AccountMoneyRecencyChart() {
           return;
         }
         setCachedData({
-          data: socketContext[key].data,
+          data: socketContext[key].data.map((data) =>
+            AccountMoneyRecencySchema.parse(data)
+          ),
           updated: newDataTimestamp,
         });
       }

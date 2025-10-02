@@ -1,169 +1,140 @@
 /**
- * TypeScript interfaces for accounts_dashboard materialized views
+ * Zod schemas for accounts_dashboard materialized views
  * Generated from dbt models in models/accounts_dashboard/
+ * Includes automatic coercion for string-to-number conversion
  */
 
+import { z } from "zod";
+
 // BasicStats.tsx
-export interface AccountBasicStats {
-  total_accounts: number;
-  accounts_with_balance: number;
-  accounts_with_sends: number;
-  accounts_with_receives_only: number;
-  total_nano_under_1: number;
-}
+export const AccountBasicStatsSchema = z.object({
+  total_accounts: z.coerce.number(),
+  accounts_with_balance: z.coerce.number(),
+  accounts_with_sends: z.coerce.number(),
+  accounts_with_receives_only: z.coerce.number(),
+  total_nano_under_1: z.coerce.number(),
+});
+
+export type AccountBasicStats = z.infer<typeof AccountBasicStatsSchema>;
 
 // TierBalancesDistro.tsx
-export interface AccountAnimalBuckets {
-  bucket:
-    | "shrimp"
-    | "fish"
-    | "penguin"
-    | "seal"
-    | "dolphin"
-    | "shark"
-    | "whale";
-  account_count: number;
-  total_nano_in_bucket: number;
-  min_balance_nano: number;
-  max_balance_nano: number;
-  avg_balance_nano: number;
-  p25_balance_nano: number;
-  p50_balance_nano: number;
-  p75_balance_nano: number;
-}
+export const AccountAnimalBucketsSchema = z.object({
+  bucket: z.coerce.string(),
+  account_count: z.coerce.number(),
+  total_nano_in_bucket: z.coerce.number(),
+  min_balance_nano: z.coerce.number(),
+  max_balance_nano: z.coerce.number(),
+  avg_balance_nano: z.coerce.number(),
+  p25_balance_nano: z.coerce.number(),
+  p50_balance_nano: z.coerce.number(),
+  p75_balance_nano: z.coerce.number(),
+});
+
+export type AccountAnimalBuckets = z.infer<typeof AccountAnimalBucketsSchema>;
 
 // AccountDormancy.tsx
-export interface AccountDormancy {
-  day: string; // date
-  active_count_30d: number;
-  active_count_1y: number;
-  activity_percentage: number;
-  activity_percentage_ma_7d: number;
-  activity_percentage_median_7d: number;
-}
+export const AccountDormancySchema = z.object({
+  day: z.string(), // date
+  active_count_30d: z.coerce.number(),
+  active_count_1y: z.coerce.number(),
+  activity_percentage: z.coerce.number(),
+  activity_percentage_ma_7d: z.coerce.number(),
+  activity_percentage_median_7d: z.coerce.number(),
+});
+
+export type AccountDormancy = z.infer<typeof AccountDormancySchema>;
 
 // AccountMoneyRecency.tsx
-export interface AccountMoneyRecency {
-  time_bucket: string; // 'Never Sent' | '>36m' | '≤1m' | '≤2m' | etc.
-  account_count: number;
-  total_balance: number;
-  avg_balance: number;
-  min_balance: number;
-  max_balance: number;
-  percentage_of_accounts: number;
-  percentage_of_balance: number;
-}
+export const AccountMoneyRecencySchema = z.object({
+  time_bucket: z.string(), // 'Never Sent' | '>36m' | '≤1m' | '≤2m' | etc.
+  account_count: z.coerce.number(),
+  total_balance: z.coerce.number(),
+  avg_balance: z.coerce.number(),
+  min_balance: z.coerce.number(),
+  max_balance: z.coerce.number(),
+  percentage_of_accounts: z.coerce.number(),
+  percentage_of_balance: z.coerce.number(),
+});
+
+export type AccountMoneyRecency = z.infer<typeof AccountMoneyRecencySchema>;
 
 // AccountNetworkActivityRatio.tsx
-export interface AccountNetworkActivityRatio {
-  bucket_tier:
-    | "shrimp"
-    | "fish"
-    | "penguin"
-    | "seal"
-    | "dolphin"
-    | "shark"
-    | "whale";
-  ratio_bucket:
-    | "0"
-    | "1-10"
-    | "11-20"
-    | "21-30"
-    | "31-40"
-    | "41-50"
-    | "51-60"
-    | "61-70"
-    | "71-80"
-    | "81-90"
-    | "91-100";
-  account_count: number;
-  percentage_of_tier: number;
-}
+export const AccountNetworkActivityRatioSchema = z.object({
+  bucket_tier: z.coerce.string(),
+  ratio_bucket: z.coerce.string(),
+  account_count: z.coerce.number(),
+  percentage_of_tier: z.coerce.number(),
+});
+
+export type AccountNetworkActivityRatio = z.infer<
+  typeof AccountNetworkActivityRatioSchema
+>;
 
 // RepChangeDistro.tsx
-export interface AccountRepresentativeAnalysis {
-  time_since_last_rep_change:
-    | "never_changed"
-    | "< 1 month"
-    | "1 month"
-    | "2 months"
-    | "3 months"
-    | "4 months"
-    | "5 months"
-    | "6 months"
-    | "7 months"
-    | "8 months"
-    | "9 months"
-    | "10 months"
-    | "11 months"
-    | "12+ months";
-  representatives_count_bucket:
-    | "never_changed"
-    | "1"
-    | "<= 5"
-    | "<= 10"
-    | "<= 100"
-    | "> 100";
-  accounts_count: number;
-  total_balance: number;
-  percentage_of_supply: number;
-}
+export const AccountRepresentativeAnalysisSchema = z.object({
+  time_since_last_rep_change: z.coerce.string(),
+  representatives_count_bucket: z.coerce.string(),
+  accounts_count: z.coerce.number(),
+  total_balance: z.coerce.number(),
+  percentage_of_supply: z.coerce.number(),
+});
+
+export type AccountRepresentativeAnalysis = z.infer<
+  typeof AccountRepresentativeAnalysisSchema
+>;
 
 // TopTierBalanceDistro.tsx
-export interface AccountTopTiersDistribution {
-  tier_name: "seal" | "dolphin" | "shark" | "whale";
-  balance: number;
-}
+export const AccountTopTiersDistributionSchema = z.object({
+  tier_name: z.coerce.string(),
+  balance: z.coerce.number(),
+});
+
+export type AccountTopTiersDistribution = z.infer<
+  typeof AccountTopTiersDistributionSchema
+>;
 
 // TransactionAndBalanceDistro.tsx
-export interface AccountTransactionAndBalanceDistribution {
-  transaction_bucket:
-    | "1 tx"
-    | "2-10 tx"
-    | "11-100 tx"
-    | "101-1k tx"
-    | "1k+ tx";
-  balance_bucket:
-    | "< 1 NANO"
-    | "1-10 NANO"
-    | "10-100 NANO"
-    | "100-1k NANO"
-    | "1k-10k NANO"
-    | "10k-100k NANO"
-    | "100k-1M NANO"
-    | "1M+ NANO";
-  total_counts: number;
-}
+export const AccountTransactionAndBalanceDistributionSchema = z.object({
+  transaction_bucket: z.coerce.string(),
+  balance_bucket: z.coerce.string(),
+  total_counts: z.coerce.number(),
+});
+
+export type AccountTransactionAndBalanceDistribution = z.infer<
+  typeof AccountTransactionAndBalanceDistributionSchema
+>;
 
 // AnimalTierTrends.tsx
-export interface AnimalTierTrends {
-  calculation_timestamp: string; // timestamp
+export const AnimalTierTrendsSchema = z.object({
+  calculation_timestamp: z.string(), // timestamp
   // Raw amounts
-  shrimp_amount: number;
-  fish_amount: number;
-  penguin_amount: number;
-  seal_amount: number;
-  dolphin_amount: number;
-  shark_amount: number;
-  whale_amount: number;
+  shrimp_amount: z.coerce.number(),
+  fish_amount: z.coerce.number(),
+  penguin_amount: z.coerce.number(),
+  seal_amount: z.coerce.number(),
+  dolphin_amount: z.coerce.number(),
+  shark_amount: z.coerce.number(),
+  whale_amount: z.coerce.number(),
   // Long-term trends
-  shrimp_trend: number;
-  fish_trend: number;
-  penguin_trend: number;
-  seal_trend: number;
-  dolphin_trend: number;
-  shark_trend: number;
-  whale_trend: number;
+  shrimp_trend: z.coerce.number(),
+  fish_trend: z.coerce.number(),
+  penguin_trend: z.coerce.number(),
+  seal_trend: z.coerce.number(),
+  dolphin_trend: z.coerce.number(),
+  shark_trend: z.coerce.number(),
+  whale_trend: z.coerce.number(),
   // Daily changes
-  shrimp_daily_change: number;
-  fish_daily_change: number;
-  penguin_daily_change: number;
-  seal_daily_change: number;
-  dolphin_daily_change: number;
-  shark_daily_change: number;
-  whale_daily_change: number;
+  shrimp_daily_change: z.coerce.number(),
+  fish_daily_change: z.coerce.number(),
+  penguin_daily_change: z.coerce.number(),
+  seal_daily_change: z.coerce.number(),
+  dolphin_daily_change: z.coerce.number(),
+  shark_daily_change: z.coerce.number(),
+  whale_daily_change: z.coerce.number(),
   // Market data
-  usd_avg_price: number | null;
-  volume_24h: number | null;
-  volume_24h_sample_ts: string | null; // timestamp
-}
+  usd_avg_price: z.coerce.number().nullable(),
+  volume_24h: z.coerce.number().nullable(),
+  volume_24h_sample_ts: z.string().nullable(), // timestamp
+});
+
+export type AnimalTierTrends = z.infer<typeof AnimalTierTrendsSchema>;

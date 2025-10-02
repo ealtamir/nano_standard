@@ -70,7 +70,10 @@ interface PlotlyConfig {
   modeBarButtonsToRemove: string[];
 }
 
-import { AccountTopTiersDistribution } from "../models.ts";
+import {
+  AccountTopTiersDistribution,
+  AccountTopTiersDistributionSchema,
+} from "../models.ts";
 import { useSocketData } from "../../../SocketManager.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { config } from "../../../../../config_loader.ts";
@@ -102,7 +105,9 @@ export default function TopTierBalancesDistro() {
           return;
         }
         setCachedData({
-          data: socketContext[key].data,
+          data: socketContext[key].data.map((data) =>
+            AccountTopTiersDistributionSchema.parse(data)
+          ),
           updated: newDataTimestamp,
         });
       }

@@ -1,4 +1,4 @@
-import { AccountAnimalBuckets } from "../models.ts";
+import { AccountAnimalBuckets, AccountAnimalBucketsSchema } from "../models.ts";
 import { useSocketData } from "../../../SocketManager.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { config } from "../../../../../config_loader.ts";
@@ -52,7 +52,9 @@ export default function TierBalancesDistro() {
           return;
         }
         setCachedData({
-          data: socketContext[key].data,
+          data: socketContext[key].data.map((data) =>
+            AccountAnimalBucketsSchema.parse(data)
+          ),
           updated: newDataTimestamp,
         });
       }
