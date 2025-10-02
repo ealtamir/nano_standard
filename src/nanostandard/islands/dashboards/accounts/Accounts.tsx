@@ -14,6 +14,8 @@ interface AccountsProps {
   wsProtocol: "ws" | "wss";
 }
 
+const AUTO_CLOSE_TIMEOUT = 1000 * 60 * 60; // 1 hour
+
 export default function Accounts({ wsProtocol }: AccountsProps) {
   return (
     <>
@@ -21,7 +23,10 @@ export default function Accounts({ wsProtocol }: AccountsProps) {
         <title>Nano Standard - Accounts Dashboard</title>
         <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" />
       </Head>
-      <SocketManager protocol={wsProtocol}>
+      <SocketManager
+        protocol={wsProtocol}
+        autoCloseTimeout={AUTO_CLOSE_TIMEOUT}
+      >
         <div class="w-full min-w-[800px]">
           <BasicStats />
 
