@@ -49,7 +49,7 @@ export default function IndexApp({ data }: PageProps<PageData>) {
         gradientVia="via-blue-500"
         gradientTo="to-blue-600"
       />
-      <Footer showPriceData />
+      <Footer />
     </div>
   );
 }

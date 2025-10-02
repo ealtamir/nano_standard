@@ -47,8 +47,6 @@ export default function AccountsPage({ data }: PageProps<PageData>) {
       <Accounts wsProtocol={data.wsProtocol} />
       <div className="mt-12"></div>
       <CommunitySignup
-        title="Be the First to Access the Accounts Dashboard"
-        description="Join our community to get early access to the Accounts Dashboard and other upcoming features. We'll notify you as soon as it's ready!"
         gradientFrom="from-green-400"
         gradientVia="via-green-500"
         gradientTo="to-green-600"
