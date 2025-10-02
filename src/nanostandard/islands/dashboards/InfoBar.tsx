@@ -1,4 +1,4 @@
-import { useSocketData } from "../../SocketManager.tsx";
+import { useSocketData } from "../SocketManager.tsx";
 import { useSignal } from "@preact/signals";
 import { useEffect } from "preact/hooks";
 import { JSX } from "preact/jsx-runtime";

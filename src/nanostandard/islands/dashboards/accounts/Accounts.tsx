@@ -9,6 +9,7 @@ import RepChangeDistroChart from "./charts/RepChangeDistro.tsx";
 import TopTierBalancesDistro from "./charts/TopTierBalancesDistro.tsx";
 import TransactionBalanceDistroChart from "./charts/TransactionBalanceDistro.tsx";
 import AnimalTierTrendsChart from "./charts/AnimalTierTrends.tsx";
+import InfoBar from "../InfoBar.tsx";
 
 interface AccountsProps {
   wsProtocol: "ws" | "wss";
@@ -24,6 +25,7 @@ export default function Accounts({ wsProtocol }: AccountsProps) {
       <SocketManager
         protocol={wsProtocol}
       >
+        <InfoBar />
         <div class="w-full min-w-[800px]">
           <BasicStats />
 

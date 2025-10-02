@@ -1,7 +1,7 @@
 import { PriceTracker } from "../../dashboards/transactions/PriceTracker.tsx";
 import { SocketManager } from "../../SocketManager.tsx";
 import { useState } from "preact/hooks";
-import InfoBar from "../../dashboards/transactions/InfoBar.tsx";
+import InfoBar from "../InfoBar.tsx";
 import NanoInfo from "../../../components/dashboards/transactions/NanoInfo.tsx";
 import ChartsContainer from "./charts/ChartsContainer.tsx";
 import NanoConfirmationsChart from "./charts/NanoConfirmationsChart.tsx";

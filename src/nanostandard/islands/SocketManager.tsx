@@ -98,6 +98,9 @@ export function SocketManager({
 
     // Handle errors
     ws.addEventListener("error", (error) => {
+      if (Deno.env.get("ENVIRONMENT") === "production") {
+        return;
+      }
       console.error("WebSocket error:", error);
     });
 
