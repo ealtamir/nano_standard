@@ -14,8 +14,6 @@ interface AccountsProps {
   wsProtocol: "ws" | "wss";
 }
 
-const AUTO_CLOSE_TIMEOUT = 1000 * 60 * 60; // 1 hour
-
 export default function Accounts({ wsProtocol }: AccountsProps) {
   return (
     <>
@@ -25,7 +23,6 @@ export default function Accounts({ wsProtocol }: AccountsProps) {
       </Head>
       <SocketManager
         protocol={wsProtocol}
-        autoCloseTimeout={AUTO_CLOSE_TIMEOUT}
       >
         <div class="w-full min-w-[800px]">
           <BasicStats />

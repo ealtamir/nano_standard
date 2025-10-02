@@ -8,7 +8,7 @@ interface SocketManagerProps {
   children: ComponentChildren;
   endpoint?: string;
   protocol?: "ws" | "wss";
-  autoCloseTimeout?: number;
+  keepAliveInterval?: number;
 }
 
 interface SocketContext {
@@ -21,7 +21,7 @@ export function SocketManager({
   children,
   endpoint = "/api/data",
   protocol = "wss",
-  autoCloseTimeout = 40000,
+  keepAliveInterval = 40000,
 }: SocketManagerProps) {
   const packr = new Packr();
   const [socket, setSocket] = useState<WebSocket | null>(null);
@@ -68,7 +68,7 @@ export function SocketManager({
           topics: [],
         } as SocketMessage));
       }
-    }, autoCloseTimeout);
+    }, keepAliveInterval);
 
     // Listen for messages
     ws.addEventListener("message", async (event) => {
