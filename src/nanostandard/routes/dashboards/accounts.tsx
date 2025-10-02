@@ -51,7 +51,7 @@ export default function AccountsPage({ data }: PageProps<PageData>) {
         gradientVia="via-green-500"
         gradientTo="to-green-600"
       />
-      <Footer showPriceData />
+      <Footer />
     </div>
   );
 }
