@@ -50,7 +50,7 @@ export default function TransactionBalanceDistroChart() {
   }, [socketContext]);
 
   useEffect(() => {
-    if (cachedData.data && window.Plotly) {
+    if (cachedData.data && globalThis.Plotly) {
       const balanceOrder = [
         "< 1 NANO",
         "1-10 NANO",
@@ -113,24 +113,30 @@ export default function TransactionBalanceDistroChart() {
       const layout = {
         title: {
           text:
-            "NANO Account Distribution (Log Scale): Transaction Activity vs Balance Ranges",
+            "📊 NANO Account Distribution (Log Scale): Transaction Activity vs Balance Ranges",
           x: 0.5,
           xanchor: "center",
-          font: { size: 20 },
+          font: { size: 22, family: "Arial Black" },
         },
         xaxis: {
           title: "Transaction Activity",
           tickangle: 45,
+          gridcolor: "rgba(128, 128, 128, 0.2)",
+          showgrid: true,
         },
         yaxis: {
           title: "Balance Range",
+          gridcolor: "rgba(128, 128, 128, 0.2)",
+          showgrid: true,
         },
-        font: { size: 12 },
+        font: { family: "Arial", size: 12 },
+        plot_bgcolor: "rgba(248, 249, 250, 0.8)",
+        paper_bgcolor: "white",
         margin: { l: 100, r: 50, t: 80, b: 80 },
         height: 800,
       };
 
-      window.Plotly.newPlot(
+      globalThis.Plotly.newPlot(
         "transaction-balance-distro-chart",
         data,
         layout,
@@ -150,6 +156,15 @@ export default function TransactionBalanceDistroChart() {
 
   return (
     <div class="bg-white rounded-lg shadow-lg p-6">
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">
+          Transaction vs Balance Distribution
+        </h3>
+        <p class="text-sm text-gray-600">
+          Heatmap showing account distribution by transaction activity and
+          balance ranges (log scale)
+        </p>
+      </div>
       <div id="transaction-balance-distro-chart" class="w-full" />
     </div>
   );

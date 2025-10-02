@@ -60,7 +60,14 @@ export default function TierBalancesDistro() {
 
   return (
     <div class="bg-white rounded-lg shadow-lg p-6">
-      <h2 class="text-xl font-semibold mb-4">Tier Balances Distribution</h2>
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">
+          Tier Balances Distribution
+        </h3>
+        <p class="text-sm text-gray-600">
+          Detailed breakdown of account balances by animal tier categories
+        </p>
+      </div>
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">

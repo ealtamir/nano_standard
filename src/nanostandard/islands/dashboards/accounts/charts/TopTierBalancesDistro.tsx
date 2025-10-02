@@ -190,8 +190,8 @@ export default function TopTierBalancesDistro() {
         }
       });
 
-      // Helper function to format balance amounts
-      const formatBalance = (amount: number): string => {
+      // Helper function to format balance amounts (currently unused but kept for future use)
+      const _formatBalance = (amount: number): string => {
         if (amount >= 1e6) {
           return `${(amount / 1e6).toFixed(1)}M`;
         } else if (amount >= 1e3) {
@@ -240,6 +240,7 @@ export default function TopTierBalancesDistro() {
           borderwidth: 1,
         },
         hovermode: "closest",
+        width: 800,
         height: 600,
       };
 

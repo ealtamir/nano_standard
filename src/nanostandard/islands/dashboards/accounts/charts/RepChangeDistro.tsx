@@ -171,22 +171,16 @@ export default function RepChangeDistroChart() {
 
       const layout = {
         title: {
-          text:
-            `Representative Changes Heatmap<br><sub>Color intensity based on percentage of supply, text shows percentage, balance, and accounts</sub><br><sub>Total: ${
-              totalPercentage.toFixed(2)
-            }% of supply, ${totalAccounts.toLocaleString()} accounts, ${
-              formatBalance(totalBalance)
-            } balance</sub>`,
-          font: {
-            size: 16,
-            color: "#2d3748",
-          },
+          text: "🔄 Representative Changes Heatmap",
+          x: 0.5,
+          xanchor: "center",
+          font: { size: 22, family: "Arial Black" },
         },
-        paper_bgcolor: "rgba(0,0,0,0)",
-        plot_bgcolor: "rgba(0,0,0,0)",
+        paper_bgcolor: "white",
+        plot_bgcolor: "rgba(248, 249, 250, 0.8)",
         height: 600,
         margin: {
-          t: 120,
+          t: 80,
           r: 100,
           b: 80,
           l: 100,
@@ -195,16 +189,32 @@ export default function RepChangeDistroChart() {
           title: "Time Since Last Representative Change",
           tickangle: 45,
           tickfont: { size: 12 },
-          gridcolor: "#e2e8f0",
+          gridcolor: "rgba(128, 128, 128, 0.2)",
           linecolor: "#cbd5e0",
         },
         yaxis: {
           title: "Number of Representative Changes",
           tickfont: { size: 12 },
-          gridcolor: "#e2e8f0",
+          gridcolor: "rgba(128, 128, 128, 0.2)",
           linecolor: "#cbd5e0",
         },
-        font: { size: 14 },
+        font: { family: "Arial", size: 12 },
+        annotations: [
+          {
+            xref: "paper",
+            yref: "paper",
+            x: 0.5,
+            y: -0.15,
+            text:
+              `Color intensity based on percentage of supply, text shows percentage, balance, and accounts<br>Total: ${
+                totalPercentage.toFixed(2)
+              }% of supply, ${totalAccounts.toLocaleString()} accounts, ${
+                formatBalance(totalBalance)
+              } balance`,
+            showarrow: false,
+            font: { size: 10, color: "#666666" },
+          },
+        ],
       };
 
       const trace = {

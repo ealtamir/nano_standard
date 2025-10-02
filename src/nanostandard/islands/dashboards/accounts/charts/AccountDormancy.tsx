@@ -43,8 +43,8 @@ export default function AccountDormancyChart() {
   }, [socketContext]);
 
   useEffect(() => {
-    if (cachedData.data && window.Plotly) {
-      const isMobile = window.innerWidth < 768;
+    if (cachedData.data && globalThis.Plotly) {
+      const isMobile = globalThis.innerWidth < 768;
 
       // Prepare data
       const dates = cachedData.data.map((d) => new Date(d.day));
@@ -58,14 +58,13 @@ export default function AccountDormancyChart() {
 
       const layout = {
         title: {
-          text: "Account Activity Percentage Over Time",
-          font: {
-            size: 16,
-            color: "#2d3748",
-          },
+          text: "📊 Account Activity Percentage Over Time",
+          x: 0.5,
+          xanchor: "center",
+          font: { size: 22, family: "Arial Black" },
         },
-        paper_bgcolor: "rgba(0,0,0,0)",
-        plot_bgcolor: "rgba(0,0,0,0)",
+        paper_bgcolor: "white",
+        plot_bgcolor: "rgba(248, 249, 250, 0.8)",
         autosize: true,
         height: isMobile ? 500 : 600,
         margin: isMobile
@@ -76,14 +75,14 @@ export default function AccountDormancyChart() {
           tickformat: "%b %d, %Y",
           nticks: isMobile ? 8 : 12,
           tickangle: isMobile ? -45 : -30,
-          gridcolor: "#e2e8f0",
+          gridcolor: "rgba(128, 128, 128, 0.2)",
           linecolor: "#cbd5e0",
           title: "Date",
         },
         yaxis: {
           title: "Activity Percentage (%)",
           side: "left",
-          gridcolor: "#e2e8f0",
+          gridcolor: "rgba(128, 128, 128, 0.2)",
           linecolor: "#cbd5e0",
           tickfont: { size: isMobile ? 9 : 11 },
           showgrid: true,
@@ -93,6 +92,7 @@ export default function AccountDormancyChart() {
           spikecolor: "#a0aec0",
           spikethickness: 1,
         },
+        font: { family: "Arial", size: 12 },
         hovermode: "x unified",
         legend: {
           x: 0,
@@ -100,8 +100,8 @@ export default function AccountDormancyChart() {
           xanchor: "left",
           yanchor: "top",
           orientation: "v",
-          bgcolor: "rgba(255, 255, 255, 0.8)",
-          bordercolor: "#e2e8f0",
+          bgcolor: "rgba(255, 255, 255, 0.9)",
+          bordercolor: "rgba(0, 0, 0, 0.2)",
           borderwidth: 1,
         },
         barmode: "overlay",
@@ -165,7 +165,7 @@ export default function AccountDormancyChart() {
         },
       };
 
-      window.Plotly.newPlot(
+      globalThis.Plotly.newPlot(
         "account-dormancy-chart",
         traces,
         layout,
@@ -185,6 +185,14 @@ export default function AccountDormancyChart() {
 
   return (
     <div class="bg-white rounded-lg shadow-lg p-6">
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">
+          Account Activity Percentage
+        </h3>
+        <p class="text-sm text-gray-600">
+          Daily account activity percentage with moving averages over time
+        </p>
+      </div>
       <div id="account-dormancy-chart" class="w-full" />
     </div>
   );

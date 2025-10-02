@@ -111,14 +111,13 @@ export default function AccountMoneyRecencyChart() {
 
       const layout = {
         title: {
-          text: "Account Money Recency Distribution",
-          font: {
-            size: 16,
-            color: "#2d3748",
-          },
+          text: "💰 Account Money Recency Distribution",
+          x: 0.5,
+          xanchor: "center",
+          font: { size: 22, family: "Arial Black" },
         },
-        paper_bgcolor: "rgba(0,0,0,0)",
-        plot_bgcolor: "rgba(0,0,0,0)",
+        paper_bgcolor: "white",
+        plot_bgcolor: "rgba(248, 249, 250, 0.8)",
         autosize: true,
         height: isMobile ? 500 : 600,
         margin: isMobile
@@ -127,7 +126,7 @@ export default function AccountMoneyRecencyChart() {
         xaxis: {
           title: "Time Since Last Send",
           tickangle: isMobile ? -45 : -30,
-          gridcolor: "#e2e8f0",
+          gridcolor: "rgba(128, 128, 128, 0.2)",
           linecolor: "#cbd5e0",
           showgrid: false,
           categoryorder: "array",
@@ -136,7 +135,7 @@ export default function AccountMoneyRecencyChart() {
         yaxis: {
           title: "Total Balance (NANO)",
           side: "left",
-          gridcolor: "#e2e8f0",
+          gridcolor: "rgba(128, 128, 128, 0.2)",
           linecolor: "#cbd5e0",
           tickfont: { size: isMobile ? 9 : 11 },
           showgrid: true,
@@ -147,6 +146,7 @@ export default function AccountMoneyRecencyChart() {
           spikethickness: 1,
           type: "log", // Use log scale for better visualization of large differences
         },
+        font: { family: "Arial", size: 12 },
         hovermode: "closest",
         showlegend: false,
       };
@@ -221,6 +221,14 @@ export default function AccountMoneyRecencyChart() {
 
   return (
     <div class="bg-white rounded-lg shadow-lg p-6">
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">
+          Account Money Recency Distribution
+        </h3>
+        <p class="text-sm text-gray-600">
+          Distribution of account balances by time since last send transaction
+        </p>
+      </div>
       <div id="account-money-recency-chart" class="w-full" />
     </div>
   );

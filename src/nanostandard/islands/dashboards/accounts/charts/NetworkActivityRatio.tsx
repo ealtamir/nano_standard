@@ -287,6 +287,12 @@ export default function NetworkActivityRatioChart() {
     }];
 
     const layout = {
+      title: {
+        text: "🌐 Network Activity Ratio Heatmap",
+        x: 0.5,
+        xanchor: "center",
+        font: { size: 22, family: "Arial Black" },
+      },
       xaxis: {
         title: "Activity Coefficient (%)",
         tickmode: "array",
@@ -338,10 +344,11 @@ export default function NetworkActivityRatioChart() {
       height: containerHeight,
       plot_bgcolor: "rgba(248, 249, 250, 0.8)",
       paper_bgcolor: "white",
+      font: { family: "Arial", size: 12 },
       margin: {
         l: leftMargin,
         r: rightMargin,
-        t: topMargin,
+        t: topMargin + 40, // Add space for title
         b: bottomMargin,
       },
       shapes: shapes,

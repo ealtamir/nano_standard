@@ -65,9 +65,14 @@ export default function BasicStats() {
 
   return (
     <div class="bg-white rounded-lg shadow-lg p-6">
-      <h2 class="text-lg font-semibold mb-4 text-center">
-        Basic Account Stats
-      </h2>
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">
+          Basic Account Statistics
+        </h3>
+        <p class="text-sm text-gray-600">
+          Overview of account distribution and activity metrics
+        </p>
+      </div>
       <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
         <Stat
           title="Total Accounts"
