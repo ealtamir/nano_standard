@@ -209,7 +209,7 @@ export default function RepChangeDistroChart() {
         texttemplate: "%{text}",
         textfont: { size: 12 },
         type: "heatmap",
-        colorscale: "YlGnBu",
+        colorscale: "Portland",
         showscale: true,
         colorbar: {
           title: "Percentage of Supply (%)",

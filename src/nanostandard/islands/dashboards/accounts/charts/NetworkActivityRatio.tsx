@@ -243,7 +243,7 @@ export default function NetworkActivityRatioChart() {
           y: rIdx,
           text: `<b>${
             percentage.toFixed(2)
-          }%</b><br><span style='font-size:10px'>${
+          }%</b><br><span style='font-size:15px'>${
             formatNumber(accountCount)
           }</span>`,
           showarrow: false,
@@ -332,7 +332,7 @@ export default function NetworkActivityRatioChart() {
           family: "Arial",
         },
         tickfont: {
-          size: 12,
+          size: 14,
           color: "#333333",
           family: "Arial",
         },
@@ -346,7 +346,7 @@ export default function NetworkActivityRatioChart() {
       height: containerHeight,
       plot_bgcolor: "rgba(248, 249, 250, 0.8)",
       paper_bgcolor: "white",
-      font: { family: "Arial", size: 12 },
+      font: { family: "Arial", size: 18 },
       margin: {
         l: leftMargin,
         r: rightMargin,
@@ -368,7 +368,7 @@ export default function NetworkActivityRatioChart() {
           showarrow: false,
           align: "left",
           font: {
-            size: 11,
+            size: 14,
             color: "#333333",
             family: "Arial",
           },
