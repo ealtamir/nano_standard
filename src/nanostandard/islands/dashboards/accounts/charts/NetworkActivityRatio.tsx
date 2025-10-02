@@ -190,17 +190,17 @@ export default function NetworkActivityRatioChart() {
 
     // Get container dimensions for responsive sizing
     const container = document.getElementById("network-activity-ratio-chart");
-    const containerWidth = container?.clientWidth || 1200;
+    const _containerWidth = container?.clientWidth || 1200;
     const containerHeight = 600; // Fixed height to prevent overflow
 
-    // Calculate responsive font sizes
-    const baseFontSize = Math.max(10, Math.min(14, containerWidth / 80));
+    // Use consistent font sizes
+    const baseFontSize = 14;
 
-    // Calculate responsive margins
-    const leftMargin = Math.max(100, containerWidth * 0.12);
-    const rightMargin = Math.max(50, containerWidth * 0.08);
-    const topMargin = Math.max(80, containerHeight * 0.15);
-    const bottomMargin = Math.max(40, containerHeight * 0.08);
+    // Use consistent margins
+    const leftMargin = 100;
+    const rightMargin = 50;
+    const topMargin = 120; // Increased for title space
+    const bottomMargin = 40;
 
     // Create shapes and annotations
     const shapes: Array<{
@@ -241,13 +241,15 @@ export default function NetworkActivityRatioChart() {
         annotations.push({
           x: cIdx,
           y: rIdx,
-          text: `<b>${percentage.toFixed(2)}%</b><br><span style='font-size:${
-            Math.max(8, baseFontSize * 0.7)
-          }px'>${formatNumber(accountCount)}</span>`,
+          text: `<b>${
+            percentage.toFixed(2)
+          }%</b><br><span style='font-size:10px'>${
+            formatNumber(accountCount)
+          }</span>`,
           showarrow: false,
           font: {
             color: "white",
-            size: Math.max(10, baseFontSize),
+            size: baseFontSize,
             family: "Arial",
           },
         });
@@ -307,7 +309,7 @@ export default function NetworkActivityRatioChart() {
           family: "Arial",
         },
         tickfont: {
-          size: Math.max(9, baseFontSize * 0.9),
+          size: 12,
           color: "#333333",
           family: "Arial",
         },
@@ -330,7 +332,7 @@ export default function NetworkActivityRatioChart() {
           family: "Arial",
         },
         tickfont: {
-          size: Math.max(9, baseFontSize * 0.9),
+          size: 12,
           color: "#333333",
           family: "Arial",
         },
@@ -348,7 +350,7 @@ export default function NetworkActivityRatioChart() {
       margin: {
         l: leftMargin,
         r: rightMargin,
-        t: topMargin + 40, // Add space for title
+        t: topMargin,
         b: bottomMargin,
       },
       shapes: shapes,
@@ -362,13 +364,11 @@ export default function NetworkActivityRatioChart() {
           text: "<b>Color Key:</b><br>" +
             "<b>Hue (Orange → Blue-Green)</b>: Activity Ratio<br>" +
             "<b>Saturation (Faded → Bright)</b>: % of Accounts in Tier<br>" +
-            `<span style='font-size:${
-              Math.max(7, baseFontSize * 0.7)
-            }px'>Each cell shows percentage (bold) and account count</span>`,
+            `<span style='font-size:10px'>Each cell shows percentage (bold) and account count</span>`,
           showarrow: false,
           align: "left",
           font: {
-            size: Math.max(8, baseFontSize * 0.8),
+            size: 11,
             color: "#333333",
             family: "Arial",
           },
@@ -445,7 +445,15 @@ export default function NetworkActivityRatioChart() {
           Network Activity Ratio
         </h3>
         <p class="text-sm text-gray-600">
-          Distribution of account activity ratios across tiers
+          Distribution of account activity ratios across tiers.
+        </p>
+        <p class="text-sm text-gray-600">
+          The plot shows what percentage of accounts in the tiers have a given
+          activity coefficient. Higher values mean more activity over the
+        </p>
+        <p class="text-sm text-gray-600">
+          lifespan of the account. As accounts stop sending Ӿ, the coefficient
+          drops. Fast for new accounts, more slowly for older ones.
         </p>
       </div>
       <div

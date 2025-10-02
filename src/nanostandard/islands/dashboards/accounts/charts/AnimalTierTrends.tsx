@@ -19,6 +19,7 @@ interface PlotlyTrace {
   opacity?: number;
   showlegend?: boolean;
   hoverinfo?: string;
+  customdata?: number[][];
 }
 
 interface PlotlyLayout {
@@ -165,32 +166,10 @@ export default function AnimalTierTrendsChart() {
         },
       };
 
-      // Helper function to format baseline amounts
-      const formatBaselineAmount = (amount: number): string => {
-        if (amount >= 1e6) {
-          return `${(amount / 1e6).toFixed(1)}M`;
-        } else if (amount >= 1e3) {
-          return `${(amount / 1e3).toFixed(1)}K`;
-        } else {
-          return `${amount.toFixed(0)}`;
-        }
-      };
-
-      // Get baseline amounts from the first data point
-      const baselineAmounts: Record<string, number> = {};
-      const firstDataPoint = cachedData.data[0];
-      Object.keys(tierConfig).forEach((tier) => {
-        const amountKey = `${tier}_amount` as keyof AnimalTierTrends;
-        baselineAmounts[tier] = firstDataPoint[amountKey] as number;
-      });
-
-      // Update tier names with baseline amounts
+      // Update tier names without baseline amounts
       Object.keys(tierConfig).forEach((tier) => {
         const config = tierConfig[tier as keyof typeof tierConfig];
-        const baseline = baselineAmounts[tier];
-        config.name = `${config.emoji} ${config.name.split(" ")[0]} (${
-          formatBaselineAmount(baseline)
-        })`;
+        config.name = `${config.emoji} ${config.name.split(" ")[0]}`;
       });
 
       // Prepare data for the chart
@@ -202,9 +181,19 @@ export default function AnimalTierTrendsChart() {
       // Add traces for trend data (percentage changes)
       Object.keys(tierConfig).forEach((tier) => {
         const trendCol = `${tier}_trend` as keyof AnimalTierTrends;
+        const amountCol = `${tier}_amount` as keyof AnimalTierTrends;
+        const dailyChangeCol = `${tier}_daily_change` as keyof AnimalTierTrends;
         const config = tierConfig[tier as keyof typeof tierConfig];
 
         const trendData = cachedData.data?.map((d) => d[trendCol] as number) ||
+          [];
+        const amountData = cachedData.data?.map((d) =>
+          d[amountCol] as number
+        ) ||
+          [];
+        const dailyChangeData = cachedData.data?.map((d) =>
+          d[dailyChangeCol] as number
+        ) ||
           [];
 
         traces.push({
@@ -219,7 +208,13 @@ export default function AnimalTierTrendsChart() {
           hovertemplate: `<b>${config.name}</b><br>` +
             `Date: %{x}<br>` +
             `Trend: %{y:.2f}%<br>` +
+            `Total: %{customdata[0]:,.0f} NANO<br>` +
+            `Daily Change: %{customdata[1]:+.2f}%<br>` +
             `<extra></extra>`,
+          customdata: amountData.map((amount, index) => [
+            Math.round(amount),
+            dailyChangeData[index] || 0,
+          ]),
         });
       });
 
@@ -323,7 +318,11 @@ export default function AnimalTierTrendsChart() {
       <div class="mb-4">
         <h3 class="text-lg font-semibold text-gray-800">Tier Balance Trends</h3>
         <p class="text-sm text-gray-600">
-          Percentage change from baseline for each tier over time
+          Percentage change from baseline for each tier over time.
+        </p>
+        <p class="text-sm text-gray-600">
+          The plot gives an idea of how different tiers behave over time, as
+          well as how money flows from one tier to other/s.
         </p>
       </div>
       <div

@@ -25,6 +25,35 @@ export default function RepChangeDistroChart() {
     data: null,
     updated: null,
   });
+
+  // Helper function to format numbers with K and M suffixes
+  const formatBalance = (value: number): string => {
+    if (isNaN(value) || value === 0) {
+      return "0";
+    }
+
+    if (value >= 1_000_000) {
+      return `${(value / 1_000_000).toFixed(1)}M`;
+    } else if (value >= 1_000) {
+      return `${(value / 1_000).toFixed(1)}K`;
+    } else {
+      return value.toFixed(0);
+    }
+  };
+
+  // Calculate summary statistics
+  const totalPercentage = cachedData.data?.reduce(
+    (sum, item) => sum + item.percentage_of_supply,
+    0,
+  ) || 0;
+  const totalAccounts = cachedData.data?.reduce(
+    (sum, item) => sum + item.accounts_count,
+    0,
+  ) || 0;
+  const totalBalance = cachedData.data?.reduce(
+    (sum, item) => sum + item.total_balance,
+    0,
+  ) || 0;
   useEffect(() => {
     if (!socketContext) return;
     Object.keys(socketContext).some((key: string) => {
@@ -47,7 +76,6 @@ export default function RepChangeDistroChart() {
     if (cachedData.data && globalThis.Plotly) {
       // Define the order for time and representative count buckets
       const timeOrder = [
-        "never_changed",
         "< 1 month",
         "1 month",
         "2 months",
@@ -61,31 +89,17 @@ export default function RepChangeDistroChart() {
         "10 months",
         "11 months",
         "12+ months",
+        "never_changed",
       ];
 
       const repCountOrder = [
-        "never_changed",
         "1",
         "<= 5",
         "<= 10",
         "<= 100",
         "> 100",
+        "never_changed",
       ];
-
-      // Helper function to format numbers with K and M suffixes
-      const formatBalance = (value: number): string => {
-        if (isNaN(value) || value === 0) {
-          return "0";
-        }
-
-        if (value >= 1_000_000) {
-          return `${(value / 1_000_000).toFixed(1)}M`;
-        } else if (value >= 1_000) {
-          return `${(value / 1_000).toFixed(1)}K`;
-        } else {
-          return value.toFixed(0);
-        }
-      };
 
       // Create pivot tables for percentage, balance, and count
       const pivotPercentage: number[][] = [];
@@ -141,20 +155,6 @@ export default function RepChangeDistroChart() {
         }
       }
 
-      // Calculate summary statistics
-      const totalPercentage = cachedData.data.reduce(
-        (sum, item) => sum + item.percentage_of_supply,
-        0,
-      );
-      const totalAccounts = cachedData.data.reduce(
-        (sum, item) => sum + item.accounts_count,
-        0,
-      );
-      const totalBalance = cachedData.data.reduce(
-        (sum, item) => sum + item.total_balance,
-        0,
-      );
-
       // Create custom data for hover template
       const customData = [];
       for (let i = 0; i < repCountOrder.length; i++) {
@@ -199,22 +199,6 @@ export default function RepChangeDistroChart() {
           linecolor: "#cbd5e0",
         },
         font: { family: "Arial", size: 12 },
-        annotations: [
-          {
-            xref: "paper",
-            yref: "paper",
-            x: 0.5,
-            y: -0.15,
-            text:
-              `Color intensity based on percentage of supply, text shows percentage, balance, and accounts<br>Total: ${
-                totalPercentage.toFixed(2)
-              }% of supply, ${totalAccounts.toLocaleString()} accounts, ${
-                formatBalance(totalBalance)
-              } balance`,
-            showarrow: false,
-            font: { size: 10, color: "#666666" },
-          },
-        ],
       };
 
       const trace = {
@@ -277,7 +261,14 @@ export default function RepChangeDistroChart() {
           Representative Changes Distribution
         </h3>
         <p class="text-sm text-gray-600">
-          Heatmap showing distribution of representative changes over time
+          Heatmap showing distribution of representative changes over time<br />
+          <span class="text-xs text-gray-500">
+            Color intensity based on percentage of supply, text shows
+            percentage, balance, and accounts. Total:{" "}
+            {totalPercentage.toFixed(2)}% of supply,{" "}
+            {totalAccounts.toLocaleString()} accounts,{" "}
+            {formatBalance(totalBalance)} balance
+          </span>
         </p>
       </div>
       <div

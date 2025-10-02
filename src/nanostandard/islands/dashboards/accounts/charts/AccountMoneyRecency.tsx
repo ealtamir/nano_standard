@@ -44,8 +44,6 @@ export default function AccountMoneyRecencyChart() {
 
   useEffect(() => {
     if (cachedData.data && globalThis.Plotly) {
-      const isMobile = globalThis.innerWidth < 768;
-
       // Sort data by time bucket for better visualization
       const sortedData = [...cachedData.data].sort((a, b) => {
         // Custom sort order for time buckets - "Never Sent" goes last
@@ -119,13 +117,11 @@ export default function AccountMoneyRecencyChart() {
         paper_bgcolor: "white",
         plot_bgcolor: "rgba(248, 249, 250, 0.8)",
         autosize: true,
-        height: isMobile ? 500 : 600,
-        margin: isMobile
-          ? { t: 50, r: 45, b: 100, l: 45 }
-          : { t: 50, r: 80, b: 120, l: 80 },
+        height: 600,
+        margin: { t: 50, r: 80, b: 120, l: 80 },
         xaxis: {
           title: "Time Since Last Send",
-          tickangle: isMobile ? -45 : -30,
+          tickangle: -30,
           gridcolor: "rgba(128, 128, 128, 0.2)",
           linecolor: "#cbd5e0",
           showgrid: false,
@@ -137,7 +133,7 @@ export default function AccountMoneyRecencyChart() {
           side: "left",
           gridcolor: "rgba(128, 128, 128, 0.2)",
           linecolor: "#cbd5e0",
-          tickfont: { size: isMobile ? 9 : 11 },
+          tickfont: { size: 11 },
           showgrid: true,
           showspikes: true,
           spikemode: "across",
@@ -184,7 +180,7 @@ export default function AccountMoneyRecencyChart() {
         }),
         textposition: "outside",
         textfont: {
-          size: isMobile ? 12 : 14,
+          size: 14,
           color: "#2d3748",
           family: "Inter, system-ui, sans-serif",
         },
@@ -226,7 +222,11 @@ export default function AccountMoneyRecencyChart() {
           Account Money Recency Distribution
         </h3>
         <p class="text-sm text-gray-600">
-          Distribution of account balances by time since last send transaction
+          Total balance of accounts by time since last send transaction.
+        </p>
+        <p class="text-sm text-gray-600">
+          The plot gives an idea of how NANO is "active" by the participation of
+          the accounts in the network.
         </p>
       </div>
       <div id="account-money-recency-chart" class="w-full" />

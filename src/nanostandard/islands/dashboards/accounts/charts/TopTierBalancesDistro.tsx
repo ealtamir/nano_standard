@@ -240,7 +240,6 @@ export default function TopTierBalancesDistro() {
           borderwidth: 1,
         },
         hovermode: "closest",
-        width: 800,
         height: 600,
       };
 
@@ -277,7 +276,11 @@ export default function TopTierBalancesDistro() {
         </h3>
         <p class="text-sm text-gray-600">
           Distribution of account balances by percentile rank, colored by animal
-          tier
+          tier.
+        </p>
+        <p class="text-sm text-gray-600">
+          The plot shows how much Ӿ is held by the top 1k accounts,
+          coincidentally, all belonging to shark and whale tiers.
         </p>
       </div>
       <div

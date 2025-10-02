@@ -19,6 +19,16 @@ const emojiMap: Record<string, string> = {
   whale: "🐳",
 };
 
+const thresholdMap: Record<string, string> = {
+  shrimp: "<0.971",
+  fish: "<9.59",
+  penguin: "<96.34",
+  seal: "<933",
+  dolphin: "<5.2K",
+  shark: "<83.1K",
+  whale: "≥83.1K",
+};
+
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -76,7 +86,7 @@ export default function TierBalancesDistro() {
                 scope="col"
                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                Tier
+                Tier (Ӿ Threshold)
               </th>
               <th
                 scope="col"
@@ -134,6 +144,9 @@ export default function TierBalancesDistro() {
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   <span class="mr-2">{emojiMap[row.bucket]}</span>
                   {capitalizeFirstLetter(row.bucket)}
+                  <span class="ml-2 text-xs text-gray-500 font-normal">
+                    ({thresholdMap[row.bucket]})
+                  </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {row.account_count.toLocaleString()}

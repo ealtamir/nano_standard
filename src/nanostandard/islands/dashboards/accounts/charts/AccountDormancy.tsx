@@ -44,8 +44,6 @@ export default function AccountDormancyChart() {
 
   useEffect(() => {
     if (cachedData.data && globalThis.Plotly) {
-      const isMobile = globalThis.innerWidth < 768;
-
       // Prepare data
       const dates = cachedData.data.map((d) => new Date(d.day));
       const activityPercentage = cachedData.data.map((d) =>
@@ -66,15 +64,13 @@ export default function AccountDormancyChart() {
         paper_bgcolor: "white",
         plot_bgcolor: "rgba(248, 249, 250, 0.8)",
         autosize: true,
-        height: isMobile ? 500 : 600,
-        margin: isMobile
-          ? { t: 50, r: 45, b: 70, l: 45 }
-          : { t: 50, r: 80, b: 50, l: 80 },
+        height: 600,
+        margin: { t: 50, r: 80, b: 50, l: 80 },
         xaxis: {
           type: "date",
           tickformat: "%b %d, %Y",
-          nticks: isMobile ? 8 : 12,
-          tickangle: isMobile ? -45 : -30,
+          nticks: 12,
+          tickangle: -30,
           gridcolor: "rgba(128, 128, 128, 0.2)",
           linecolor: "#cbd5e0",
           title: "Date",
@@ -84,7 +80,7 @@ export default function AccountDormancyChart() {
           side: "left",
           gridcolor: "rgba(128, 128, 128, 0.2)",
           linecolor: "#cbd5e0",
-          tickfont: { size: isMobile ? 9 : 11 },
+          tickfont: { size: 11 },
           showgrid: true,
           showspikes: true,
           spikemode: "across",
@@ -190,7 +186,13 @@ export default function AccountDormancyChart() {
           Account Activity Percentage
         </h3>
         <p class="text-sm text-gray-600">
-          Daily account activity percentage with moving averages over time
+          Daily account activity percentage with moving averages over time. Each
+          datapoint represents how many accounts sent Ӿ over the last 30 days
+          compared to how many sent over the last year.
+        </p>
+        <p class="text-sm text-gray-600">
+          The plot gives an idea of how much activity is happening in a given
+          day compared to the trend over the last year.
         </p>
       </div>
       <div id="account-dormancy-chart" class="w-full" />

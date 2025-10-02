@@ -162,7 +162,8 @@ export default function TransactionBalanceDistroChart() {
         </h3>
         <p class="text-sm text-gray-600">
           Heatmap showing account distribution by transaction activity and
-          balance ranges (log scale)
+          balance ranges (log scale). Exponentiate basis of 10 the count to get
+          the actual amount of accounts.
         </p>
       </div>
       <div id="transaction-balance-distro-chart" class="w-full" />
