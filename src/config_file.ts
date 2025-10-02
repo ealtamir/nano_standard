@@ -19,7 +19,7 @@ interface Propagator {
   nano_confirmations_key: string;
   nano_unique_accounts_key: string;
   nano_bucket_distribution_key: string;
-  account_animal_buckets_key: string;
+  account_animal_bucket_key: string;
   account_basic_stats_key: string;
   account_dormancy_key: string;
   account_money_recency_key: string;
@@ -79,7 +79,7 @@ export const config: Config = {
     nano_confirmations_key: "nano:confirmations",
     nano_unique_accounts_key: "nano:unique_accounts",
     nano_bucket_distribution_key: "nano:bucket_distribution",
-    account_animal_buckets_key: "account_animal_buckets",
+    account_animal_bucket_key: "account_animal_buckets",
     account_basic_stats_key: "account_basic_stats",
     account_dormancy_key: "account_dormancy",
     account_money_recency_key: "account_money_recency",
