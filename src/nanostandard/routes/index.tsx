@@ -338,7 +338,7 @@ export default function Home() {
                     identify patterns in network activity over time.
                   </p>
                   <a
-                    href="/transactions"
+                    href="/dashboards/transactions"
                     class="inline-flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors"
                   >
                     <span>Explore Transactions</span>
@@ -389,9 +389,7 @@ export default function Home() {
                 <div class="p-6">
                   <h3 class="text-2xl font-bold text-gray-900 mb-3 font-montserrat flex items-center">
                     Accounts
-                    <span class="ml-2 text-xs bg-yellow-500 text-white px-2 py-1 rounded-full font-medium">
-                      Coming Soon
-                    </span>
+                  
                   </h3>
                   <p class="text-gray-700 mb-6">
                     Analyze account behaviors, track aggregate balances, inspect
@@ -399,7 +397,7 @@ export default function Home() {
                     statistics.
                   </p>
                   <a
-                    href="/accounts"
+                    href="/dashboards/accounts"
                     class="inline-flex items-center text-green-600 font-medium hover:text-green-800 transition-colors"
                   >
                     <span>Explore Accounts</span>
@@ -461,7 +459,7 @@ export default function Home() {
                     and discover key players.
                   </p>
                   <a
-                    href="/network"
+                    href="/dashboards/network"
                     class="inline-flex items-center text-purple-600 font-medium hover:text-purple-800 transition-colors"
                   >
                     <span>Explore Network</span>
