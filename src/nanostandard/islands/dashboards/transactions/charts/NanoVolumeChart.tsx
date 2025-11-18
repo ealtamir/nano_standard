@@ -72,7 +72,7 @@ export default function NanoVolumeChart() {
 
       const layout = {
         title: {
-          text: "Transaction Volume Over Time",
+          text: "Transaction NANO Volume Over Time",
           font: {
             size: 16,
             color: "#2d3748",

@@ -8,6 +8,7 @@ import NanoConfirmationsChart from "./charts/NanoConfirmationsChart.tsx";
 import NanoPricesChart from "./charts/NanoPricesChart.tsx";
 import NanoUniqueAccountsChart from "./charts/NanoAccountsChart.tsx";
 import NanoDistributionChart from "./charts/NanoDistributionChart.tsx";
+import NanoVolumeChart from "./charts/NanoVolumeChart.tsx";
 
 interface HomeProps {
   wsProtocol: "ws" | "wss";
@@ -29,6 +30,7 @@ export default function Transactions({ wsProtocol }: HomeProps) {
 
         <ChartsContainer>
           <NanoPricesChart selectedCurrency={selectedCurrency} />
+          <NanoVolumeChart />
           <NanoConfirmationsChart />
           <NanoUniqueAccountsChart />
           <NanoDistributionChart />
