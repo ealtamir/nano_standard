@@ -44,3 +44,4 @@ flyway-*
 pid
 redis
 kv.*
+node_modules
